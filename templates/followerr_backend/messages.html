@@ -7,66 +7,68 @@
     <button class="dark-button" style="margin-top: 20px;" type="submit">Create new Chat</button>
 </form>
 <br>
-<p>Chats</p>
 
-{% for chat in chats %}
+<div class="main-form">
+    <h2>Chats:</h2>
+
+    {% for chat in chats %}
+        <br>
+        <div class="messages-item-wrap">
+            <div class="messages-item">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    {% if chat.image %}
+                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="{{ chat.image.url }}" alt="chat"></a>
+                    {% else %}
+                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="/media/group_avatars/group.png" alt="chat"></a>
+                    {% endif %}
+                    <a href="{% url 'chat' chat.pk %}">{{ chat.title }}</a><br>
+                </div>
+                <p>{{ chat.users.count }} users</p>
+            </div>
+        </div>
+
+    {% endfor %}
     <br>
-    <div class="messages-item-wrap">
-        <div class="messages-item">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                {% if chat.image %}
-                    <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="{{ chat.image.url }}" alt="chat"></a>
-                {% else %}
-                    <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="/media/group_avatars/group.png" alt="chat"></a>
-                {% endif %}
-                <a href="{% url 'chat' chat.pk %}">{{ chat.title }}</a><br>
-            </div>
-            <p>{{ chat.users.count }} users</p>
-        </div>
-    </div>
+    <h2>Private Messages:</h2>
 
-{% endfor %}
-<br>
-<p>Private Messages</p>
-
-{% for user in online_users %}
-    {% if user in users %}
-        <div class="messages-item-wrap">
-            <div class="private-messages-item">
-                {% if user.avatar %}
-                    <a href="{% url 'private_messages' user.pk %}"><img width="50px" height="auto" src="{{ user.avatar.picture.url}}" alt="connect" ></a>
-                {% else %}
-                    {% if user.gender %}
-                        <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+    {% for user in online_users %}
+        {% if user in users %}
+            <div class="messages-item-wrap">
+                <div class="private-messages-item">
+                    {% if user.avatar %}
+                        <a href="{% url 'private_messages' user.pk %}"><img width="50px" height="auto" src="{{ user.avatar.picture.url}}" alt="connect" ></a>
                     {% else %}
-                        <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                        {% if user.gender %}
+                            <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                        {% else %}
+                            <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <div class="message-name-status"><a href="{% url 'private_messages' user.pk %}">{{user.name}}</a><p>online</p></div>
+                    <div class="message-name-status"><a href="{% url 'private_messages' user.pk %}">{{user.name}}</a><p>online</p></div>
+                </div>
             </div>
-        </div>
-    {% endif %}
-<br>
-{% endfor %}
+        {% endif %}
+    <br>
+    {% endfor %}
 
-{% for user in users %}
-    {% if user not in online_users %}
-        <div class="messages-item-wrap">
-            <div class="private-messages-item">
-                {% if user.avatar %}
-                    <a href="{% url 'private_messages' user.pk %}"><img width="50px" height="auto" src="{{ user.avatar.picture.url}}" alt="connect" ></a>
-                {% else %}
-                    {% if user.gender %}
-                        <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+    {% for user in users %}
+        {% if user not in online_users %}
+            <div class="messages-item-wrap">
+                <div class="private-messages-item">
+                    {% if user.avatar %}
+                        <a href="{% url 'private_messages' user.pk %}"><img width="50px" height="auto" src="{{ user.avatar.picture.url}}" alt="connect" ></a>
                     {% else %}
-                        <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                        {% if user.gender %}
+                            <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                        {% else %}
+                            <a href="{% url 'private_messages' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <a href="{% url 'private_messages' user.pk %}">{{user.name}}</a>
+                    <a href="{% url 'private_messages' user.pk %}">{{user.name}}</a>
+                </div>
             </div>
-        </div>
-    {% endif %}
-<br>
-{% endfor %}
-
+        {% endif %}
+    <br>
+    {% endfor %}
+</div>
 {% endblock %}

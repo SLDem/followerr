@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
+    <a href="{% url 'search_posts' %}">Search Posts</a>
     <form class="main-form" method="post" enctype="multipart/form-data">
         <div class="main-post-form-image-wrap">
             {% if request.user.avatar %}
