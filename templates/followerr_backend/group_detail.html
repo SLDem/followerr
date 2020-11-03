@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="group-info-wrap">
+    <div class="group-title-description">
+        <div class="group-title">
+            <h1>{{ group.title }}</h1>
+        </div>
+        <div class="group-description">
+            <p>{{ group.description }}</p>
+        </div>
+        <div class="group-discussions">
+            <a style="margin-bottom: 10px;" href="{% url 'discussions_list' group.pk %}">Latest discussions:</a>
+            {% for discussion in discussions %}
+                <div class="group-discussion">
+                    <a href="{% url 'discussion' discussion.pk %}">{{ discussion.title }}</a>
+                    <a href="{% url 'profile' discussion.author.pk %}">{{ discussion.author }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="group-avatar-wrap">
+        <div class="group-avatar">
+            {% if group.group_avatar %}
+                <img height="400px" width="auto" src="{{ group.group_avatar.url }}" alt="group_avatar">
+            {% else %}
+                <img height="400px" width="auto" src="/media/group_avatars/group.png" alt="group">
+            {% endif %}
+        </div>
+        <div class="group-participants">
+            <a href="{% url 'group_users' group.pk %}">Participants:</a>
+            <div class="group-participants-list">
+                {% for user in users %}
+                    <div class="group-participant">
+                        {% if user.avatar %}
+                            <img height="30px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect">
+                        {% else %}
+                            {% if user.gender %}
+                                <img height="30px" width="auto" src="/media/avatars/default-avatar-male.jpg">
+                            {% else %}
+                                <img height="30px" width="auto" src="/media/avatars/default-avatar-female.jpg">
+                            {% endif %}
+                        {% endif %}
+                        <p>{{ user.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="group-buttons">
+    {% if group.is_private %}
+        {% if button_status == 'not_in_group' %}
+            <a href="{% url 'send_group_request' group.pk %}"><button class="dark-button">Request Join</button></a>
+        {% elif button_status == 'group_join_request_sent' %}
+            <a href="{% url 'cancel_group_request' group.pk %}"><button class="dark-button">Cancel Join Request</button></a>
+        {% endif %}
+        {% if request.user in group.users.all %}
+            <a href="{% url 'join_or_leave_group' group.pk %}"><button class="dark-button">Leave</button></a>
+        {% endif %}
+    {% else %}
+        {% if request.user in group.users.all %}
+            <a href="{% url 'join_or_leave_group' group.pk %}"><button class="dark-button">Leave</button></a>
+        {% else %}
+            <a href="{% url 'join_or_leave_group' group.pk %}"><button class="dark-button">Join</button></a>
+        {% endif %}
+    {% endif %}
+
+    {% if request.user in group.owners.all %}
+        <a href="{% url 'delete_group' group.pk %}"><button class="dark-button">Delete Group</button></a>
+        <a href="{% url 'group_management' group.pk %}"><button class="dark-button">Manage Group</button></a>
+    {% endif %}
+</div>
+
+<br>
+
+{%  if request.user in group.owners.all %}
+    <form class="main-form" method="post" enctype="multipart/form-data">
+        <div class="main-post-form-image-wrap">
+            {% if group.group_avatar %}
+                <a href="{% url 'group_detail' group.pk %}"><img height="70px" width="auto" src="{{ group.group_avatar.url}}" alt="connect" ></a>
+            {% else %}
+                <a href="{% url 'group_detail' group.pk %}"><img height="70px" width="auto" src="/media/group_avatars/group.png"></a>
+            {% endif %}
+        </div>
+        {% csrf_token %}
+
+        {% block extrahead %}
+        {{ form.media }}
+        {% endblock %}
+
+        {{ form.as_p }}
+        <br>
+        <button class="dark-button" type="submit">Send</button>
+    </form>
+{% endif %}
+
+<div class="posts">
+    {% for post in posts %}
+        {% include "_post.html" %}
+    {% endfor %}
+</div>
+<br>
+<a href="{% url 'groups' %}"><button class="dark-button">Back</button></a>
+
+{% endblock %}

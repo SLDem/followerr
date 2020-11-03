@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if request.user.pk == chat.owner.pk %}
+        <h1>Edit Chat</h1>
+        <form class="new-chat-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="dark-button" style="margin-top: 20px;" type="submit">Save</button>
+        </form>
+    {% else %}
+        <p>You can only edit your own chats.</p>
+    {% endif %}
+{% endblock %}

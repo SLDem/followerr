@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="group-user-list">
+    {% for user in group.users.all %}
+        <div class="group-user-list-user">
+            <div class="group-user-list-user-info">
+                {% if user.avatar %}
+                    <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect"></a>
+                {% else %}
+                    {% if user.gender %}
+                        <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>
+                    {% else %}
+                        <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="/media/avatars/default-avatar-female.jpg"></a>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'profile' user.pk %}">{{ user }}</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

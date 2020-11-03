@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form class="main-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="dark-button" type="submit">Add users</button>
+</form>
+
+<br>
+<a href="{% url 'chat' chat.pk %}">Back</a>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% if user.pk == request.user.pk %}
+        {% if sent_friend_requests or received_friend_requests %}
+            <div class="friend-requests">
+                {% if sent_friend_requests %}
+                    <div class="sent-requests">
+                        <p>Sent friend requests to:</p>
+                        {% for request in sent_friend_requests %}
+                            <a href="{% url 'profile' request.to_user.pk %}">{{ request.to_user.name }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <br>
+                <br>
+                {% if received_friend_requests %}
+                    <div class="received-requests">
+                        <p>Received friend requests from:</p>
+                        {% for request in received_friend_requests %}
+                            <a href="{% url 'profile' request.from_user.pk %}">{{request.from_user.name}}</a>
+                            <div>
+                                <a href="{% url 'accept_friend_request' request.from_user.pk %}"><button class="dark-button">Accept</button></a>
+                                <a href="{% url 'delete_friend_request' request.from_user.pk %}"><button class="dark-button">Ignore</button></a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <br>
+    {% endif %}
+
+
+
+    <div class="friends-list">
+        <div class="friends-sign"><p>Friends:</p></div>
+        <hr style="margin: 0 auto; width: 100%;">
+
+        {% for friend in friends %}
+            {% if friend in online_users %}
+                <div class="friend-row">
+                    <div class="friend-in-list">
+                        {% if friend.avatar %}
+                            <img height="50px" width="auto" src="{{ friend.avatar.picture.url}}" alt="connect" >
+                        {% else %}
+                            {% if friend.gender %}
+                                <img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg">
+                            {% else %}
+                                <img height="50px" width="auto" src="/media/avatars/default-avatar-female.jpg">
+                            {% endif %}
+                        {% endif %}
+
+                        {% if friend in online_users %}
+                            <div class="online-mini" style="margin-bottom: -47px;"></div>
+                        {% endif %}
+
+                        <a href="{% url 'profile' friend.pk %}">{{ friend.name }}</a>
+                    </div>
+                    {% if request.user == user %}
+                        <a href="{% url 'remove_friend' friend.pk %}"><button class="dark-button">Remove</button></a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for friend in friends %}
+            {% if friend not in online_users %}
+            <div class="friend-row">
+                <div class="friend-in-list">
+                    {% if friend.avatar %}
+                        <img height="50px" width="auto" src="{{ friend.avatar.picture.url }}" alt="connect" >
+                    {% else %}
+                        {% if friend.gender %}
+                            <img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg">
+                        {% else %}
+                            <img height="50px" width="auto" src="/media/avatars/default-avatar-female.jpg">
+                        {% endif %}
+                    {% endif %}
+
+                    {% if friend in online_users %}
+                        <div class="online-mini" style="margin-bottom: -47px;"></div>
+                    {% endif %}
+
+                    <a href="{% url 'profile' friend.pk %}">{{ friend.name }}</a>
+                </div>
+                {% if request.user == user %}
+                    <a href="{% url 'remove_friend' friend.pk %}"><button class="dark-button">Remove</button></a>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

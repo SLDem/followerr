@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="main-form" method="post">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <button class="dark-button" type="submit">Save</button>
+</form>
+{% endblock %}

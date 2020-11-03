@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="group-list">
+    <h2>All groups:</h2>
+    {% for group in all_groups %}
+        {% if group not in user_groups %}
+            <div class="group">
+                <div class="group-avatar-name">
+                    {% if group.group_avatar %}
+                        <a href="{% url 'group_detail' group.pk %}"><img height="50px" width="auto" src="{{ group.group_avatar.url }}" alt="connect"></a>
+                    {% else %}
+                        <a href="{% url 'group_detail' group.pk %}"><img height="50px" width="auto" src="/media/group_avatars/group.png" alt="connect"></a>
+                    {% endif %}
+                    <a href="{% url 'group_detail' group.pk %}">{{ group.title }}</a>
+                </div>
+                <div style="text-align: right;">
+                    <p>created: {{ group.date_created }}</p>
+                    <p>{{ group.users.count }} participants.</p>
+                </div>
+
+            </div>
+        {% endif %}
+    <br>
+    {% endfor %}
+</div>
+<br>
+<div class="group-list" style="margin-bottom: 30px;">
+    <h2>User group list:</h2>
+    <br>
+    {% for group in user_groups %}
+        <div class="group">
+            <div class="group-avatar-name">
+                {% if group.group_avatar %}
+                    <a href="{% url 'group_detail' group.pk %}"><img height="50px" width="auto" src="{{ group.group_avatar.url }}" alt="connect"></a>
+                {% else %}
+                    <a href="{% url 'group_detail' group.pk %}"><img height="50px" width="auto" src="/media/group_avatars/group.png" alt="connect"></a>
+                {% endif %}
+                <a href="{% url 'group_detail' group.pk %}">{{ group.title }}</a>
+            </div>
+            <div style="text-align: right;">
+                <p>created: {{ group.date_created }}</p>
+                <p>{{ group.users.count }} participants.</p>
+            </div>
+        </div>
+    <br>
+    {% endfor %}
+</div>
+
+<p style="margin-bottom: 10px; text-align: right;">Add new group:</p>
+<form class="main-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <br>
+    <button class="dark-button" type="submit">Create Group</button>
+</form>
+
+{% endblock %}

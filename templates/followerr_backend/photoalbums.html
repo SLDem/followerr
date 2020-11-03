@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>{{ user }} Photoalbums</h1>
+<br>
+{% for photoalbum in photoalbums %}
+    <div class="album-wrap">
+        <a style="text-decoration: none;" href="{% url 'photoalbum' photoalbum.pk %}">{{ photoalbum.title }}</a>
+
+        {% if request.user == photoalbum.user %}
+            <div>
+                <a href="{% url 'edit_album' photoalbum.pk %}"><button class="dark-button">&#9998;</button></a>
+                <a href="{% url 'delete_album' photoalbum.pk %}"><button class="dark-button">&#10006;</button></a>
+            </div>
+        {% endif %}
+    </div>
+<br>
+{% endfor %}
+
+
+<form class="main-form" method="post">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <button class="dark-button" type="submit">Create</button>
+</form>
+
+{% endblock %}

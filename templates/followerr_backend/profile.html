@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <h1>
+        {{user.name}}{% if user.following %}, I follow the ways of
+        {{ user.following }}
+        {% endif %}
+    </h1>
+    <br>
+
+    <div class="user-info">
+        <div class="user-avatar">
+            {% if user.avatar %}
+                <a href="{% url 'image_detail' user.avatar.pk %}"><img src="{{ user.avatar.picture.url }}" alt="connect"></a>
+            {% else %}
+                {% if user.gender %}
+                    <img src="/media/avatars/default-avatar-male.jpg">
+                {% else %}
+                    <img src="/media/avatars/default-avatar-female.jpg">
+                {% endif %}
+            {% endif %}
+
+            {% if user in online_users %}
+                <div class="online"></div>
+            {% endif %}
+
+        </div>
+        <div class="user-secondary-info">
+            {% if user.is_staff %}
+                <div style="width: 37px; margin: 0; margin-bottom: 5px;" class="admin-sign">admin</div>
+            {% endif %}
+            <p>About me: {{ user.about_me }}</p>
+            <p>Favourite books: {{ user.favourite_books }}</p>
+            <p>Favourite music: {{ user.favourite_music }}</p>
+            <p>Favourite movies: {{ user.favourite_movies }}</p>
+            <br>
+            <hr style="margin: 0 auto, width: 50%;">
+        </div>
+    </div>
+
+    <div class="button-info-wrap">
+        {% if user.pk == request.user.pk %}
+            <div class="profile-buttons-wrap">
+                <a href="{% url 'edit_user' user.pk %}"><button class="dark-button">Edit Profile</button></a>
+                <a href="{% url 'upload_avatar' %}"><button class="dark-button">Upload Avatar</button></a>
+                <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
+                <a href="{% url 'blocked_users' %}"><button class="dark-button">Blocked Users</button></a>
+                <a href="{% url 'photoalbums' user.pk %}"><button class="dark-button">Photoalbums</button></a>
+            </div>
+        {% else %}
+        <div class="profile-buttons-wrap">
+            {% if user in request.user.blocked_users.all %}
+                <a href="{% url 'unblock_user' user.pk %}"><button class="dark-button">Unblock User</button></a>
+            {% else %}
+                <a href="{% url 'private_messages' user.pk %}"><button class="dark-button">Message</button></a>
+                <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
+                {% if button_status == 'not_friend' %}
+                    <a href="{% url 'send_friend_request' user.pk %}"><button class="dark-button">Add Friend</button></a>
+                {% elif button_status == 'friend_request_sent' %}
+                    <a href="{% url 'cancel_friend_request' user.pk %}"><button class="dark-button">Cancel Request</button></a>
+                {% elif button_status == 'friend' %}
+                    <a href="{% url 'remove_friend' user.pk %}"><button class="dark-button">Remove Friend</button></a>
+                {% endif %}
+                <a href="{% url 'block_user' user.pk %}"><button class="dark-button">Block User</button></a>
+                <a href="{% url 'photoalbums' user.pk %}"><button class="dark-button">Photoalbums</button></a>
+            {% endif %}
+        </div>
+
+        {% endif %}
+        <div class="user-main-info">
+            <p>Email: {{ user.email }}</p>
+            <p>Name: {{ user.name }}</p>
+            {% if user.gender %}
+                Gender: Male
+            {% else %}
+                Gender: Female
+            {% endif %}
+            <p>City: {{ user.city }}</p>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    {% if request.user == user %}
+    <form class="main-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% block extrahead %}
+        {{ form.media }}
+        {% endblock %}
+
+        {{ form.as_p }}
+        <br>
+        <button class="dark-button" type="submit">Send</button>
+    </form>
+    {% endif %}
+    <div class="posts">
+        {% for post in page_obj %}
+            {% include "_post.html" %}
+            <br>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&larr; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

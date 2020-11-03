@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+
+<div class="images-wrap">
+{% for image in images %}
+    <div class="image-item">
+        <a href="{% url 'image_detail' image.pk %}"><img width="300" height="auto" src="{{ image.picture.url }}" alt="connect"></a>
+    </div>
+{% endfor %}
+</div>
+<br>
+
+<form class="main-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <button class="dark-button" type="submit">Add</button>
+</form>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load social_share %}
+
+{% block content %}
+    <div style="margin-top: -20px;" class="post">
+        <div class="post-user-info">
+            <div style="display: flex;">
+                <div>
+                    <div class="post-user-avatar">
+                        {% if post.user %}
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                {% if post.user.avatar %}
+                                    <a href="{% url 'profile' post.user.pk %}"><img width="50px" height="auto" src="{{ post.user.avatar.picture.url }}" alt="connect" ></a>
+                                {% else %}
+                                    {% if user.gender %}
+                                        <a href="{% url 'profile' post.user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                                    {% else %}
+                                        <a href="{% url 'profile' post.user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                                    {% endif %}
+                                {% endif %}
+                                <a href="{% url 'profile' post.user.pk %}"><b>{{ post.user.name }}</b></a>
+                            </div>
+
+                            {% for user in online_users %}
+                                {% if user == post.user %}
+                                    <div style="margin-top:0; margin-left: 0;" class="online-mini"></div>
+                                {% else %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if post.user.is_staff %}
+                                <div class="admin-sign">admin</div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if post.group %}
+                            {% if post.group.group_avatar %}
+                                <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="{{ group.group_avatar.url}}" alt="connect" ></a>
+                            {% else %}
+                                <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="/media/group_avatars/group.png"></a>
+                            {% endif %}
+                            <a href="{% url 'group_detail' post.group.pk %}"><b>{{ post.group.title }}</b></a>
+                        {% endif %}
+                    </div>
+                    <br>
+                </div>
+            </div>
+
+            <div class="buttons">
+                {% if request.user.pk == post.user.pk %}
+                    <a style="height: 50%;" href="{% url 'edit_post' post.pk %}"><button class="dark-button">&#9998;</button></a>
+                    <a style="height: 50%;" href="{% url 'delete_post' post.pk %}"><button class="dark-button">&#10006;</button></a>
+                {% endif %}
+            </div>
+        </div>
+
+        <br>
+
+        <div class="post-body">
+            <div class="post-text">{{ post.body }}</div>
+            <br>
+            {% if post.image %}
+                <div class="post-image"><img onclick="window.open(this.src)" src="{{ post.image.url }}" alt="connect"></div>
+            {% endif %}
+        </div>
+
+        <div class="like-posted">
+            <div class="posted-date">
+                {{ post.date_posted | timesince }} ago.
+            </div>
+            <div class="like-button">
+                {% if request.user in post.likers.all %}
+                    <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+                    <p style="color: green;">{{post.likers.count}}&nbsp;</p>
+                {% else %}
+                    <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
+                    <p>{{post.likers.count}}&nbsp;</p>
+                {% endif %}
+
+                {% if request.user in post.dislikers.all %}
+                    <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+                    <p style="color: #F47846;">&nbsp;{{post.dislikers.count}}</p>
+                {% else %}
+                    <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
+                    <p>&nbsp;{{post.dislikers.count}}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="social-links">
+        Share:
+        {% post_to_facebook post.get_absolute_url "Facebook" %}
+        {% post_to_twitter post.body post.get_absolute_url "Twitter" %}
+        {% post_to_linkedin post.get_absolute_url %}
+    </div>
+
+    <br>
+    <br>
+
+    <div class="main-form">
+        <form method="post">
+            {% csrf_token %}
+
+            {% block extrahead %}
+            {{ form.media }}
+            {% endblock %}
+
+            {{ form.as_p }}
+            <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Post a Comment</button>
+        </form>
+    </div>
+
+    {% include "_comments.html" %}
+
+    <br>
+{% endblock %}

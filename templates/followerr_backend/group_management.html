@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form class="main-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <br>
+    <button class="dark-button" type="submit">Save Edits</button>
+</form>
+
+<br>
+
+{% if group.is_private %}
+    <div class="join-requests">
+        {% if join_requests %}
+            {% for request in join_requests %}
+                <h1>Join group requests:</h1>
+                <a href="{% url 'profile' request.from_user.pk %}">{{request.from_user.name}}</a>
+                <div>
+                    <a href="{% url 'accept_group_request' group.pk request.from_user.pk %}"><button class="dark-button">Accept</button></a>
+                    <a href="{% url 'delete_group_request' group.pk request.from_user.pk %}"><button class="dark-button">Ignore</button></a>
+                </div>
+            <br>
+            {% endfor %}
+        {% else %}
+            <h1>No join requests right now.</h1>
+        {% endif %}
+    </div>
+{% endif %}
+
+<br>
+
+<div class="group-user-list">
+    {% for user in group.users.all %}
+        {% if user != request.user %}
+        <div class="group-user-list-user">
+            <div class="group-user-list-user-info">
+                {% if user.avatar %}
+                    <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect"></a>
+                {% else %}
+                    {% if user.gender %}
+                        <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>
+                    {% else %}
+                        <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="/media/avatars/default-avatar-female.jpg"></a>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'profile' user.pk %}">{{ user }}</a>
+            </div>
+            <div>
+                {% if request.user == group.admin %}
+                    {% if user not in group.owners.all %}
+                        <a href="{% url 'remove_user_from_group' group.pk user.pk %}"><button class="dark-button">Remove</button></a>
+                        <a href="{% url 'make_owner' group.pk user.pk %}"><button class="dark-button">Make Owner</button></a>
+                    {% else %}
+                        <a href="{% url 'remove_owner' group.pk user.pk %}"><button class="dark-button">Remove Owner</button></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<br>
+<a href="{% url 'group_detail' group.pk %}"><button class="dark-button">Back</button></a>
+
+{% endblock %}

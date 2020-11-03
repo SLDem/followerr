@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for discussion in discussions %}
+    <div class="group-discussion">
+        <a href="{% url 'discussion' discussion.pk %}">{{ discussion.title }}</a>
+        <a href="{% url 'profile' discussion.author.pk %}">{{ discussion.author }}</a>
+    </div>
+{% endfor %}
+
+<h1>New Discussion</h1>
+<form class="main-form" method="post">
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+
+    {{ form.as_p }}
+    <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Create</button>
+</form>
+
+{% endblock %}

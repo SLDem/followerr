@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if request.user.pk == post.user.pk or request.user in post.group.owners.all %}
+        <h1>Edit Post</h1>
+        <form class="main-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% block extrahead %}
+            {{ form.media }}
+            {% endblock %}
+            {{ form.as_p }}
+            <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Save</button>
+        </form>
+    {% else %}
+        <p>You can only edit your own posts.</p>
+    {% endif %}
+{% endblock %}

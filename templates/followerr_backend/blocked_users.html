@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if blocked_users %}
+    {% for user in blocked_users %}
+        <div class="friend-row">
+            <div class="friend-in-list">
+                {% if user.avatar %}
+                    <img height="50px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect" >
+                {% else %}
+                    {% if user.gender %}
+                        <img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg">
+                    {% else %}
+                        <img height="50px" width="auto" src="/media/avatars/default-avatar-female.jpg">
+                    {% endif %}
+                {% endif %}
+
+                {% if user in online_users %}
+                    <div class="online-mini" style="margin-bottom: -47px;"></div>
+                {% endif %}
+
+                <a href="{% url 'profile' user.pk %}">{{ user.name }}</a>
+            </div>
+            <a href="{% url 'unblock_user' user.pk %}"><button class="dark-button">Unblock</button></a>
+        </div>
+    {% endfor %}
+{% else %}
+    <h2>You didn't block anyone.</h2>
+{% endif %}
+{% endblock %}
