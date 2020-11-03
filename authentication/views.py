@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.core.mail import EmailMessage
 from django.contrib import messages
-from django.contrib.auth import authenticate
 
 from datetime import timedelta
 from django.views import View
@@ -35,21 +34,16 @@ def signup(request):
             user.set_password(raw_password)
             user.save()
 
+            # Verification
             email_subject = 'Activate your followerr account'
-
             domain = get_current_site(request).domain
-
             user_id = urlsafe_base64_encode(force_bytes(user.pk))
-
             link = reverse('activate', kwargs={
                 'user_id': user_id,
                 'token': token_generator.make_token(user),
             })
-
             activate_url = 'http://' + domain + link
-
             email_body = 'Hello ' + user.name + ' please use this link to verify your account\n' + activate_url
-
             email = EmailMessage(
                 email_subject,
                 email_body,
@@ -58,7 +52,6 @@ def signup(request):
 
             )
             email.send()
-
             return redirect('login')
     else:
         form = SignupForm()
