@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django_social_share',
     'emoji_picker',
     'online_users',
-    'django_email_verification',
 ]
 
 MIDDLEWARE = [
@@ -98,12 +97,6 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
@@ -138,14 +131,9 @@ LOGOUT_REDIRECT_URL = 'login'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-EMAIL_ACTIVE_FIELD = 'is_active'
-EMAIL_SERVER = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'followerrstaff@gmail.com'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'followerrstaff@gmail.com'
 EMAIL_PORT = 587
-EMAIL_ADDRESS = 'followerrstaff@gmail.com'
-EMAIL_FROM_ADDRESS = 'followerrstaff@gmail.com'
-EMAIL_PASSWORD = 'followerr2131!'  # os.environ['password_key'] suggested
-EMAIL_MAIL_SUBJECT = 'Confirm your email'
-EMAIL_MAIL_HTML = 'mail_body.html'
-EMAIL_MAIL_PLAIN = 'mail_body.txt'
-EMAIL_PAGE_TEMPLATE = 'confirm_template.html'
-EMAIL_PAGE_DOMAIN = 'http://localhost:8000'
+EMAIL_HOST_PASSWORD = 'followerr2131!'
