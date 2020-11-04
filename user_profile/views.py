@@ -65,7 +65,7 @@ def upload_avatar(request):
             new_image = form.save(commit=False)
             new_image.album = photoalbum
             new_image.save()
-            request.user.avatar = new_image
+            request.user.image = new_image
             request.user.save()
             return redirect('profile', pk=request.user.pk)
     else:

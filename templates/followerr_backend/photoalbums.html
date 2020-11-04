@@ -3,6 +3,7 @@
 
 <h1>{{ user }} Photoalbums</h1>
 <br>
+<a href="{% url 'search_photoalbums' %}">Search all photoalbums</a> | <a href="{% url 'search_images' %}">Search all images</a>
 {% for photoalbum in photoalbums %}
     <div class="album-wrap">
         <a style="text-decoration: none;" href="{% url 'photoalbum' photoalbum.pk %}">{{ photoalbum.title }}</a>

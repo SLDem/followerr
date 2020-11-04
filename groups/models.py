@@ -7,7 +7,7 @@ class Group(models.Model):
 
     title = models.CharField('Title', max_length=100, null=False, blank=False)
     description = models.CharField('Description', max_length=4000, null=True, blank=True)
-    group_avatar = models.ImageField('Group Avatar', upload_to='group_avatars', blank=True)
+    image = models.ImageField('Group Avatar', upload_to='group_avatars', blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField('Is this a private group?', default=False)
 

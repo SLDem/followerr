@@ -21,8 +21,8 @@
     </div>
     <div class="group-avatar-wrap">
         <div class="group-avatar">
-            {% if group.group_avatar %}
-                <img height="400px" width="auto" src="{{ group.group_avatar.url }}" alt="group_avatar">
+            {% if group.image %}
+                <img height="400px" width="auto" src="{{ group.image.url }}" alt="group_avatar">
             {% else %}
                 <img height="400px" width="auto" src="/media/group_avatars/group.png" alt="group">
             {% endif %}
@@ -32,8 +32,8 @@
             <div class="group-participants-list">
                 {% for user in users %}
                     <div class="group-participant">
-                        {% if user.avatar %}
-                            <img height="30px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect">
+                        {% if user.image %}
+                            <img height="30px" width="auto" src="{{ user.image.image.url }}" alt="connect">
                         {% else %}
                             {% if user.gender %}
                                 <img height="30px" width="auto" src="/media/avatars/default-avatar-male.jpg">
@@ -80,8 +80,8 @@
 {%  if request.user in group.owners.all %}
     <form class="main-form" method="post" enctype="multipart/form-data">
         <div class="main-post-form-image-wrap">
-            {% if group.group_avatar %}
-                <a href="{% url 'group_detail' group.pk %}"><img height="70px" width="auto" src="{{ group.group_avatar.url}}" alt="connect" ></a>
+            {% if group.image %}
+                <a href="{% url 'group_detail' group.pk %}"><img height="70px" width="auto" src="{{ group.image.url }}" alt="connect" ></a>
             {% else %}
                 <a href="{% url 'group_detail' group.pk %}"><img height="70px" width="auto" src="/media/group_avatars/group.png"></a>
             {% endif %}

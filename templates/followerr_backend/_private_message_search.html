@@ -1,0 +1,42 @@
+<div class="message-avatar-body">
+    <div class="message-content">
+        <div style="display: flex; align-items: center; gap: 10px; justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                {% if message.from_user.image %}
+                    <a href="{% url 'profile' message.from_user.id %}"><img width="50px" height="auto" src="{{ message.from_user.image.image }}" alt="connect" ></a>
+                {% else %}
+                    {% if message.from_user.gender %}
+                        <a href="{% url 'profile' message.from_user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                    {% else %}
+                        <a href="{% url 'profile' message.from_user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                    {% endif %}
+                {% endif %}
+                <a style="text-decoration: none;" href="{% url 'profile' message.from_user.id %}"><b>{{ message.from_user.name }}</b></a>
+                <p>to</p>
+                <a style="text-decoration: none;" href="{% url 'profile' message.to_user.id %}"><b>{{ message.to_user.name }}</b></a>
+            </div>
+            <div style="display: flex;">
+                <p style="opacity: 0.6;">{{ message.created_at }}</p>
+                <a style="text-decoration: none; margin: 0 10px; font-weight: bold; text-shadow: none; opacity: 0.8;" href="{% url 'delete_private_message' message.id %}">&#10006;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="message-body">
+        {{ message.body }}
+    </div>
+
+    <div>
+        <div class="message-image">
+            {% if message.image %}
+                <img src="{{ message.image.url }}" alt="msg-image">
+            {% endif %}
+        </div>
+    </div>
+
+    {% if request.user.pk == message.from_user.id %}
+        <a href="{% url 'private_messages' message.to_user.id %}">View Chat</a>
+    {% elif request.user.pk == message.to_user.id %}
+        <a href="{% url 'private_messages' message.from_user.id %}">View Chat</a>
+    {% endif %}
+</div>

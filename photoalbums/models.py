@@ -14,7 +14,7 @@ class Photoalbum(models.Model):
 class Image(models.Model):
     objects: models.Manager()
 
-    picture = models.ImageField('Image', upload_to='images', null=False, blank=False)
+    image = models.ImageField('Image', upload_to='images', null=False, blank=False)
     description = models.TextField('Description', max_length=4000, null=True, blank=True)
 
     album = models.ForeignKey('Photoalbum', related_name='album_images', null=True, on_delete=models.CASCADE)

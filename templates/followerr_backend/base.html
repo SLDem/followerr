@@ -20,7 +20,7 @@
                 <li><a href="{% url 'messages' %}">Messages</a></li>
                 <li><a href="{% url 'groups' %}">Groups</a></li>
                 <li><a href="{% url 'photoalbums' request.user.pk %}">Photoalbums</a></li>
-                <li><a href="{% url 'all_users_list' %}">All users</a></li>
+                <li><a href="{% url 'search_users' %}">Search users</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>

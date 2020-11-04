@@ -2,8 +2,8 @@
 {% block content %}
 
 <form method="get">
-    <input id="q" name="q" type="text" placeholder="Search for...">
-    <a href="{% url 'search_posts' %}"><button class="dark-button" type="submit">&#128269;</button></a>
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for posts...">
+    <button class="dark-button" type="submit">&#128269;</button>
 </form>
 
 {% for post in posts %}

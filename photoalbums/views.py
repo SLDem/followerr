@@ -70,8 +70,8 @@ def image_detail(request, pk):
 
 def make_avatar(request, pk):
     image = Image.objects.get(pk=pk)
-    if image.album.user == request.user and image != request.user.avatar:
-        request.user.avatar = image
+    if image.album.user == request.user and image != request.user.image:
+        request.user.image = image
         request.user.save()
         return redirect('image_detail', pk=image.pk)
     else:

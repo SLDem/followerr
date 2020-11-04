@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="image-wrap">
-    <img style="max-width: 100%;" width="auto" height="auto" src="{{ image.picture.url }}" alt="connect">
+    <img style="max-width: 100%;" width="auto" height="auto" src="{{ image.image.url }}" alt="connect">
 </div>
 
 <br>
@@ -15,7 +15,7 @@
 </div>
 <br>
 
-{% if request.user == image.album.user and image != request.user.avatar %}
+{% if request.user == image.album.user and image != request.user.image %}
     <a href="{% url 'make_avatar' image.pk %}"><button class="dark-button">Make Avatar</button></a>
 {% endif %}
 

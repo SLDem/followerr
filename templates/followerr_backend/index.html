@@ -3,8 +3,8 @@
     <a href="{% url 'search_posts' %}">Search Posts</a>
     <form class="main-form" method="post" enctype="multipart/form-data">
         <div class="main-post-form-image-wrap">
-            {% if request.user.avatar %}
-                <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="{{ request.user.avatar.picture.url}}" alt="connect" ></a>
+            {% if request.user.image %}
+                <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="{{ request.user.image.image.url}}" alt="connect" ></a>
             {% else %}
                 {% if user.gender %}
                     <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>

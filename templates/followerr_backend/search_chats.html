@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form method="get">
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for chats...">
+    <button class="dark-button" type="submit">&#128269;</button>
+</form>
+
+
+{% for chat in chats %}
+    {% for i in chat.users %}
+        {% if request.user.pk == i.id %}
+            {% include '_chat_search.html' %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% endblock %}

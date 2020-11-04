@@ -11,8 +11,8 @@
 
     <div class="user-info">
         <div class="user-avatar">
-            {% if user.avatar %}
-                <a href="{% url 'image_detail' user.avatar.pk %}"><img src="{{ user.avatar.picture.url }}" alt="connect"></a>
+            {% if user.image %}
+                <a href="{% url 'image_detail' user.image.pk %}"><img src="{{ user.image.image.url }}" alt="connect"></a>
             {% else %}
                 {% if user.gender %}
                     <img src="/media/avatars/default-avatar-male.jpg">

@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     friends = models.ManyToManyField("User", blank=True)
     blocked_users = models.ManyToManyField("User", blank=True, related_name='blocked_by_user')
-    avatar = models.ForeignKey("photoalbums.Image", on_delete=models.SET_NULL, null=True, blank=True)
+    image = models.ForeignKey("photoalbums.Image", on_delete=models.SET_NULL, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="get">
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for images...">
+    <button class="dark-button" type="submit">&#128269;</button>
+</form>
+
+<br>
+{% if images %}
+    <div class="images-wrap">
+        {% for image in images %}
+            {% include "_image_search.html" %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+{% endblock %}

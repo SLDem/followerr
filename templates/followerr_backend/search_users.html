@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="get">
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for users...">
+    <button class="dark-button" type="submit">&#128269;</button>
+</form>
+
+<br>
+{% if users %}
+<div class="main-form">
+{% for user in users %}
+    {% include '_user_search.html' %}
+{% endfor %}
+</div>
+{% endif %}
+
+
+{% endblock %}

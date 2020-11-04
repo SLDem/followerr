@@ -20,7 +20,8 @@ class UserAdmin(BaseUserAdmin):
             'is_superuser',
             'user_permissions',
             'blocked_users',
-            'avatar',
+            'image',
+            'gender',
         )}),
     )
     add_fieldsets = (

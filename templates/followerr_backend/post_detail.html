@@ -9,8 +9,8 @@
                     <div class="post-user-avatar">
                         {% if post.user %}
                             <div style="display: flex; flex-direction: column; align-items: center;">
-                                {% if post.user.avatar %}
-                                    <a href="{% url 'profile' post.user.pk %}"><img width="50px" height="auto" src="{{ post.user.avatar.picture.url }}" alt="connect" ></a>
+                                {% if post.user.image %}
+                                    <a href="{% url 'profile' post.user.pk %}"><img width="50px" height="auto" src="{{ post.user.image.image.url }}" alt="connect" ></a>
                                 {% else %}
                                     {% if user.gender %}
                                         <a href="{% url 'profile' post.user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
@@ -32,14 +32,13 @@
                                 <div class="admin-sign">admin</div>
                             {% endif %}
                         {% endif %}
-
                         {% if post.group %}
                             {% if post.group.group_avatar %}
                                 <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="{{ group.group_avatar.url}}" alt="connect" ></a>
                             {% else %}
                                 <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="/media/group_avatars/group.png"></a>
                             {% endif %}
-                            <a href="{% url 'group_detail' post.group.pk %}"><b>{{ post.group.title }}</b></a>
+                            <a href="{% url 'group_detail' post.group.pk %}"><b>&nbsp;{{ post.group.title }}</b></a>
                         {% endif %}
                     </div>
                     <br>

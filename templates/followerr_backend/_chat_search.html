@@ -1,0 +1,13 @@
+<div class="messages-item-wrap" style="margin-top: 10px;">
+    <div class="messages-item">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            {% if chat.image %}
+                <a href="{% url 'chat' chat.id %}"><img height="50px" width="auto" style="border-radius: 25px;" src="{{ chat.image }}" alt="chat"></a>
+            {% else %}
+                <a href="{% url 'chat' chat.id %}"><img height="50px" width="auto" style="border-radius: 25px;" src="/media/group_avatars/group.png" alt="chat"></a>
+            {% endif %}
+            <a href="{% url 'chat' chat.id %}">{{ chat.title }}</a><br>
+        </div>
+        <p>{{ chat.users|length }} users</p>
+    </div>
+</div>

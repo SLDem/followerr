@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="get">
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for private messages...">
+    <button class="dark-button" type="submit">&#128269;</button>
+</form>
+
+<br>
+{% for message in private_messages %}
+    {% if request.user.pk == message.from_user.id or request.user.pk == message.to_user.id %}
+    {% include '_private_message_search.html' %}
+    {% endif %}
+{% endfor %}
+
+
+{% endblock %}
