@@ -20,13 +20,13 @@
 {% if message in messages %}
 <a href="{% url 'chat_users' message.chat.pk %}">Users</a>
 {% endif %}
-{% for message in messages %}
+{% for message in page_obj %}
 
     <div class="message-avatar-body">
         <div class="message-content">
             <div style="display: flex; align-items: center; gap: 10px;">
-                {% if message.from_user.avatar %}
-                    <a href="{% url 'profile' message.from_user.pk %}"><img width="50px" height="auto" src="{{ message.from_user.avatar.picture.url }}" alt="connect" ></a>
+                {% if message.from_user.image %}
+                    <a href="{% url 'profile' message.from_user.pk %}"><img width="50px" height="auto" src="{{ message.from_user.image.image.url }}" alt="connect" ></a>
                 {% else %}
                     {% if message.from_user.gender %}
                         <a href="{% url 'profile' message.from_user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
@@ -61,8 +61,25 @@
             </div>
         </div>
     </div>
-
 {% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&larr; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+        {% endif %}
+    </span>
+</div>
 
 <form class="message-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}

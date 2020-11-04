@@ -67,7 +67,7 @@ def dislike_comment(request, pk):
 def reply_form(request, pk, parent_id):
     post = Post.objects.get(pk=pk)
     if request.user.is_authenticated:
-        comments = post.comments.all()
+        comments = Comment.objects.filter(post=post)
         if request.method == 'POST':
             form = NewCommentForm(request.POST)
             if form.is_valid():

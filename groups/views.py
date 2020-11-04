@@ -73,6 +73,7 @@ def group_management(request, pk):
             form = NewGroupForm(request.POST, request.FILES, instance=group)
             if form.is_valid():
                 form.save()
+                group.save()
                 return redirect('group_detail', pk=group.pk)
         else:
             form = NewGroupForm(instance=group)

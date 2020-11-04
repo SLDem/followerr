@@ -17,8 +17,8 @@
                             <div class="online-mini" style="margin-bottom: -47px;"></div>
                         {% endif %}
                     {% elif post.group %}
-                        {% if post.group.group_avatar %}
-                            <a href="{% url 'group_detail' post.group.pk %}"><img width="50px" height="auto" src="{{ post.group.group_avatar.url}}" alt="connect" ></a>
+                        {% if post.group.image %}
+                            <a href="{% url 'group_detail' post.group.pk %}"><img width="50px" height="auto" src="{{ post.group.image.url}}" alt="connect" ></a>
                         {% else %}
                             <a href="{% url 'group_detail' post.group.pk %}"><img height="50px" width="auto" src="/media/group_avatars/group.png"></a>
                         {% endif %}

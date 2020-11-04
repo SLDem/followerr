@@ -42,12 +42,34 @@
                 </div>
                 <div class="posted-date">
                     {% if post %}
-                        <a style="color: #404040; font-weight: bold;" href="{% url 'reply_form' post.pk node.id %}">Reply</a>
+                        <button data-id="{{ node.id }}" class="reply-button">Reply</button>
                     {% elif image %}
-                        <a style="color: #404040; font-weight: bold;" href="{% url 'reply_form_picture' image.pk node.id %}">Reply</a>
+                        <button data-id="{{ node.id }}" class="image-reply-button">Reply</button>
                     {% endif %}
                     <p>{{ node.date_posted | timesince }} ago.</p>
                 </div>
+                {% if post %}
+                <div style="display: none;" id="replycomment-{{ node.id }}">
+                    <form class="reply-form" method="post" action="{% url 'reply_form' post.pk node.id %}">
+                        <button class="dark-button" type="submit">Reply</button>
+                        {% csrf_token %}
+                            <input type="hidden" name="parent_id" id="parent_id" value="{{ node.id }}" />
+                        {% block extrahead %}
+                        {{ form.media }}
+                        {% endblock %}
+                        {{ form.body }}
+                    </form>
+                </div>
+                {% elif image %}
+                <div style="display: none;" id="image-replycomment-{{ node.id }}">
+                    <form class="reply-form" method="post" action="{% url 'reply_form_picture' image.pk node.id %}">
+                        <button class="dark-button" type="submit">Reply</button>
+                        {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ node.id }}" />
+                        {{ form.body }}
+                    </form>
+                </div>
+                {% endif %}
             </div>
 
             {% if not node.is_leaf_node %}

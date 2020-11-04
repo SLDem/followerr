@@ -32,13 +32,6 @@
     padding-bottom: 2px;
 }
 
-
-.comment-body-input {
-    width: 100%;
-    margin-bottom: 5px;
-    height: 80px;
-}
-
 .comment-image-input {
     width: 100%;
     margin-bottom: 5px;
@@ -112,17 +105,27 @@
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
 }
 
-.reply-form {
+#replycomment- ,#image-replycomment-{
     width: 100%;
-    border: 1px solid #404040;
     background-color: white;
     padding: 5px;
+    display: none;
 }
 
-.reply-form .comment-body-input {
-    height: 50px;
+.reply-form, .image-reply-form {
+    margin-top: -2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: white;
+    padding-bottom: 5px;
+    width: 95%;
+    height: 25px;
+    margin-top: 10px;
 }
 
-.reply-form button {
-    margin-bottom: 0px;
+.comment-body-input {
+    width: 100%;
+    height: 30px;
 }

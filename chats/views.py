@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 from .forms import NewMessageForm, NewChatForm, AddUserToChatForm, NewPrivateMessageForm
 from user_profile.models import User
@@ -41,6 +42,11 @@ def chat(request, pk):
     online_users = see_online_users()
     chat = Chat.objects.get(pk=pk)
     messages = Message.objects.filter(chat=chat)
+
+    messages_paginator = Paginator(messages, 10)
+    page_number = request.GET.get('page')
+    page_obj = messages_paginator.get_page(page_number)
+
     if request.method == 'POST':
         form = NewMessageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -52,7 +58,11 @@ def chat(request, pk):
             redirect(request.META.get('HTTP_REFERER'))
     else:
         form = NewMessageForm()
-    return render(request, 'chat.html', {'messages': messages, 'form': form, 'online_users': online_users, 'chat': chat})
+    return render(request, 'chat.html', {'messages': messages,
+                                         'form': form,
+                                         'online_users': online_users,
+                                         'chat': chat,
+                                         'page_obj': page_obj})
 
 
 def private_messages(request, pk):
@@ -62,6 +72,10 @@ def private_messages(request, pk):
     from_user = PrivateMessage.objects.filter(from_user=request.user, to_user=receiver)
     to_user = PrivateMessage.objects.filter(to_user=request.user, from_user=receiver)
     messages = from_user.union(to_user)
+
+    messages_paginator = Paginator(messages, 10)
+    page_number = request.GET.get('page')
+    page_obj = messages_paginator.get_page(page_number)
 
     if request.method == 'POST':
         form = NewPrivateMessageForm(request.POST, request.FILES)
@@ -74,7 +88,11 @@ def private_messages(request, pk):
             redirect(request.META.get('HTTP_REFERER'))
     else:
         form = NewPrivateMessageForm()
-    return render(request, 'private_messages.html', {'online_users': online_users, 'messages': messages, 'form': form, 'receiver': receiver})
+    return render(request, 'private_messages.html', {'online_users': online_users,
+                                                     'messages': messages,
+                                                     'form': form,
+                                                     'receiver': receiver,
+                                                     'page_obj': page_obj})
 
 
 def chat_users(request, pk):

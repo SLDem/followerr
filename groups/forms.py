@@ -10,13 +10,13 @@ class NewGroupForm(forms.ModelForm):
     description = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={'class': 'group-description-input',
                                                                          'placeholder': 'Enter group description'}),
                                   label='')
-    group_avatar = forms.ImageField(required=False, label='Upload group avatar',
+    image = forms.ImageField(required=False, label='Upload group avatar',
                                     widget=forms.FileInput(attrs={'class': 'group-avatar-input',
                                                                   'placeholder': 'Add image'}))
 
     class Meta:
         model = Group
-        fields = ('title', 'description', 'group_avatar', 'is_private')
+        fields = ('title', 'description', 'image', 'is_private')
 
 
 
