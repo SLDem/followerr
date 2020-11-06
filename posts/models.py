@@ -1,6 +1,8 @@
 from django.db import models
 from user_profile.models import User
 from groups.models import Group
+from django.utils import timezone
+import datetime
 
 
 class Post(models.Model):
@@ -15,5 +17,9 @@ class Post(models.Model):
     likers = models.ManyToManyField(User, related_name='likers', blank=True)
     dislikers = models.ManyToManyField(User, related_name='dislikers', blank=True)
 
+    def __unicode__(self):
+        return self.body
+
     def get_absolute_url(self):
         return "/post_detail/%i/" % self.pk
+

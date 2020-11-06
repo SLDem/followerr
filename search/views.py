@@ -1,26 +1,6 @@
 from django.shortcuts import render
-from search.documents import PostDocument, GroupDocument, ChatDocument, PrivateMessageDocument, PhotoalbumDocument, \
+from search.documents import ChatDocument, PrivateMessageDocument, PhotoalbumDocument, \
     ImageDocument, UserDocument
-
-
-def search_posts(request):
-    q = request.GET.get('q')
-
-    if q:
-        posts = PostDocument.search().query('match', body=q)
-    else:
-        posts = ''
-    return render(request, 'search_posts.html', {'posts': posts})
-
-
-def search_groups(request):
-    q = request.GET.get('q')
-
-    if q:
-        groups = GroupDocument.search().query('match', title=q)
-    else:
-        groups = ''
-    return render(request, 'search_groups.html', {'groups': groups})
 
 
 def search_chats(request):

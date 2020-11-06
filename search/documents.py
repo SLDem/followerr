@@ -37,8 +37,8 @@ class UserDocument(Document):
         related_models = [Image]
 
     def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
+        if isinstance(related_instance, Image):
+            return related_instance.image_set.all()
 
 
 @photoalbums.doc_type

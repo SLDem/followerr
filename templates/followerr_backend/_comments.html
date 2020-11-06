@@ -42,9 +42,9 @@
                 </div>
                 <div class="posted-date">
                     {% if post %}
-                        <button data-id="{{ node.id }}" class="reply-button">Reply</button>
+                        <button data-id="{{ node.id }}" class="reply-button">&#8645;</button>
                     {% elif image %}
-                        <button data-id="{{ node.id }}" class="image-reply-button">Reply</button>
+                        <button data-id="{{ node.id }}" class="image-reply-button">&#8645;</button>
                     {% endif %}
                     <p>{{ node.date_posted | timesince }} ago.</p>
                 </div>

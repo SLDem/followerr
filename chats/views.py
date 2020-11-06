@@ -6,6 +6,7 @@ from .forms import NewMessageForm, NewChatForm, AddUserToChatForm, NewPrivateMes
 from user_profile.models import User
 from .models import Message, PrivateMessage, Chat
 from authentication.views import see_online_users
+from django.contrib.auth.decorators import login_required
 
 
 def get_users_for_private_messages(request):
@@ -18,6 +19,7 @@ def get_users_for_private_messages(request):
     return users
 
 
+@login_required
 def messages(request):
     user = request.user
     online_users = see_online_users()

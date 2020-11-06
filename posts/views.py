@@ -9,21 +9,33 @@ from groups.models import Group
 from comments.models import Comment
 from authentication.views import see_online_users
 
+from search.documents import PostDocument
+
 
 def index(request):
     online_users = see_online_users()
     user_groups = Group.objects.filter(users__id=request.user.pk)
 
+    def search_posts(request):
+        q = request.GET.get('q')
+
+        if q:
+            searched_posts = PostDocument.search().query('match', body=q)
+        else:
+            searched_posts = ''
+        return searched_posts
+
+    searched_posts = search_posts(request)
+
     if request.user.is_authenticated:
         user = request.user
-        friends_posts = Post.objects.filter(user__in=user.friends.all())
         user_posts = Post.objects.filter(user=request.user)
+        friends_posts = Post.objects.filter(user__in=user.friends.all())
         user_group_posts = Post.objects.filter(group__in=user_groups)
 
         posts = friends_posts.union(user_posts, user_group_posts)[::-1]
         posts_paginator = Paginator(posts, 5)
-        page_number = request.GET.get('page')
-        page_obj = posts_paginator.get_page(page_number)
+        page_obj = posts_paginator.get_page(request.GET.get('page'))
 
         if request.method == 'POST':
             form = NewPostForm(request.POST, request.FILES)
@@ -34,8 +46,15 @@ def index(request):
                 return redirect('index')
         else:
             form = NewPostForm(instance=None)
-        return render(request, 'index.html',
-                      {'form': form, 'posts': posts, 'online_users': online_users, 'page_obj': page_obj})
+        context = {
+            'form': form,
+            'posts': posts,
+            'searched_posts': searched_posts,
+            'online_users': online_users,
+            'page_obj': page_obj
+        }
+
+        return render(request, 'index.html', context=context)
     else:
         return redirect('login')
 
@@ -57,21 +76,11 @@ def post_detail(request, pk):
         else:
             form = NewCommentForm(instance=None)
         return render(request, 'post_detail.html', {'form': form,
-                                                    'comments': comments,
                                                     'post': post,
                                                     'online_users': online_users,
                                                     'comments': comments})
     else:
         return redirect('login')
-
-
-def delete_post(request, pk):
-    post = Post.objects.get(pk=pk)
-    if post.user.pk == request.user.pk:
-        post.delete()
-        return redirect('index')
-    else:
-        return HttpResponse('You can only delete your own posts')
 
 
 def edit_post(request, pk):
@@ -93,7 +102,7 @@ def like_post(request, pk):
         post.likers.remove(user)
         post.save()
         return redirect(request.META.get('HTTP_REFERER'))
-    elif user in post.dislikers.all() and user not in post.likers.all():
+    elif user not in post.likers.all() and user in post.dislikers.all():
         post.likers.add(user)
         post.dislikers.remove(user)
         post.save()
@@ -110,7 +119,7 @@ def dislike_post(request, pk):
         post.dislikers.remove(user)
         post.save()
         return redirect(request.META.get('HTTP_REFERER'))
-    elif user in post.likers.all() and user not in post.dislikers.all():
+    elif user not in post.dislikers.all() and user in post.likers.all():
         post.dislikers.add(user)
         post.likers.remove(user)
         post.save()
@@ -118,3 +127,12 @@ def dislike_post(request, pk):
         post.dislikers.add(user)
         post.save()
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_post(request, pk):
+    post = Post.objects.get(pk=pk)
+    if post.user.pk == request.user.pk:
+        post.delete()
+        return redirect('index')
+    else:
+        return HttpResponse('You can only delete your own posts')

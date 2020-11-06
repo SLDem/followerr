@@ -1,11 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{% url 'search_groups' %}">Search Groups</a>
+<form method="get">
+    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for groups...">
+    <button class="dark-button" type="submit">&#128269;</button>
+</form>
+
 <br>
+
+{% if searched_groups %}
+<div class="group-list" style="margin-bottom: 30px; text-align: center;">
+    {% if searched_groups %}
+    <p>Search results: </p>
+        {% for group in searched_groups %}
+            <div class="group" style="margin-bottom: 10px;">
+                <div class="group-avatar-name">
+                    {% if group.image %}
+                        <a href="{% url 'group_detail' group.id %}"><img height="50px" width="auto" src="{{ group.image }}" alt="connect"></a>
+                    {% else %}
+                        <a href="{% url 'group_detail' group.id %}"><img height="50px" width="auto" src="/media/group_avatars/group.png" alt="connect"></a>
+                    {% endif %}
+                    <a href="{% url 'group_detail' group.id %}">{{ group.title }}</a>
+                </div>
+                <div style="text-align: right;">
+                    <p>{{ group.users|length }} participants.</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
 <div class="group-list" style="margin-bottom: 30px; text-align: center;">
     <h2 style="margin-bottom: 10px;">Your groups</h2>
     <hr>
     <br>
+
     {% for group in user_groups %}
         <div class="group">
             <div class="group-avatar-name">

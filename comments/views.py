@@ -79,9 +79,5 @@ def reply_form(request, pk, parent_id):
                 return redirect('post_detail', pk=post.pk)
         else:
             form = NewCommentForm(instance=None)
-        return render(request, 'reply_form.html', {'form': form,
-                                                   'comments': comments,
-                                                   'post': post,
-                                                   'parent_id': parent_id})
     else:
         return redirect('login')

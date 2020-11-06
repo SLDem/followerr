@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
             'is_staff',
             'is_superuser',
             'user_permissions',
+            'friends',
             'blocked_users',
             'image',
             'gender',
@@ -41,6 +42,17 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ('user_permissions',)
 
 
+class PostsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'body', 'image', 'date_posted')
+    list_filter = ('body', )
+
+    # fieldsets = (
+    #     (None, {
+    #         'fields': ('body', 'image', )
+    #     }),
+    # )
+
+
 admin.site.register(User, UserAdmin)
 
 admin.site.register(Group)
@@ -49,7 +61,7 @@ admin.site.register(FriendRequest)
 
 admin.site.register(GroupJoinRequest)
 
-admin.site.register(Post)
+admin.site.register(Post, PostsAdmin)
 
 admin.site.register(Comment)
 

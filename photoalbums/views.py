@@ -143,7 +143,6 @@ def reply_form_picture(request, pk, parent_id):
             return redirect('image_detail', pk=picture.pk)
     else:
         form = NewCommentForm()
-    return render(request, 'reply_form_picture.html', {'picture': picture, 'form': form, 'parent_id': parent_id})
 
 
 def like_image(request, pk):

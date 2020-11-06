@@ -12,11 +12,24 @@ from posts.forms import NewPostForm
 from chats.forms import NewMessageForm
 from .forms import NewGroupForm, NewDiscussionForm
 
+from search.documents import GroupDocument
+
 
 def groups(request):
     user = request.user
     user_groups = Group.objects.filter(users__id=user.pk)
     all_groups = Group.objects.all()
+
+    def search_groups(request):
+        q = request.GET.get('q')
+
+        if q:
+            searched_groups = GroupDocument.search().query('match', title=q)
+        else:
+            searched_groups = ''
+        return searched_groups
+
+    searched_groups = search_groups(request)
 
     if request.method == 'POST':
         form = NewGroupForm(request.POST, request.FILES)
@@ -30,7 +43,7 @@ def groups(request):
             return redirect('group_detail', pk=new_group.pk)
     else:
         form = NewGroupForm()
-    return render(request, 'groups.html', {'all_groups': all_groups, 'user_groups': user_groups, 'form': form})
+    return render(request, 'groups.html', {'all_groups': all_groups, 'searched_groups': searched_groups, 'user_groups': user_groups, 'form': form})
 
 
 def group_detail(request, pk):

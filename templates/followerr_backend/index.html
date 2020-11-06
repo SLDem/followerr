@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <a href="{% url 'search_posts' %}">Search Posts</a>
+
     <form class="main-form" method="post" enctype="multipart/form-data">
         <div class="main-post-form-image-wrap">
             {% if request.user.image %}
@@ -24,7 +24,23 @@
         <br>
         <button class="dark-button" type="submit">Send</button>
     </form>
+
+    <br>
+    <br>
+
+    <form method="get">
+        <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for posts...">
+        <button class="dark-button" type="submit">&#128269;</button>
+    </form>
+
     <div class="posts">
+        {% if searched_posts %}
+            {% for post in searched_posts %}
+                {% include "_post_search.html" %}
+            {% endfor %}
+        <br>
+        <hr>
+        {% endif %}
         {% for post in page_obj %}
             {% include "_post.html" %}
         {% endfor %}

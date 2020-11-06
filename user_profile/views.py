@@ -13,8 +13,10 @@ from photoalbums.forms import NewImageForm
 from photoalbums.models import Photoalbum
 
 from authentication.views import see_online_users
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def profile(request, pk):
     user = User.objects.get(pk=pk)
     if request.user in user.blocked_users.all():
