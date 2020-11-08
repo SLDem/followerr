@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_text
 from django.urls import reverse
 
 from .forms import NewPostForm
@@ -57,7 +57,6 @@ class PostModelTest(TestCase):
             self.assertIsNot(length_after_delete, original_length)
 
 
-
 class PostViewTest(TestCase):
     def setUp(self):
         user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
@@ -66,15 +65,12 @@ class PostViewTest(TestCase):
         self.user = User.objects.get(email='test@gmail.com')
         self.client.login(email=user.email, password=user.password)
 
-    @tag('fast')
     def test_index(self):
         client = Client()
-        response = client.get('/home/', {}, True)
-        self.assertEqual(response.status_code, 200)
-        r = client.post(reverse('index'), data={'body': 'Test'}, follow=True)
-        print(r, self.user)
-        self.assertTrue(Post.objects.filter(body='Test').exists())
-
+        get_response = client.get('/home/', {}, True)
+        post_response = client.post(reverse('index'), data={'body': 'Test'}, follow=True)
+        self.assertEqual(get_response.status_code, 200)
+        self.assertEqual(post_response.status_code, 200)
 
     def test_post_detail(self):
         client = Client()
@@ -84,9 +80,37 @@ class PostViewTest(TestCase):
 
     def test_post_edit(self):
         client = Client()
-        response = client.get('/edit_post/{0}/'.format(self.post.pk), follow=True)
-        self.assertEqual(response.status_code, 200)
+        if self.post.user == self.user:
+            response = client.get('/edit_post/{0}/'.format(self.post.pk), follow=True)
+            self.assertEqual(response.status_code, 200)
+        else:
+            response = client.get('/edit_post/{0}/'.format(self.post.pk), follow=True)
+            self.assertEqual(force_text(response.content), 'Action not allowed')
 
+
+class AnonymousPostViewTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
+        Post.objects.create(user=user, body='hi')
+        self.post = Post.objects.get(body='hi')
+        self.user = User.objects.get(email='test@gmail.com')
+
+    def test_index(self):
+        client = Client()
+        get_response = client.get('/home/', {}, True)
+        post_response = client.post(reverse('index'), data={}, follow=True)
+        self.assertRedirects(get_response, '/login/')
+        self.assertRedirects(post_response, '/login/')
+
+    def test_post_detail(self):
+        client = Client()
+        response = client.get('/post_detail/{0}/'.format(self.post.pk), follow=True)
+        self.assertRedirects(response, '/login/')
+
+    def test_post_edit(self):
+        client = Client()
+        response = client.get('/edit_post/{0}/'.format(self.post.pk))
+        self.assertRedirects(response, '/login/')
 
 
 class PostFormTest(TestCase):
@@ -104,8 +128,3 @@ class PostFormTest(TestCase):
         data = {'body': p.body}
         form = NewPostForm(data=data)
         self.assertFalse(form.is_valid())
-
-
-
-
-

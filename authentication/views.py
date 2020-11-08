@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.core.mail import EmailMessage
 from django.contrib import messages
 
@@ -43,11 +43,12 @@ def signup(request):
                 'token': token_generator.make_token(user),
             })
             activate_url = 'http://' + domain + link
-            email_body = 'Hello ' + user.name + ' please use this link to verify your account\n' + activate_url
+            email_body = 'Hello ' + user.name + \
+                         ' please use this link to verify your account\n' + activate_url
             email = EmailMessage(
                 email_subject,
                 email_body,
-                'noreply@semicolon.com',
+                'noreply@followerr.com',
                 [user.email],
 
             )
@@ -63,15 +64,15 @@ class VerificationView(View):
         try:
             id = urlsafe_base64_decode(force_text(user_id))
             user = User.objects.get(pk=id)
-
             if not token_generator.check_token(user, token):
-                return redirect('login')
+                return HttpResponse('login failed')
             if user.is_active:
                 return redirect('login')
+            print('hi')
             user.is_active = True
             user.save()
             messages.success(request, 'Account activated successfully')
             return redirect('login')
         except Exception as ex:
-            pass
+            print(ex)
         return redirect('login')

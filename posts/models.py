@@ -1,8 +1,6 @@
 from django.db import models
 from user_profile.models import User
 from groups.models import Group
-from django.utils import timezone
-import datetime
 
 
 class Post(models.Model):
@@ -22,4 +20,3 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return "/post_detail/%i/" % self.pk
-

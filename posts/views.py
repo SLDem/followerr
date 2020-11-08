@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import NewPostForm
 from comments.forms import NewCommentForm
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+
+from .forms import NewPostForm
 
 from .models import Post
 from groups.models import Group
 from comments.models import Comment
+
 from authentication.views import see_online_users
 
 from search.documents import PostDocument
@@ -85,13 +88,17 @@ def post_detail(request, pk):
 
 def edit_post(request, pk):
     post = Post.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = NewPostForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('post_detail', pk=post.pk)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = NewPostForm(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                form.save()
+                return redirect('post_detail', pk=post.pk)
+        else:
+            form = NewPostForm(instance=post)
     else:
-        form = NewPostForm(instance=post)
+        return redirect('login')
+    form = NewPostForm(instance=post)
     return render(request, 'edit_post.html', {'form': form, 'post': post})
 
 
