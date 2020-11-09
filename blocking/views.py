@@ -5,7 +5,6 @@ from user_profile.models import User
 from friends.models import FriendRequest
 
 
-
 def block_user(request, pk):
     user = request.user
     user_to_block = User.objects.get(pk=pk)
@@ -28,7 +27,11 @@ def block_user(request, pk):
     if user_to_block in user.friends.all():
         user.friends.remove(user_to_block)
     user.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+
+    if user_to_block == user:
+        return HttpResponse("You can't block yourself")
+
+    return redirect('profile', pk=user_to_block.pk)
 
 
 def unblock_user(request, pk):
@@ -37,9 +40,9 @@ def unblock_user(request, pk):
     if user_to_unblock in user.blocked_users.all():
         user.blocked_users.remove(user_to_unblock)
         user.save()
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect('profile', pk=user_to_unblock.pk)
     else:
-        return HttpResponse('You can not unblock someone you did not block')
+        return HttpResponse('You can not unblock yourself or someone you did not block')
 
 
 def blocked_users(request):

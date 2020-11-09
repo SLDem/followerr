@@ -1,24 +1,18 @@
 from django.test import TestCase, Client
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.utils import timezone
 from django.core import mail
 
-from datetime import timedelta
-
 from .forms import SignupForm
 
-import online_users.models
 from online_users.models import OnlineUserActivity
 from posts.models import Post
 from user_profile.models import User
 
-from .utils import token_generator
+from django.utils.http import urlsafe_base64_encode
 
 from django.test import tag
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-
 
 
 class AuthenticationViewTest(TestCase):
@@ -61,7 +55,6 @@ class AuthenticationViewTest(TestCase):
         self.assertTrue(user.is_active)
         self.assertRedirects(response, '/login/')
 
-    @tag('fast')
     def test_signup_email_confirmation_fail(self):
         response = self.client.post('/signup/', data={'email': 'test1@gmail.com',
                                                       'name': 'test1',
@@ -82,13 +75,11 @@ class AuthenticationViewTest(TestCase):
         self.assertFalse(user.is_active)
         self.assertRedirects(response, '/login/')
 
-    @tag('fast')
     def test_login_fail(self):
         user = User.objects.create_user(email='test1@gmail.com', password='test1')
         self.client.post(reverse('login'), {'email': user.email, 'password': 'invalidpassword'})
         self.assertTemplateUsed('login.html')
 
-    @tag('fast')
     def test_login(self):
         self.client.post(reverse('login'), data={'email': 'test@gmail.com', 'password': 'test'})
         self.assertTemplateUsed('profile.html')
@@ -99,7 +90,34 @@ class AuthenticationFormTest(TestCase):
     def setUp(self):
         self.client = Client()
 
-    @tag('fast')
+    def test_auth_form_valid(self):
+        data = {'email': 'test1@gmail.com',
+                'password1': 'test1',
+                'password2': 'test1',
+                'name': 'test1',
+                'gender': True}
+        form = SignupForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_auth_form_email_invalid(self):
+        data = {'email': 'test1gmailcom',
+                'password1': 'test1',
+                'password2': 'test1',
+                'name': 'test1',
+                'gender': True}
+        form = SignupForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_auth_form_passwords_invalid(self):
+        data = {'email': 'test1@gmail.com',
+                'password1': 'test1',
+                'password2': 'test2',
+                'name': 'test1',
+                'gender': True}
+        form = SignupForm(data=data)
+        self.assertFalse(form.is_valid())
+
+
     def test_equal_passwords(self):
         response = self.client.post('/signup/', data={'email': 'test2@gmail.com',
                                                       'name': 'test2',
@@ -109,7 +127,6 @@ class AuthenticationFormTest(TestCase):
         self.failIf(response.context['form'].is_valid())
         self.assertEqual(len(mail.outbox), 0)
 
-    @tag('fast')
     def test_email_valid(self):
         response = self.client.post('/signup/', data={'email': 'test3com',
                                                       'name': 'test3',
