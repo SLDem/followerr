@@ -7,7 +7,6 @@ from django.core import mail
 from .forms import SignupForm
 
 from online_users.models import OnlineUserActivity
-from posts.models import Post
 from user_profile.models import User
 
 from django.utils.http import urlsafe_base64_encode
@@ -19,7 +18,6 @@ class AuthenticationViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
-        self.post = Post.objects.create(user=self.user, body='hi')
 
     def test_see_online_users(self):
         self.time = timezone.now()

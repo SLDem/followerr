@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for posts\views.py: 17%</title>
+    <title>Coverage for posts\views.py: 24%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>posts\views.py</b> :
-            <span class="pc_cov">17%</span>
+            <span class="pc_cov">24%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             103 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">17 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">86 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">25 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">78 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -116,11 +116,11 @@
     <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t64" class="pln"><span class="n"><a href="#t64">64</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t"><span class="key">def</span> <span class="nam">post_detail</span><span class="op">(</span><span class="nam">request</span><span class="op">,</span> <span class="nam">pk</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t66" class="mis show_mis"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="nam">online_users</span> <span class="op">=</span> <span class="nam">see_online_users</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t67" class="mis show_mis"><span class="n"><a href="#t67">67</a></span><span class="t">    <span class="nam">post</span> <span class="op">=</span> <span class="nam">Post</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">pk</span><span class="op">=</span><span class="nam">pk</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t68" class="mis show_mis"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">if</span> <span class="nam">request</span><span class="op">.</span><span class="nam">user</span><span class="op">.</span><span class="nam">is_authenticated</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t69" class="mis show_mis"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="nam">comments</span> <span class="op">=</span> <span class="nam">Comment</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">post</span><span class="op">=</span><span class="nam">post</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t70" class="mis show_mis"><span class="n"><a href="#t70">70</a></span><span class="t">        <span class="key">if</span> <span class="nam">request</span><span class="op">.</span><span class="nam">method</span> <span class="op">==</span> <span class="str">'POST'</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="nam">online_users</span> <span class="op">=</span> <span class="nam">see_online_users</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="run"><span class="n"><a href="#t67">67</a></span><span class="t">    <span class="nam">post</span> <span class="op">=</span> <span class="nam">Post</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">pk</span><span class="op">=</span><span class="nam">pk</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">if</span> <span class="nam">request</span><span class="op">.</span><span class="nam">user</span><span class="op">.</span><span class="nam">is_authenticated</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="run"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="nam">comments</span> <span class="op">=</span> <span class="nam">Comment</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">post</span><span class="op">=</span><span class="nam">post</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="run"><span class="n"><a href="#t70">70</a></span><span class="t">        <span class="key">if</span> <span class="nam">request</span><span class="op">.</span><span class="nam">method</span> <span class="op">==</span> <span class="str">'POST'</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t71" class="mis show_mis"><span class="n"><a href="#t71">71</a></span><span class="t">            <span class="nam">form</span> <span class="op">=</span> <span class="nam">NewCommentForm</span><span class="op">(</span><span class="nam">request</span><span class="op">.</span><span class="nam">POST</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t72" class="mis show_mis"><span class="n"><a href="#t72">72</a></span><span class="t">            <span class="key">if</span> <span class="nam">form</span><span class="op">.</span><span class="nam">is_valid</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t73" class="mis show_mis"><span class="n"><a href="#t73">73</a></span><span class="t">                <span class="nam">new_comment</span> <span class="op">=</span> <span class="nam">form</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="nam">commit</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -130,13 +130,13 @@
     <p id="t77" class="mis show_mis"><span class="n"><a href="#t77">77</a></span><span class="t">                <span class="nam">new_comment</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t78" class="mis show_mis"><span class="n"><a href="#t78">78</a></span><span class="t">                <span class="key">return</span> <span class="nam">redirect</span><span class="op">(</span><span class="str">'post_detail'</span><span class="op">,</span> <span class="nam">pk</span><span class="op">=</span><span class="nam">post</span><span class="op">.</span><span class="nam">pk</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">        <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t80" class="mis show_mis"><span class="n"><a href="#t80">80</a></span><span class="t">            <span class="nam">form</span> <span class="op">=</span> <span class="nam">NewCommentForm</span><span class="op">(</span><span class="nam">instance</span><span class="op">=</span><span class="key">None</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t81" class="mis show_mis"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="key">return</span> <span class="nam">render</span><span class="op">(</span><span class="nam">request</span><span class="op">,</span> <span class="str">'post_detail.html'</span><span class="op">,</span> <span class="op">{</span><span class="str">'form'</span><span class="op">:</span> <span class="nam">form</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="run"><span class="n"><a href="#t80">80</a></span><span class="t">            <span class="nam">form</span> <span class="op">=</span> <span class="nam">NewCommentForm</span><span class="op">(</span><span class="nam">instance</span><span class="op">=</span><span class="key">None</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t81" class="run"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="key">return</span> <span class="nam">render</span><span class="op">(</span><span class="nam">request</span><span class="op">,</span> <span class="str">'post_detail.html'</span><span class="op">,</span> <span class="op">{</span><span class="str">'form'</span><span class="op">:</span> <span class="nam">form</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t82" class="pln"><span class="n"><a href="#t82">82</a></span><span class="t">                                                    <span class="str">'post'</span><span class="op">:</span> <span class="nam">post</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">                                                    <span class="str">'online_users'</span><span class="op">:</span> <span class="nam">online_users</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t84" class="pln"><span class="n"><a href="#t84">84</a></span><span class="t">                                                    <span class="str">'comments'</span><span class="op">:</span> <span class="nam">comments</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t86" class="mis show_mis"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="key">return</span> <span class="nam">redirect</span><span class="op">(</span><span class="str">'login'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t86" class="run"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="key">return</span> <span class="nam">redirect</span><span class="op">(</span><span class="str">'login'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t88" class="pln"><span class="n"><a href="#t88">88</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t89" class="run"><span class="n"><a href="#t89">89</a></span><span class="t"><span class="key">def</span> <span class="nam">edit_post</span><span class="op">(</span><span class="nam">request</span><span class="op">,</span> <span class="nam">pk</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -201,7 +201,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3</a>,
-            created at 2020-11-06 18:52 +0200
+            created at 2020-11-10 10:24 +0200
         </p>
     </div>
 </div>

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if user in chat.users.all %}
 {% for user in users %}
     {% if user != request.user %}
         <div class="message-avatar-body">
@@ -17,13 +18,17 @@
                     {% endif %}
                     {{ user.name }}
                 </div>
-                <a href="{% url 'remove_user_from_chat' chat.pk user.pk %}"><button class="dark-button">Remove</button></a>
+                {% if request.user == chat.owner %}
+                    <a href="{% url 'remove_user_from_chat' chat.pk user.pk %}"><button class="dark-button">Remove</button></a>
+                {% endif %}
             </div>
         </div>
         <br>
     {% endif %}
 {% endfor %}
-
+{% else %}
+<p>You can only view users from your own chats</p>
+{% endif %}
 <a href="{% url 'chat' chat.pk %}">Back</a>
 
 {% endblock %}

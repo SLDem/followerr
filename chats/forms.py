@@ -40,7 +40,7 @@ class NewChatForm(forms.ModelForm):
         fields = ('title', 'image', )
 
 
-class AddUserToChatForm(forms.ModelForm):
+class AddUsersToChatForm(forms.ModelForm):
 
     class Meta:
         model = Chat
@@ -48,7 +48,7 @@ class AddUserToChatForm(forms.ModelForm):
 
     def __init__(self, queryset, *args, **kwargs):
         self.queryset = queryset
-        super(AddUserToChatForm, self).__init__(*args, **kwargs)
+        super(AddUsersToChatForm, self).__init__(*args, **kwargs)
         self.fields['users'] = forms.ModelMultipleChoiceField(queryset=self.queryset,
                                                               widget=forms.CheckboxSelectMultiple
                                                               (attrs={'class': 'add-people-to-chat-form'}),
