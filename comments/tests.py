@@ -1,18 +1,14 @@
 from django.test import TestCase, Client
 from django.utils.encoding import force_bytes
 from django.urls import reverse
-from django.utils import timezone
-from django.core import mail
 
 from .forms import NewCommentForm
 
-from online_users.models import OnlineUserActivity
 from posts.models import Post
 from user_profile.models import User
 
 from .models import Comment
 
-from django.utils.http import urlsafe_base64_encode
 
 from django.test import tag
 

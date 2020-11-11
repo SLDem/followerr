@@ -34,15 +34,19 @@ class UserDocument(Document):
             'is_staff',
             'gender',
         ]
-        related_models = [Image]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, Image):
-            return related_instance.image_set.all()
 
 
 @photoalbums.doc_type
 class ImageDocument(Document):
+    album = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'title': fields.TextField(),
+        'user': fields.ObjectField(properties={
+            'id': fields.IntegerField(),
+            'name': fields.ObjectField()
+        })
+    })
+
     class Index:
         name = 'images'
 
@@ -53,10 +57,6 @@ class ImageDocument(Document):
             'description',
             'image'
         ]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
 
 
 @photoalbums.doc_type
@@ -76,12 +76,6 @@ class PhotoalbumDocument(Document):
             'title',
             'created_at',
         ]
-        related_models = [User]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
-
 
 @private_messages.doc_type
 class PrivateMessageDocument(Document):
@@ -115,11 +109,6 @@ class PrivateMessageDocument(Document):
             'body',
             'created_at',
         ]
-        related_models = [User]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
 
 
 @chats.doc_type
@@ -141,11 +130,6 @@ class ChatDocument(Document):
             'title',
             'image',
         ]
-        related_models = [User]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
 
 
 @posts.doc_type
@@ -186,11 +170,7 @@ class PostDocument(Document):
             'date_posted'
 
         ]
-        related_models = [User, Group]
 
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
 
 
 @groups.doc_type
@@ -210,10 +190,3 @@ class GroupDocument(Document):
             'image',
 
         ]
-        related_models = [User]
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, User):
-            return related_instance.user_set.all()
-
-

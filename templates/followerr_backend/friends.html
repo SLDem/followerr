@@ -42,8 +42,8 @@
             {% if friend in online_users %}
                 <div class="friend-row">
                     <div class="friend-in-list">
-                        {% if friend.avatar %}
-                            <img height="50px" width="auto" src="{{ friend.avatar.picture.url}}" alt="connect" >
+                        {% if friend.image %}
+                            <img height="50px" width="auto" src="{{ friend.image.image.url}}" alt="connect" >
                         {% else %}
                             {% if friend.gender %}
                                 <img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg">

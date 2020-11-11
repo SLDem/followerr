@@ -53,7 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_books = models.TextField('Favourite books', max_length=3000, null=True, blank=True)
     favourite_movies = models.TextField('Favourite movies', max_length=3000, null=True, blank=True)
 
-    friends = models.ManyToManyField("User", blank=True)
+    friends = models.ManyToManyField("User", related_name='user_friends', blank=True)
     blocked_users = models.ManyToManyField("User", blank=True, related_name='blocked_by_user')
     image = models.ForeignKey("photoalbums.Image", on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -66,5 +66,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
 
 

@@ -20,9 +20,9 @@ class NewImageForm(forms.ModelForm):
                                                                      'placeholder': 'Enter a description for your image'}),
                                   label='')
 
-    picture = forms.ImageField(required=True, label='',
-                               widget=forms.FileInput(attrs={'class': 'new-picture-input'}))
+    image = forms.ImageField(required=True, label='',
+                               widget=forms.FileInput(attrs={'class': 'new-image-input'}))
 
     class Meta:
         model = Image
-        fields = ('description', 'picture')
+        fields = ('description', 'image')

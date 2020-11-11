@@ -59,7 +59,6 @@ def upload_avatar(request):
     if request.method == 'POST':
         form = NewImageForm(request.POST, request.FILES)
         if form.is_valid():
-
             photoalbum = Photoalbum.objects.filter(title='Profile pictures', user=request.user).first()
             if not photoalbum:
                 photoalbum = Photoalbum.objects.create(title='Profile pictures', user=request.user)
