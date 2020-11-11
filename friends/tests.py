@@ -67,9 +67,13 @@ class FriendsViewTests(TestCase):
 
     def test_accept_friend_request(self):
         FriendRequest.objects.create(from_user=self.user1, to_user=self.user)
-        response = self.client.get(reverse('accept_friend_request', kwargs={'pk': self.user1.pk}), follow=True)
+        self.client.get(reverse('accept_friend_request', kwargs={'pk': self.user1.pk}), follow=True)
         self.assertIn(self.user1, self.user.friends.all())
         self.assertIn(self.user, self.user1.friends.all())
+
+    def test_accept_friend_request_user_doesnt_exist(self):
+        response = self.client.get(reverse('accept_friend_request', kwargs={'pk': '10'}), follow=True)
+        self.assertIn(force_bytes('User does not exist'), response.content)
 
     def test_delete_friend_request(self):
         FriendRequest.objects.create(from_user=self.user1, to_user=self.user)

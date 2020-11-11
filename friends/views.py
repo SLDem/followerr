@@ -64,17 +64,21 @@ def cancel_friend_request(request, pk):
 
 
 def accept_friend_request(request, pk):
-    from_user = User.objects.get(pk=pk)
-    f_request = FriendRequest.objects.filter(
-        from_user=from_user,
-        to_user=request.user
-    ).first()
-    user1 = request.user
-    user2 = from_user
-    user1.friends.add(user2)
-    user2.friends.add(user1)
-    f_request.delete()
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    try:
+        from_user = User.objects.get(pk=pk)
+        f_request = FriendRequest.objects.filter(
+            from_user=from_user,
+            to_user=request.user
+        ).first()
+        user1 = request.user
+        user2 = from_user
+        user1.friends.add(user2)
+        user2.friends.add(user1)
+        f_request.delete()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    except Exception:
+        pass
+    return HttpResponse('User does not exist')
 
 
 def delete_friend_request(request, pk):

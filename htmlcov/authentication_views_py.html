@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for authentication\views.py: 34%</title>
+    <title>Coverage for authentication\views.py: 29%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>authentication\views.py</b> :
-            <span class="pc_cov">34%</span>
+            <span class="pc_cov">29%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             56 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">19 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">37 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">16 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">40 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -69,9 +69,9 @@
     <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t17" class="pln"><span class="n"><a href="#t17">17</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t"><span class="key">def</span> <span class="nam">see_online_users</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t19" class="run"><span class="n"><a href="#t19">19</a></span><span class="t">    <span class="nam">user_status</span> <span class="op">=</span> <span class="nam">online_users</span><span class="op">.</span><span class="nam">models</span><span class="op">.</span><span class="nam">OnlineUserActivity</span><span class="op">.</span><span class="nam">get_user_activities</span><span class="op">(</span><span class="nam">timedelta</span><span class="op">(</span><span class="nam">seconds</span><span class="op">=</span><span class="num">300</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t20" class="run"><span class="n"><a href="#t20">20</a></span><span class="t">    <span class="nam">users</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="op">(</span><span class="nam">user</span><span class="op">.</span><span class="nam">user</span> <span class="key">for</span> <span class="nam">user</span> <span class="key">in</span> <span class="nam">user_status</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t">    <span class="key">return</span> <span class="nam">users</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t19" class="mis show_mis"><span class="n"><a href="#t19">19</a></span><span class="t">    <span class="nam">user_status</span> <span class="op">=</span> <span class="nam">online_users</span><span class="op">.</span><span class="nam">models</span><span class="op">.</span><span class="nam">OnlineUserActivity</span><span class="op">.</span><span class="nam">get_user_activities</span><span class="op">(</span><span class="nam">timedelta</span><span class="op">(</span><span class="nam">seconds</span><span class="op">=</span><span class="num">300</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="mis show_mis"><span class="n"><a href="#t20">20</a></span><span class="t">    <span class="nam">users</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="op">(</span><span class="nam">user</span><span class="op">.</span><span class="nam">user</span> <span class="key">for</span> <span class="nam">user</span> <span class="key">in</span> <span class="nam">user_status</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="mis show_mis"><span class="n"><a href="#t21">21</a></span><span class="t">    <span class="key">return</span> <span class="nam">users</span>&nbsp;</span><span class="r"></span></p>
     <p id="t22" class="pln"><span class="n"><a href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t23" class="pln"><span class="n"><a href="#t23">23</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t24" class="run"><span class="n"><a href="#t24">24</a></span><span class="t"><span class="key">def</span> <span class="nam">signup</span><span class="op">(</span><span class="nam">request</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -134,7 +134,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3</a>,
-            created at 2020-11-11 15:07 +0200
+            created at 2020-11-11 20:09 +0200
         </p>
     </div>
 </div>
