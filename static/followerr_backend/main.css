@@ -82,15 +82,15 @@ body {
 .dark-button {
     padding: 5px;
     background-color: white;
-    border: 3px solid #442E94;
+    border: 3px solid #404040;
     border-radius: 5px;
-    color: #442E94;
+    color: #404040;
     cursor: pointer;
     outline: none;
 }
 
 .dark-button:hover {
-    background-color: #E9D9FC;
+    background-color: #E3E3E3;
 }
 
 .dep-container {

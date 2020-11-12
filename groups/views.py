@@ -54,13 +54,16 @@ def group_detail(request, pk):
         users = User.objects.filter(id__in=group.users.all())[:4]
         discussions = Discussion.objects.filter(group=group)[:3]
 
-        button_status = 'none'
-        if user not in group.users.all():
-            button_status = 'not_in_group'
-            if len(GroupJoinRequest.objects.filter(from_user=request.user, to_group=group)) == 1:
-                button_status = 'group_join_request_sent'
-        if user in request.user.friends.all():
-            button_status = 'joined'
+        if group.is_private:
+            button_status = 'none'
+            if user not in group.users.all():
+                button_status = 'not_in_group'
+                if len(GroupJoinRequest.objects.filter(from_user=request.user, to_group=group)) == 1:
+                    button_status = 'group_join_request_sent'
+            if user in group.users.all():
+                button_status = 'joined'
+        else:
+            button_status = 'none'
 
         if request.method == 'POST':
             if request.user in group.owners.all() or request.user == group.admin:
@@ -160,13 +163,10 @@ def join_or_leave_group(request, pk):
         if user in group.users.all():
             if user in group.owners.all():
                 group.owners.remove(user)
-                group.save()
             group.users.remove(user)
-            group.save()
         else:
             if not group.is_private:
                 group.users.add(user)
-                group.save()
             else:
                 return HttpResponse('This group is private')
         if user == group.admin:
@@ -293,13 +293,15 @@ def remove_user_from_group(request, pk, user_pk):
         if request.user == group.admin:
             if user_to_remove in group.owners.all():
                 group.owners.remove(user_to_remove)
-            group.users.remove(user_to_remove)
+                group.users.remove(user_to_remove)
+            else:
+                group.users.remove(user_to_remove)
+                return redirect(request.META.get('HTTP_REFERER', '/'))
         elif request.user in group.owners.all():
             if user_to_remove in group.owners.all() or user_to_remove == group.admin:
                 return HttpResponse('You can not remove other owners or admin')
             else:
                 group.users.remove(user_to_remove)
-                group.save()
                 return redirect(request.META.get('HTTP_REFERER', '/'))
         else:
             return HttpResponse('You can only remove users from your own groups')

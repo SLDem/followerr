@@ -1,8 +1,6 @@
-from django.test import TestCase, Client, tag
+from django.test import TestCase, Client
 from django.utils.encoding import force_bytes
 from django.urls import reverse
-
-from django.core.management import call_command
 
 from .models import Group, GroupJoinRequest, Discussion
 from .forms import NewDiscussionForm, NewGroupForm
@@ -51,7 +49,6 @@ class GroupsModelsTest(TestCase):
         self.assertEqual(len(GroupJoinRequest.objects.filter(from_user=self.user, to_group=self.group1)), 0)
 
 
-#add search groups tests
 class GroupsViewsTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(email='test@gmail.com', name='test', password='test')
@@ -173,7 +170,8 @@ class GroupsViewsTest(TestCase):
     def test_discussion_post_new_message_user_not_in_group(self):
         data = {'body': 'test_message'}
         response = self.client.post(reverse('discussion', kwargs={'pk': self.discussion1.pk}), data=data, follow=True)
-        self.assertIn(force_bytes('You must be a member of the group to post messages in this discussion'), response.content)
+        self.assertIn(force_bytes('You must be a member of the group to post messages in this discussion'),
+                      response.content)
 
     def test_remove_discussion(self):
         self.client.get(reverse('remove_discussion', kwargs={'pk': self.discussion.pk}), follow=True)
@@ -181,7 +179,8 @@ class GroupsViewsTest(TestCase):
 
     def test_remove_discussion_not_author_or_group_admin(self):
         response = self.client.get(reverse('remove_discussion', kwargs={'pk': self.discussion1.pk}), follow=True)
-        self.assertIn(force_bytes('You can not remove this discussion unless you are its author or group admin.'), response.content)
+        self.assertIn(force_bytes('You can not remove this discussion unless you are its author or group admin.'),
+                      response.content)
 
     def test_remove_discussion_doesnt_exist(self):
         response = self.client.get(reverse('remove_discussion', kwargs={'pk': '10'}), follow=True)
@@ -195,9 +194,34 @@ class GroupsViewsTest(TestCase):
         self.client.get(reverse('join_or_leave_group', kwargs={'pk': self.group2.pk}), follow=True)
         self.assertNotIn(self.user, self.group2.users.all())
 
+    def test_join_or_leave_group_owner_leaves(self):
+        self.client.logout()
+        self.client.force_login(self.user1)
+        self.client.get(reverse('join_or_leave_group', kwargs={'pk': self.group.pk}), follow=True)
+        self.assertNotIn(self.user1, self.group.users.all())
+        self.assertNotIn(self.user1, self.group.owners.all())
+
+    def test_join_or_leave_private_group(self):
+        response = self.client.get(reverse('join_or_leave_group', kwargs={'pk': self.group3.pk}), follow=True)
+        self.assertIn(force_bytes('This group is private'), response.content)
+
+    def test_join_or_leave_group_admin_leaves(self):
+        response = self.client.get(reverse('join_or_leave_group', kwargs={'pk': self.group.pk}), follow=True)
+        self.assertIn(force_bytes('You can not leave your own group, you must delete it'), response.content)
+
     def test_join_or_leave_group_group_doesnt_exist(self):
         response = self.client.get(reverse('join_or_leave_group', kwargs={'pk': '10'}), follow=True)
         self.assertIn(force_bytes('Group does not exist'), response.content)
+
+    def test_group_join_request_button_status(self):
+        GroupJoinRequest.objects.create(from_user=self.user, to_group=self.group3)
+        response = self.client.get(reverse('group_detail', kwargs={'pk': self.group3.pk}), follow=True)
+        self.assertIn(force_bytes('Cancel Join Request'), response.content)
+
+    def test_private_group_leave_button_status(self):
+        self.group3.users.add(self.user)
+        response = self.client.get(reverse('group_detail', kwargs={'pk': self.group3.pk}), follow=True)
+        self.assertIn(force_bytes('Leave'), response.content)
 
     def test_send_group_join_request(self):
         self.client.get(reverse('send_group_request', kwargs={'pk': self.group3.pk}), follow=True)
@@ -233,63 +257,65 @@ class GroupsViewsTest(TestCase):
         GroupJoinRequest.objects.create(from_user=self.user, to_group=self.group3)
         self.client.logout()
         self.client.force_login(self.user1)
-        self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user.pk}), follow=True)
+        self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user.pk}),
+                        follow=True)
         self.assertIn(self.user, self.group3.users.all())
 
     def test_accept_group_request_no_permission(self):
-        response = self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user1.pk}), follow=True)
+        response = self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk,
+                                                                           'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('Action not allowed'), response.content)
 
     def test_accept_group_request_group_does_not_exist(self):
         response = self.client.get(reverse('accept_group_request', kwargs={'pk': '10', 'user_pk': self.user1.pk}),
-                        follow=True)
+                                   follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_accept_group_request_request_does_not_exist(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user2.pk}),
-                        follow=True)
+        response = self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk,
+                                                                           'user_pk': self.user2.pk}), follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_accept_group_request_user_does_not_exist(self):
         self.client.logout()
         self.client.force_login(self.user1)
         response = self.client.get(reverse('accept_group_request', kwargs={'pk': self.group3.pk, 'user_pk': '10'}),
-                        follow=True)
+                                   follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_delete_group_request(self):
         self.client.logout()
         self.client.force_login(self.user1)
         self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user1.pk}),
-                                   follow=True)
+                        follow=True)
         self.assertEqual(len(GroupJoinRequest.objects.filter(from_user=self.user1, to_group=self.group3)), 0)
 
     def test_delete_group_request_no_permission(self):
-        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user1.pk}),
-                        follow=True)
+        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk,
+                                                                           'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('Action not allowed'), response.content)
 
     def test_delete_group_request_group_does_not_exist(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('delete_group_request', kwargs={'pk': '10', 'user_pk': self.user1.pk}),
-                        follow=True)
+        response = self.client.get(reverse('delete_group_request', kwargs={'pk': '10',
+                                                                           'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_delete_group_request_request_does_not_exist(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk, 'user_pk': self.user2.pk}),
-                        follow=True)
+        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk,
+                                                                           'user_pk': self.user2.pk}), follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_delete_group_request_user_does_not_exist(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk, 'user_pk': '10'}),
-                        follow=True)
+        response = self.client.get(reverse('delete_group_request', kwargs={'pk': self.group3.pk,
+                                                                           'user_pk': '10'}), follow=True)
         self.assertIn(force_bytes('Group, user or join request does not exist'), response.content)
 
     def test_group_management_view(self):
@@ -333,53 +359,70 @@ class GroupsViewsTest(TestCase):
         self.assertTemplateUsed(response, 'group_users.html')
 
     def test_remove_user_from_group(self):
-        self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user2.pk}), follow=True)
+        self.client.get(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                  'user_pk': self.user2.pk}), follow=True)
         self.assertNotIn(self.user2, self.group.users.all())
 
+    def test_remove_user_from_group_owner_removing(self):
+        self.client.logout()
+        self.client.force_login(self.user1)
+        self.client.get(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                  'user_pk': self.user4.pk}), follow=True)
+        self.assertNotIn(self.user4, self.group.users.all())
+
     def test_remove_user_from_group_group_doesnt_exist(self):
-        response = self.client.get(reverse('remove_user_from_group', kwargs={'pk': '10', 'user_pk': self.user4.pk}), follow=True)
+        response = self.client.get(reverse('remove_user_from_group', kwargs={'pk': '10',
+                                                                             'user_pk': self.user4.pk}), follow=True)
         self.assertIn(force_bytes('Group or user does not exist'), response.content)
 
     def test_remove_user_from_group_user_doesnt_exist(self):
-        response = self.client.get(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': '10'}), follow=True)
+        response = self.client.get(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                             'user_pk': '10'}), follow=True)
         self.assertIn(force_bytes('Group or user does not exist'), response.content)
 
     def test_remove_user_from_group_remove_user_current_user_is_user(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user4.pk}), follow=True)
+        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                              'user_pk': self.user4.pk}), follow=True)
         self.assertIn(force_bytes('You can only remove users from your own groups'), response.content)
 
     def test_remove_user_from_group_remove_admin_current_user_is_user(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}), follow=True)
+        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                              'user_pk': self.user.pk}), follow=True)
         self.assertIn(force_bytes('You can only remove users from your own groups'), response.content)
 
     def test_remove_user_from_group_remove_user_current_user_is_owner(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}), follow=True)
+        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                              'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('You can only remove users from your own groups'), response.content)
 
     def test_remove_user_from_group_remove_owner_current_user_is_owner(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user3.pk}), follow=True)
+        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                              'user_pk': self.user3.pk}), follow=True)
         self.assertIn(force_bytes('You can not remove other owners or admin'), response.content)
 
     def test_remove_user_from_group_remove_admin_current_user_is_owner(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}), follow=True)
+        response = self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                              'user_pk': self.user.pk}), follow=True)
         self.assertIn(force_bytes('You can not remove other owners or admin'), response.content)
 
     def test_remove_user_from_group_remove_owner_current_user_is_admin(self):
-        self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}), follow=True)
+        self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user1.pk}), follow=True)
         self.assertNotIn(self.user1, self.group.users.all())
 
     def test_remove_user_from_group_remove_user_current_user_is_admin(self):
-        self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk, 'user_pk': self.user2.pk}), follow=True)
+        self.client.post(reverse('remove_user_from_group', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user2.pk}), follow=True)
         self.assertNotIn(self.user2, self.group.users.all())
 
     def test_delete_group_user_is_admin(self):
@@ -405,37 +448,43 @@ class GroupsViewsTest(TestCase):
     def test_make_owner_user_making_user(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user4.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user4.pk}), follow=True)
         self.assertIn(force_bytes('Action not allowed'), response.content)
 
     def test_make_owner_user_making_owner(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user2.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user2.pk}), follow=True)
         self.assertIn(force_bytes('Action not allowed'), response.content)
 
     def test_make_owner_user_making_admin(self):
         self.client.logout()
         self.client.force_login(self.user2)
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('Action not allowed'), response.content)
 
     def test_make_owner_owner_making_user(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user4.pk}), follow=True)
+        self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                      'user_pk': self.user4.pk}), follow=True)
         self.assertIn(self.user4, self.group.users.all())
 
     def test_make_owner_owner_making_owner(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user3.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user3.pk}), follow=True)
         self.assertIn(force_bytes('User already listed as owner of the group'), response.content)
 
     def test_make_owner_owner_making_admin(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user.pk}), follow=True)
         self.assertIn(force_bytes('User already listed as owner of the group'), response.content)
 
     def test_make_owner_admin_making_user(self):
@@ -443,7 +492,8 @@ class GroupsViewsTest(TestCase):
         self.assertIn(self.user4, self.group.users.all())
 
     def test_make_owner_admin_making_owner(self):
-        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}), follow=True)
+        response = self.client.get(reverse('make_owner', kwargs={'pk': self.group.pk,
+                                                                 'user_pk': self.user1.pk}), follow=True)
         self.assertIn(force_bytes('User already listed as owner of the group'), response.content)
 
     def test_remove_owner_group_or_user_doesnt_exist(self):
@@ -455,33 +505,48 @@ class GroupsViewsTest(TestCase):
     def test_remove_owner_user_removing(self):
         self.client.logout()
         self.client.force_login(self.user4)
-        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user2.pk}), follow=True)
-        response1 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}),follow=True)
-        response2 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}),follow=True)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response.content)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response1.content)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response2.content)
+        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user2.pk}), follow=True)
+        response1 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                    'user_pk': self.user1.pk}), follow=True)
+        response2 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                    'user_pk': self.user.pk}), follow=True)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response.content)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response1.content)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response2.content)
 
     def test_remove_owner_owner_removing(self):
         self.client.logout()
         self.client.force_login(self.user1)
-        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user4.pk}), follow=True)
-        response1 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user3.pk}),follow=True)
-        response2 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}),follow=True)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response.content)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response1.content)
-        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'), response2.content)
+        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user4.pk}), follow=True)
+        response1 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                    'user_pk': self.user3.pk}), follow=True)
+        response2 = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                    'user_pk': self.user.pk}), follow=True)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response.content)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response1.content)
+        self.assertIn(force_bytes('You cant perform this action unless you are the admin of this group'),
+                      response2.content)
 
     def test_remove_owner_admin_removing_user(self):
-        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user4.pk}), follow=True)
+        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user4.pk}), follow=True)
         self.assertIn(force_bytes('This user is not the owner of the group'), response.content)
 
     def test_remove_owner_admin_removing_owner(self):
-        self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user1.pk}), follow=True)
+        self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                        'user_pk': self.user1.pk}), follow=True)
         self.assertNotIn(self.user1, self.group.owners.all())
 
     def test_remove_owner_admin_removing_admin(self):
-        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk, 'user_pk': self.user.pk}), follow=True)
+        response = self.client.get(reverse('remove_owner', kwargs={'pk': self.group.pk,
+                                                                   'user_pk': self.user.pk}), follow=True)
         self.assertIn(force_bytes('You cant remove your own owner rights'), response.content)
 
 
@@ -520,4 +585,3 @@ class GroupsFormsTest(TestCase):
         data = {'title': 'test_discussion', 'description': '', 'author': self.user}
         form = NewDiscussionForm(data=data)
         self.assertFalse(form.is_valid())
-
