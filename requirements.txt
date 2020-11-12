@@ -3,3 +3,5 @@ django-emoji-picker==0.0.6
 django-mptt==0.11.0
 django-social-share==2.1.0
 django-social-widgets==0.4.0
+mock~=4.0.2
+six~=1.15.0

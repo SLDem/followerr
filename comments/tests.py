@@ -50,7 +50,7 @@ class CommentsViewTest(TestCase):
     def test_reply_form_with_no_parent(self):
         data = {'body': 'test comment with parent'}
         self.client.post(reverse('reply_form', kwargs={'pk': self.post.pk, 'parent_id': self.comment.pk}),
-                                    data=data, follow=True)
+                         data=data, follow=True)
         self.assertTrue(isinstance(Comment.objects.filter(body='test comment with parent').first(), Comment))
 
     def test_reply_form_with_parent_fail_no_post(self):
