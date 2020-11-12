@@ -6,6 +6,7 @@ from .forms import NewPostForm
 
 from .models import Post
 from user_profile.models import User
+from comments.models import Comment
 
 from django.test import tag
 
@@ -22,96 +23,150 @@ class PostModelTest(TestCase):
         self.assertTrue(isinstance(self.post, Post))
         self.assertEqual(self.post.__unicode__(), self.post.body)
 
-    def test_like_post(self):
-        self.post.likers.add(self.user)
-        if self.user in self.post.likers.all():
-            self.post.likers.remove(self.user)
-            self.assertNotIn(self.user, self.post.likers.all())
-        elif self.user not in self.post.likers.all() and self.user in self.post.dislikers.all():
-            self.post.likers.add(self.user)
-            self.post.dislikers.remove(self.user)
-            self.assertIn(self.user, self.post.likers.all())
-        else:
-            self.post.likers.add(self.user)
-            self.assertIn(self.user, self.post.likers.all())
+    def test_post_deletion(self):
+        self.post.delete()
+        self.assertEqual(len(Post.objects.filter(body='hi')), 0)
 
-    def test_dislike_post(self):
-        self.post.dislikers.add(self.user)
-        if self.user in self.post.dislikers.all():
-            self.post.dislikers.remove(self.user)
-            self.assertNotIn(self.user, self.post.dislikers.all())
-        elif self.user not in self.post.dislikers.all() and self.user in self.post.likers.all():
-            self.post.dislikers.add(self.user)
-            self.post.likers.remove(self.user)
-            self.assertIn(self.user, self.post.dislikers.all())
-        else:
-            self.post.dislikers.add(self.user)
-            self.assertIn(self.user, self.post.dislikers.all())
-
-    def test_delete_post(self):
-        post_to_delete = Post.objects.create(user=self.user, body='delete me')
-        original_length = Post.objects.all().count()
-        if self.user == post_to_delete.user:
-            Post.objects.filter(body='delete me').delete()
-            length_after_delete = Post.objects.all().count()
-            self.assertIsNot(length_after_delete, original_length)
+    def test_post_get_absolute_url(self):
+        url = self.post.get_absolute_url()
+        self.assertEqual(url, '/post_detail/1/')
 
 
 class PostViewTest(TestCase):
     def setUp(self):
-        user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
-        Post.objects.create(user=user, body='hi')
-        self.post = Post.objects.get(body='hi')
-        self.user = User.objects.get(email='test@gmail.com')
-        self.client.login(email=user.email, password=user.password)
+        self.client = Client()
+        self.user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
+        self.user1 = User.objects.create_user(email='test1@gmail.com', password='test1', name='test1')
+
+        self.post = Post.objects.create(user=self.user, body='hi')
+        self.post1 = Post.objects.create(user=self.user, body='hi hello')
+        self.post2 = Post.objects.create(user=self.user, body='hello hello')
+
+        self.client.force_login(self.user)
 
     def test_index(self):
-        client = Client()
-        get_response = client.get('/home/', {}, True)
-        post_response = client.post(reverse('index'), data={'body': 'Test'}, follow=True)
-        self.assertEqual(get_response.status_code, 200)
-        self.assertEqual(post_response.status_code, 200)
+        response = self.client.get('/home/', {}, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('index.html')
+
+    def test_index_logged_out(self):
+        self.client.logout()
+        response = self.client.get('/home/', {}, True)
+        self.assertRedirects(response, reverse('login'))
+
+    def test_index_add_post(self):
+        self.client.post(reverse('index'), data={'body': 'Test'}, follow=True)
+        self.assertEqual(len(Post.objects.filter(body='Test')), 1)
+
+    def test_index_search(self):
+        response = self.client.get('/?q=hi')
+        self.assertIn(force_bytes('hi'), response.content)
+        self.assertIn(force_bytes('hi hello'), response.content)
 
     def test_post_detail(self):
-        client = Client()
-        response = client.get('/post_detail/{0}/'.format(self.post.pk), follow=True)
+        response = self.client.get('/post_detail/{0}/'.format(self.post.pk), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn(force_bytes(self.post.body), response.content)
 
-    def test_post_edit(self):
-        client = Client()
-        if self.post.user == self.user:
-            response = client.get('/edit_post/{0}/'.format(self.post.pk), follow=True)
-            self.assertEqual(response.status_code, 200)
-        else:
-            response = client.get('/edit_post/{0}/'.format(self.post.pk), follow=True)
-            self.assertEqual(force_text(response.content), 'Action not allowed')
+    def test_post_detail_logged_out(self):
+        self.client.logout()
+        response = self.client.get('/post_detail/{0}/'.format(self.post.pk), follow=True)
+        self.assertRedirects(response, reverse('login'))
 
+    def test_post_detail_post_comment(self):
+        data = {'body': 'test_comment'}
+        self.client.post(reverse('post_detail', kwargs={'pk': self.post.pk}), data=data)
+        self.assertEqual(len(Comment.objects.filter(body='test_comment')), 1)
 
-class AnonymousPostViewTest(TestCase):
-    def setUp(self):
-        user = User.objects.create_user(email='test@gmail.com', password='test', name='test')
-        Post.objects.create(user=user, body='hi')
-        self.post = Post.objects.get(body='hi')
-        self.user = User.objects.get(email='test@gmail.com')
+    def test_post_detail_post_doesnt_exist(self):
+        response = self.client.get(reverse('post_detail', kwargs={'pk': '10'}), follow=True)
+        self.assertIn(force_bytes('Post does not exist'), response.content)
 
-    def test_index(self):
-        client = Client()
-        get_response = client.get('/home/', {}, True)
-        post_response = client.post(reverse('index'), data={}, follow=True)
-        self.assertRedirects(get_response, '/login/')
-        self.assertRedirects(post_response, '/login/')
+    def test_edit_post(self):
+        response = self.client.get(reverse('edit_post', kwargs={'pk': self.post.pk}), follow=True)
+        self.assertEqual(response.status_code, 200)
 
-    def test_post_detail(self):
-        client = Client()
-        response = client.get('/post_detail/{0}/'.format(self.post.pk), follow=True)
-        self.assertRedirects(response, '/login/')
+    def test_edit_post_post_request(self):
+        data = {'body': 'test_edit'}
+        self.client.post(reverse('edit_post', kwargs={'pk': self.post.pk}), data=data, follow=True)
+        self.assertEqual(len(Post.objects.filter(body='test_edit')), 1)
 
-    def test_post_edit(self):
-        client = Client()
-        response = client.get('/edit_post/{0}/'.format(self.post.pk))
-        self.assertRedirects(response, '/login/')
+    def test_edit_post_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('edit_post', kwargs={'pk': self.post.pk}))
+        self.assertRedirects(response, reverse('login'))
 
+    def test_edit_post_not_owner(self):
+        self.client.logout()
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('edit_post', kwargs={'pk': self.post.pk}), follow=True)
+        self.assertIn(force_bytes('Action not allowed'), response.content)
+
+    def test_edit_post_doesnt_exist(self):
+        response = self.client.get(reverse('edit_post', kwargs={'pk': '10'}), follow=True)
+        self.assertIn(force_bytes('Post does not exist'), response.content)
+
+    def test_post_edit_fail(self):
+        response = self.client.get('/edit_post/{0}/'.format('10'), follow=True)
+        self.assertIn(force_bytes('Post does not exist'), response.content)
+
+    def test_like_post(self):
+        self.client.get(reverse('like_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.likers.all())
+
+        self.client.get(reverse('like_post', kwargs={'pk': self.post.pk}))
+        self.assertNotIn(self.user, self.post.likers.all())
+        self.assertNotIn(self.user, self.post.dislikers.all())
+
+        self.client.get(reverse('like_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.likers.all())
+        self.assertNotIn(self.user, self.post.dislikers.all())
+
+        self.post.dislikers.add(self.user)
+        self.post.likers.remove(self.user)
+        self.client.get(reverse('like_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.likers.all())
+        self.assertNotIn(self.user, self.post.dislikers.all())
+
+    def test_like_post_fail(self):
+        response = self.client.get(reverse('like_post', kwargs={'pk': '10'}))
+        self.assertIn(force_bytes('Post does not exist'), response.content)
+
+    def test_dislike_post(self):
+        self.client.get(reverse('dislike_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.dislikers.all())
+
+        self.client.get(reverse('dislike_post', kwargs={'pk': self.post.pk}))
+        self.assertNotIn(self.user, self.post.dislikers.all())
+        self.assertNotIn(self.user, self.post.likers.all())
+
+        self.client.get(reverse('dislike_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.dislikers.all())
+        self.assertNotIn(self.user, self.post.likers.all())
+
+        self.post.likers.add(self.user)
+        self.post.dislikers.remove(self.user)
+        self.client.get(reverse('dislike_post', kwargs={'pk': self.post.pk}))
+        self.assertIn(self.user, self.post.dislikers.all())
+        self.assertNotIn(self.user, self.post.likers.all())
+
+    def test_dislike_post_fail(self):
+        response = self.client.get(reverse('dislike_post', kwargs={'pk': '10'}))
+        self.assertIn(force_bytes('Post does not exist'), response.content)
+
+    def test_delete_post(self):
+        self.client.get(reverse('delete_post', kwargs={'pk': self.post.pk}), follow=True)
+        self.assertEqual(len(Post.objects.filter(body='hi')), 0)
+
+    def test_delete_post_not_owner(self):
+        self.client.logout()
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('delete_post', kwargs={'pk': self.post.pk}), follow=True)
+        self.assertIn(force_bytes('You can only delete your own posts'), response.content)
+
+    def test_delete_post_doesnt_exist(self):
+        response = self.client.get(reverse('delete_post', kwargs={'pk': '10'}), follow=True)
+        self.assertIn(force_bytes('Post does not exist'), response.content)
 
 class PostFormTest(TestCase):
     def setUp(self):

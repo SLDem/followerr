@@ -63,83 +63,106 @@ def index(request):
 
 
 def post_detail(request, pk):
-    online_users = see_online_users()
-    post = Post.objects.get(pk=pk)
-    if request.user.is_authenticated:
-        comments = Comment.objects.filter(post=post)
-        if request.method == 'POST':
-            form = NewCommentForm(request.POST)
-            if form.is_valid():
-                new_comment = form.save(commit=False)
-                new_comment.user = request.user
-                new_comment.parent_id = request.POST.get("parent_id")
-                new_comment.post = post
-                new_comment.save()
-                return redirect('post_detail', pk=post.pk)
+    try:
+        online_users = see_online_users()
+        post = Post.objects.get(pk=pk)
+        if request.user.is_authenticated:
+            comments = Comment.objects.filter(post=post)
+            if request.method == 'POST':
+                form = NewCommentForm(request.POST)
+                if form.is_valid():
+                    new_comment = form.save(commit=False)
+                    new_comment.user = request.user
+                    new_comment.parent_id = request.POST.get("parent_id")
+                    new_comment.post = post
+                    new_comment.save()
+                    return redirect('post_detail', pk=post.pk)
+            else:
+                form = NewCommentForm(instance=None)
+            return render(request, 'post_detail.html', {'form': form,
+                                                        'post': post,
+                                                        'online_users': online_users,
+                                                        'comments': comments})
         else:
-            form = NewCommentForm(instance=None)
-        return render(request, 'post_detail.html', {'form': form,
-                                                    'post': post,
-                                                    'online_users': online_users,
-                                                    'comments': comments})
-    else:
-        return redirect('login')
+            return redirect('login')
+    except Exception as ex:
+        pass
+    return HttpResponse('Post does not exist')
 
 
 def edit_post(request, pk):
-    post = Post.objects.get(pk=pk)
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = NewPostForm(request.POST, request.FILES, instance=post)
-            if form.is_valid():
-                form.save()
-                return redirect('post_detail', pk=post.pk)
+    try:
+        post = Post.objects.get(pk=pk)
+        if request.user.is_authenticated:
+            if request.user == post.user:
+                if request.method == 'POST':
+                    form = NewPostForm(request.POST, request.FILES, instance=post)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('post_detail', pk=post.pk)
+                else:
+                    form = NewPostForm(instance=post)
+            else:
+                return HttpResponse('Action not allowed')
         else:
-            form = NewPostForm(instance=post)
-    else:
-        return redirect('login')
-    form = NewPostForm(instance=post)
-    return render(request, 'edit_post.html', {'form': form, 'post': post})
+            return redirect('login')
+        form = NewPostForm(instance=post)
+        return render(request, 'edit_post.html', {'form': form, 'post': post})
+    except Exception:
+        pass
+    return HttpResponse('Post does not exist')
 
 
 def like_post(request, pk):
-    user = request.user
-    post = Post.objects.get(pk=pk)
-    if user in post.likers.all():
-        post.likers.remove(user)
-        post.save()
+    try:
+        user = request.user
+        post = Post.objects.get(pk=pk)
+        if user in post.likers.all():
+            post.likers.remove(user)
+            post.save()
+            return redirect(request.META.get('HTTP_REFERER'))
+        elif user not in post.likers.all() and user in post.dislikers.all():
+            post.likers.add(user)
+            post.dislikers.remove(user)
+            post.save()
+        else:
+            post.likers.add(user)
+            post.save()
         return redirect(request.META.get('HTTP_REFERER'))
-    elif user not in post.likers.all() and user in post.dislikers.all():
-        post.likers.add(user)
-        post.dislikers.remove(user)
-        post.save()
-    else:
-        post.likers.add(user)
-        post.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+    except Exception:
+        pass
+    return HttpResponse('Post does not exist')
 
 
 def dislike_post(request, pk):
-    user = request.user
-    post = Post.objects.get(pk=pk)
-    if request.user in post.dislikers.all():
-        post.dislikers.remove(user)
-        post.save()
+    try:
+        user = request.user
+        post = Post.objects.get(pk=pk)
+        if request.user in post.dislikers.all():
+            post.dislikers.remove(user)
+            post.save()
+            return redirect(request.META.get('HTTP_REFERER'))
+        elif user not in post.dislikers.all() and user in post.likers.all():
+            post.dislikers.add(user)
+            post.likers.remove(user)
+            post.save()
+        else:
+            post.dislikers.add(user)
+            post.save()
         return redirect(request.META.get('HTTP_REFERER'))
-    elif user not in post.dislikers.all() and user in post.likers.all():
-        post.dislikers.add(user)
-        post.likers.remove(user)
-        post.save()
-    else:
-        post.dislikers.add(user)
-        post.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+    except Exception:
+        pass
+    return HttpResponse('Post does not exist')
 
 
 def delete_post(request, pk):
-    post = Post.objects.get(pk=pk)
-    if post.user.pk == request.user.pk:
-        post.delete()
-        return redirect('index')
-    else:
-        return HttpResponse('You can only delete your own posts')
+    try:
+        post = Post.objects.get(pk=pk)
+        if post.user.pk == request.user.pk:
+            post.delete()
+            return redirect('index')
+        else:
+            return HttpResponse('You can only delete your own posts')
+    except Exception:
+        pass
+    return HttpResponse('Post does not exist')
