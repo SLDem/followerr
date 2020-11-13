@@ -40,6 +40,7 @@ class PhotoalbumsModelTests(TestCase):
                              image=SimpleUploadedFile(name='test_image.jpg', content=open(test_image_path, 'rb').read(),
                                                       content_type='image/jpg'))
         self.assertEqual(len(Image.objects.filter(description='test_image1', album=self.photoalbum)), 1)
+        os.remove(MEDIA_ROOT + 'images/test_image.jpg')
 
     def test_image_deletion(self):
         self.image.delete()

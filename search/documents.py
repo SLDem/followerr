@@ -77,6 +77,7 @@ class PhotoalbumDocument(Document):
             'created_at',
         ]
 
+
 @private_messages.doc_type
 class PrivateMessageDocument(Document):
     from_user = fields.ObjectField(properties={

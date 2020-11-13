@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes
 from django.urls import reverse
 
 from .forms import NewPostForm

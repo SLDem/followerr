@@ -60,10 +60,11 @@ def like_comment(request, pk):
     try:
         user = request.user
         comment = Comment.objects.get(pk=pk)
+        post = comment.post
         if user in comment.likers.all():
             comment.likers.remove(user)
             comment.save()
-            return redirect(request.get_full_path())
+            return redirect('post_detail', pk=post.pk)
         elif user in comment.dislikers.all() and user not in comment.likers.all():
             comment.likers.add(user)
             comment.dislikers.remove(user)
@@ -71,7 +72,7 @@ def like_comment(request, pk):
         else:
             comment.likers.add(user)
             comment.save()
-        return redirect(request.get_full_path())
+        return redirect('post_detail', pk=post.pk)
 
     except Exception as ex:
         pass
@@ -82,10 +83,11 @@ def dislike_comment(request, pk):
     try:
         user = request.user
         comment = Comment.objects.get(pk=pk)
+        post = comment.post
         if user in comment.dislikers.all():
             comment.dislikers.remove(user)
             comment.save()
-            return redirect(request.get_full_path())
+            return redirect('post_detail', pk=post.pk)
         elif user in comment.likers.all() and user not in comment.dislikers.all():
             comment.dislikers.add(user)
             comment.likers.remove(user)
@@ -93,7 +95,7 @@ def dislike_comment(request, pk):
         else:
             comment.dislikers.add(user)
             comment.save()
-        return redirect(request.get_full_path())
+        return redirect('post_detail', pk=post.pk)
 
     except Exception as ex:
         pass
