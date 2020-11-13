@@ -1,6 +1,5 @@
-from django.test import TestCase, Client, tag
+from django.test import TestCase, Client
 from django.utils.encoding import force_bytes
-from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .documents import UserDocument, ImageDocument, PhotoalbumDocument, PrivateMessageDocument, ChatDocument, \
@@ -11,14 +10,9 @@ from groups.models import Group
 from chats.models import Chat, PrivateMessage
 from photoalbums.models import Image, Photoalbum
 from user_profile.models import User
-from comments.models import Comment
 
 
-from django_elasticsearch_dsl import fields, Index
-from django_elasticsearch_dsl.documents import DocType, Document
-from django_elasticsearch_dsl.exceptions import (ModelFieldNotMappedError,
-                                                 RedeclaredFieldError)
-from django_elasticsearch_dsl.registries import registry
+from django_elasticsearch_dsl.documents import DocType
 
 from .documents import posts, groups, chats, private_messages, photoalbums, images, users
 import os

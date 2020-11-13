@@ -7,7 +7,6 @@ from django.db.utils import IntegrityError
 from .models import Photoalbum, Image
 from .forms import NewPhotoalbumForm, NewImageForm
 
-from comments.forms import NewCommentForm
 from comments.models import Comment
 from user_profile.models import User
 

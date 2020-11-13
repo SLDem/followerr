@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, tag
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 
@@ -8,7 +8,6 @@ from .models import Post
 from user_profile.models import User
 from comments.models import Comment
 
-from django.test import tag
 
 
 class PostModelTest(TestCase):
@@ -167,6 +166,7 @@ class PostViewTest(TestCase):
     def test_delete_post_doesnt_exist(self):
         response = self.client.get(reverse('delete_post', kwargs={'pk': '10'}), follow=True)
         self.assertIn(force_bytes('Post does not exist'), response.content)
+
 
 class PostFormTest(TestCase):
     def setUp(self):

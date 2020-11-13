@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def get_absolute_url(self):
-        return '/users/%i' % self.pk
+        return '/profile/%i/' % self.pk
 
     def __str__(self):
         return self.name
