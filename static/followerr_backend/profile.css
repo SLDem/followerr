@@ -6,7 +6,7 @@
 
 .user-avatar {
     border: 1px solid white;
-    width: 300px;
+    border-radius: 10px;
     padding: 5px;
     padding-bottom: 9px;
     text-align: center;
@@ -19,6 +19,7 @@
 
 .user-avatar img {
     position: relative;
+    border-radius: 8px;
     height: auto;
     width: 100%;
 }
@@ -46,6 +47,7 @@
 
 .user-secondary-info {
     border: 1px solid white;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -74,6 +76,7 @@
 
 .user-main-info {
     border: 1px solid white;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -189,6 +192,9 @@ label {
     margin-bottom: 15px;
 }
 
-
+.admin-profile {
+    width: 43px;
+    margin-bottom: 5px;
+}
 
 

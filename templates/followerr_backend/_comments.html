@@ -3,7 +3,7 @@
     {% recursetree comments %}
         <li class="thread">
             <div class="node-body">
-                    <div style="margin-bottom: 5px;" class="comment-buttons-user">
+                    <div class="comment-buttons-user">
                         <div class="comment-user-data">
                             <p><a href="{% url 'profile' node.user.pk %}"><b>{{ node.user.name }}</b></a></p>
                             {% if node.user.is_staff %}
@@ -15,28 +15,28 @@
                         </div>
                         <div class="buttons">
                             {% if request.user.pk == node.user.pk %}
-                                <a style="height: 50%;" href="{% url 'edit_comment' node.pk %}"><button class="dark-button">&#9998;</button></a>
-                                <a style="height: 50%;" href="{% url 'delete_comment' node.pk %}"><button class="dark-button">&#10006;</button></a>
+                                <a class="comment-button" href="{% url 'edit_comment' node.pk %}"><button class="dark-button">&#9998;</button></a>
+                                <a class="comment-button" href="{% url 'delete_comment' node.pk %}"><button class="dark-button">&#10006;</button></a>
                             {% endif %}
                         </div>
                     </div>
                 {{ node.body }}
-                <div class="like-dislike-buttons-wrap" style="justify-content: space-between;">
+                <div class="like-dislike-buttons-wrap">
                     <div></div>
-                    <div class="like-dislike-buttons">
+                    <div class="like-button">
                         {% if request.user in node.likers.all %}
-                            <p style="color: green;">{{node.likers.count}}&nbsp</p>
                             <a href="{% url 'like_comment' node.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+                            <p class="like-count">{{node.likers.count}}&nbsp;</p>
                         {% else %}
-                            <p>{{node.likers.count}}&nbsp</p>
                             <a href="{% url 'like_comment' node.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
+                            <p>{{node.likers.count}}&nbsp</p>
                         {% endif %}
                         {% if request.user in node.dislikers.all %}
-                            <p style="color: #F47846;">{{node.dislikers.count}}&nbsp</p>
                             <a href="{% url 'dislike_comment' node.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+                            <p class="dislike-count">&nbsp;{{node.dislikers.count}}</p>
                         {% else %}
-                            <p>{{node.dislikers.count}}&nbsp</p>
                             <a href="{% url 'dislike_comment' node.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
+                            <p>&nbsp;{{node.dislikers.count}}</p>
                         {% endif %}
                     </div>
                 </div>

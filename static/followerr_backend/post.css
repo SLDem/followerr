@@ -1,5 +1,6 @@
 .post {
     border: 1px solid white;
+    border-radius: 10px;
     padding: 5px;
     margin-top: 30px;
     display: flex;
@@ -8,6 +9,7 @@
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    width: 100%;
 }
 
 .post-user-avatar {
@@ -16,6 +18,7 @@
 
 .post-user-avatar img {
     background-color: white;
+    border-radius: 5px;
     height: 50px;
     width: auto;
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
@@ -39,18 +42,16 @@
     text-decoration: underline;
 }
 
+.post-body {
+    font-family: "Courier New", Courier, monospace;
+}
+
 .post-body p {
     text-align: left !important;
 }
 
 .post-image {
-    width: 300px;
-    height: 100%;
     margin: 10px auto;
-    border-left: 40px solid #D5D5D5;
-    border-right: 40px solid #D5D5D5;
-    border-top: 1px solid #D5D5D5;
-    border-bottom: 1px solid #D5D5D5;
     text-align: center;
 }
 
@@ -79,6 +80,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.like-count {
+    color: green;
+}
+
+.dislike-count {
+    color: #F47846;
 }
 
 .social-links {
@@ -93,16 +103,50 @@
     align-items: center;
 }
 
+.comment-button a {
+    text-decoration: none;
+    border: 1px solid white;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    display: flex;
+    width: 24px;
+}
+
+.comment-button p {
+    margin-left: -20px;
+    font-size: 17px;
+}
+
+.comment-button p:hover {
+    margin-left: -20px;
+}
+
+.comment-button a:hover {
+    color: white;
+}
+
 .like-button {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    border: 1px solid white;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
 }
 
 .like-dislike-buttons-wrap {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    justify-content: space-between;
 }
 
 .like-dislike-buttons {
@@ -126,8 +170,6 @@
     align-items: center;
     justify-content: space-between;
 }
-
-
 
 .admin-sign {
     border: 1px solid white;
@@ -156,4 +198,27 @@
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
+}
+
+.post-user-group-admin-name {
+    display: flex;
+}
+
+.post-online-mini {
+    margin-bottom: -47px;
+}
+
+.post-group-title {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.save-edit-post-button {
+    margin: 5px 0 0 0;
+}
+
+.post-user-avatar-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

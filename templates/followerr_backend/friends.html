@@ -32,11 +32,9 @@
         <br>
     {% endif %}
 
-
-
     <div class="friends-list">
         <div class="friends-sign"><p>Friends:</p></div>
-        <hr style="margin: 0 auto; width: 100%;">
+        <hr>
 
         {% for friend in friends %}
             {% if friend in online_users %}
@@ -53,7 +51,7 @@
                         {% endif %}
 
                         {% if friend in online_users %}
-                            <div class="online-mini" style="margin-bottom: -47px;"></div>
+                            <div class="online-mini post-online-mini"></div>
                         {% endif %}
 
                         <a href="{% url 'profile' friend.pk %}">{{ friend.name }}</a>
@@ -80,7 +78,7 @@
                     {% endif %}
 
                     {% if friend in online_users %}
-                        <div class="online-mini" style="margin-bottom: -47px;"></div>
+                        <div class="online-mini post-online-mini"></div>
                     {% endif %}
 
                     <a href="{% url 'profile' friend.pk %}">{{ friend.name }}</a>

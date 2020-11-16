@@ -28,14 +28,13 @@
         </div>
         <div class="user-secondary-info">
             {% if user.is_staff %}
-                <div style="width: 37px; margin: 0; margin-bottom: 5px;" class="admin-sign">admin</div>
+                <div class="admin-sign admin-profile">admin</div>
             {% endif %}
             <p>About me: {{ user.about_me }}</p>
             <p>Favourite books: {{ user.favourite_books }}</p>
             <p>Favourite music: {{ user.favourite_music }}</p>
             <p>Favourite movies: {{ user.favourite_movies }}</p>
             <br>
-            <hr style="margin: 0 auto, width: 50%;">
         </div>
     </div>
 
@@ -105,17 +104,17 @@
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&larr; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?page=1">&#xab;</a>&nbsp;
+                <a href="?page={{ page_obj.previous_page_number }}">&#x2039;</a>
             {% endif %}
 
             <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+                <a href="?page={{ page_obj.next_page_number }}">&#x203A;</a>&nbsp;
+                <a href="?page={{ page_obj.paginator.num_pages }}">&#xbb;</a>
             {% endif %}
         </span>
     </div>

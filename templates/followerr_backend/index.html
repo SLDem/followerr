@@ -29,8 +29,8 @@
     <br>
 
     <form method="get">
-        <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for posts...">
-        <button class="dark-button" type="submit">&#128269;</button>
+        <input class="search-input" id="q" name="q" type="text" placeholder="Search for posts...">
+        <button class="dark-button search-button" type="submit">&#128269;</button>
     </form>
 
     <div class="posts">
@@ -49,17 +49,17 @@
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&larr; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?page=1">&#xab;</a>&nbsp;
+                <a href="?page={{ page_obj.previous_page_number }}">&#x2039;</a>
             {% endif %}
 
             <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+                <a href="?page={{ page_obj.next_page_number }}">&#x203A;</a>&nbsp;
+                <a href="?page={{ page_obj.paginator.num_pages }}">&#xbb;</a>
             {% endif %}
         </span>
     </div>

@@ -1,4 +1,4 @@
-<div class="post-user-avatar" style="margin-top: 10px;">
+<div class="post-user-avatar search-user-avatar">
     {% if user %}
         {% if user.image %}
             <a href="{% url 'profile' user.id %}"><img width="50px" height="auto" src="{{ user.image.image }}" alt="connect" ></a>
@@ -12,7 +12,7 @@
     {% endif %}
     {% if user %}
         {% if user.is_staff %}
-            <div class="admin-sign" style="width: 40px;">admin</div>
+            <div class="admin-sign search-user-admin-sign">admin</div>
         {% endif %}
     {% endif %}
 </div>

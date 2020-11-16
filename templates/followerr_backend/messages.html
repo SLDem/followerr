@@ -4,38 +4,35 @@
 <form class="main-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="dark-button" style="margin-top: 20px;" type="submit">Create new Chat</button>
+    <button class="dark-button new-chat-button" type="submit">Create new Chat</button>
 </form>
 <br>
 
-<a href="{% url 'search_chats' %}">Search chats</a>
-<div class="main-form">
-    <h2>Chats:</h2>
 
+<div class="main-form">
+    <a href="{% url 'search_chats' %}"><button class="dark-button">Search chats &#128269;</button></a>
+    <br>
     {% for chat in chats %}
         <br>
         <div class="messages-item-wrap">
             <div class="messages-item">
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="messages-item-image">
                     {% if chat.image %}
-                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="{{ chat.image.url }}" alt="chat"></a>
+                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" src="{{ chat.image.url }}" alt="chat"></a>
                     {% else %}
-                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" style="border-radius: 25px;" src="/media/group_avatars/group.png" alt="chat"></a>
+                        <a href="{% url 'chat' chat.pk %}"><img height="50px" width="auto" src="/media/group_avatars/group.png" alt="chat"></a>
                     {% endif %}
                     <a href="{% url 'chat' chat.pk %}">{{ chat.title }}</a><br>
                 </div>
                 <p>{{ chat.users.count }} users</p>
             </div>
         </div>
-
     {% endfor %}
-</div>
-<br>
-<br>
-<a href="{% url 'search_private_messages' %}">Search private messages</a>
 
-<div class="main-form">
-    <h2>Private Messages:</h2>
+
+    <br>
+    <a href="{% url 'search_private_messages' %}"><button class="dark-button">Search private messages &#128269;</button></a>
+    <br>
 
     {% for user in online_users %}
         {% if user in users %}
@@ -74,8 +71,6 @@
                 </div>
             </div>
         {% endif %}
-    <br>
     {% endfor %}
 </div>
-
 {% endblock %}

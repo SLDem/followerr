@@ -2,11 +2,11 @@
 {% block content %}
 
 <div class="image-wrap">
-    <img style="max-width: 100%;" width="auto" height="auto" src="{{ image.image.url }}" alt="connect">
+    <img width="auto" height="auto" src="{{ image.image.url }}" alt="connect">
 </div>
 
 <br>
-<div class="main-form" style="display: flex; align-items: center; justify-content: space-between;">
+<div class="main-form image-description">
     <p>{{ image.description }}</p>
     <div>
         <a href="{% url 'edit_image' image.pk %}"><button class="dark-button">&#9998;</button></a>
@@ -15,32 +15,30 @@
 </div>
 <br>
 
-{% if request.user == image.album.user and image != request.user.image %}
-    <a href="{% url 'make_avatar' image.pk %}"><button class="dark-button">Make Avatar</button></a>
-{% endif %}
+<div class="make-avatar-likes-wrap">
+    {% if request.user == image.album.user and image != request.user.image %}
+        <a href="{% url 'make_avatar' image.pk %}"><button class="dark-button">Make Avatar</button></a>
+    {% endif %}
 
-<br>
-<br>
+    <div class="like-button" style="width: 63px;">
+        {% if request.user in image.likers.all %}
+            <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+            <p class="like-count">{{image.likers.count}}&nbsp;</p>
+        {% else %}
+            <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
+            <p>{{image.likers.count}}&nbsp;</p>
+        {% endif %}
 
-<div style="display: flex;">
-{% if request.user in image.likers.all %}
-    <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
-    <p style="color: green;">{{image.likers.count}}&nbsp;</p>
-{% else %}
-    <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
-    <p>{{image.likers.count}}&nbsp;</p>
-{% endif %}
-
-{% if request.user in image.dislikers.all %}
-    <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
-    <p style="color: #F47846;">&nbsp;{{image.dislikers.count}}</p>
-{% else %}
-    <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
-    <p>&nbsp;{{image.dislikers.count}}</p>
-{% endif %}
+        {% if request.user in image.dislikers.all %}
+            <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+            <p class="dislike-count">&nbsp;{{image.dislikers.count}}</p>
+        {% else %}
+            <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
+            <p>&nbsp;{{image.dislikers.count}}</p>
+        {% endif %}
+    </div>
 </div>
 
-<br>
 
 <div class="main-form">
     <form method="post">
@@ -51,7 +49,7 @@
         {% endblock %}
 
         {{ form.as_p }}
-        <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Post a Comment</button>
+        <button class="dark-button edit-comment-button" type="submit">Post a Comment</button>
     </form>
 </div>
 

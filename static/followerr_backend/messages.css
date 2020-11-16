@@ -1,3 +1,8 @@
+.chat-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 .chat-buttons {
     display: flex;
     justify-content: space-between;
@@ -27,6 +32,7 @@
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    border-radius: 25px;
 }
 
 .messages-item a {
@@ -41,6 +47,10 @@
     display: flex;
     gap: 10px;
     align-items: center;
+}
+
+.private-messages-online {
+    margin-top: 5px;
 }
 
 .private-messages-item img {
@@ -75,10 +85,25 @@
     border-radius: 10px;
     background-color: white;
     padding: 5px;
+    width: 100%;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     margin-bottom: 8px;
+}
+
+.message-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.message-avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .message-content {
@@ -95,14 +120,23 @@
     width: auto;
 }
 
+.online-messages {
+    margin-top: -40px;
+    margin-left: 3px;
+}
+
 .message-image {
     text-align: center;
 }
 
-.message-image img{
+.message-image img {
     text-align: center;
-    width: auto;
-    max-height: 300px;
+    width: 100%;
+    height: auto;
+}
+
+.date-button-wrap {
+    display: flex;
 }
 
 .message-body-input {
@@ -111,6 +145,19 @@
     margin-bottom: 5px;
     border-radius: 10px;
     outline: none;
+}
+
+.message-date {
+    width: 100px;
+    opacity: 0.6;
+}
+
+.message-delete-button {
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+    text-shadow: none;
+    opacity: 0.8;
 }
 
 .message-image-input {
@@ -127,4 +174,23 @@
 .private-messages-heading {
     display: flex;
     align-items: center;
+}
+
+.private-messages-heading h1 {
+    font-size: 30px;
+    font-family: "Courier New", Courier, monospace;
+    color: #FA4337;
+}
+
+.new-chat-button {
+    margin-top: 20px;
+}
+
+.messages-item-image {
+    display: flex; align-items:
+    center; gap: 10px;
+}
+
+.edit-chat-button {
+    margin-top: 20px;
 }

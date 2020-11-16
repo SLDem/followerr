@@ -1,6 +1,6 @@
 <div class="post">
     <div class="post-user-info">
-        <div style="display: flex;">
+        <div class="post-user-group-admin-name">
             <div>
                 <div class="post-user-avatar">
                     {% if post.user %}
@@ -14,7 +14,7 @@
                             {% endif %}
                         {% endif %}
                         {% if post.user in online_users %}
-                            <div class="online-mini" style="margin-bottom: -47px;"></div>
+                            <div class="online-mini post-online-mini"></div>
                         {% endif %}
                     {% elif post.group %}
                         {% if post.group.image %}
@@ -30,7 +30,7 @@
                 <br>
             </div>
             {% if post.group %}
-                <p style="margin-left: 10px; margin-top: 10px;"><a href="{% url 'group_detail' post.group.pk %}"><b>{{ post.group.title }}</b></a></p>
+                <p class="post-group-title"><a href="{% url 'group_detail' post.group.pk %}"><b>{{ post.group.title }}</b></a></p>
             {% endif %}
             {% if post.user %}
                 {% if post.user.is_staff %}
@@ -57,22 +57,14 @@
         {% endif %}
     </div>
 
-    <div style="margin-bottom: 5px;" class="post-comment-and-like-buttons">
+    <div class="post-comment-and-like-buttons">
         <div class="comment-button">
-            <a href="{% url 'post_detail' post.pk %}"><button class="dark-button">
-                View
-                {% if post.comments.count == 1 %}
-                    {{ post.comments.count }} comment
-                {% elif post.comments.count == 0 %}
-                {% else %}
-                    {{ post.comments.count }} comments
-                {% endif %}
-            </button></a>
+            <a href="{% url 'post_detail' post.pk %}"><img src="/media/icons/comments.png" alt="comments"></a>
         </div>
         <div class="like-button">
             {% if request.user in post.likers.all %}
                 <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
-                <p style="color: green;">{{post.likers.count}}&nbsp;</p>
+                <p class="like-count">{{post.likers.count}}&nbsp;</p>
             {% else %}
                 <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
                 <p>{{post.likers.count}}&nbsp;</p>
@@ -80,13 +72,12 @@
 
             {% if request.user in post.dislikers.all %}
                 <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
-                <p style="color: #F47846;">&nbsp;{{post.dislikers.count}}</p>
+                <p class="dislike-count">&nbsp;{{post.dislikers.count}}</p>
             {% else %}
                 <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
                 <p>&nbsp;{{post.dislikers.count}}</p>
             {% endif %}
         </div>
-
     </div>
 
     <div class="posted-date">

@@ -6,9 +6,9 @@
     {% if user != request.user %}
         <div class="message-avatar-body">
             <div class="message-content">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    {% if user.avatar %}
-                        <a href="{% url 'profile' user.pk %}"><img width="50px" height="auto" src="{{ user.avatar.picture.url }}" alt="connect" ></a>
+                <div class="message-avatar">
+                    {% if user.image %}
+                        <a href="{% url 'profile' user.pk %}"><img width="50px" height="auto" src="{{ user.image.image.url }}" alt="connect" ></a>
                     {% else %}
                         {% if message.from_user.gender %}
                             <a href="{% url 'profile' user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>

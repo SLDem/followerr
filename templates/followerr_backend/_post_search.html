@@ -1,20 +1,20 @@
 <div class="post">
     <div class="post-user-info">
-        <div style="display: flex;">
+        <div class="post-user-group-admin-name">
             <div>
                 <div class="post-user-avatar">
                     {% if post.user %}
                         {% if post.user.image %}
                             <a href="{% url 'profile' post.user.id %}"><img width="50px" height="auto" src="{{ post.user.image.image }}" alt="connect" ></a>
                         {% else %}
-                            {% if user.gender %}
+                            {% if post.user.gender %}
                                 <a href="{% url 'profile' post.user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
                             {% else %}
                                 <a href="{% url 'profile' post.user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
                             {% endif %}
                         {% endif %}
                         {% if post.user in online_users %}
-                            <div class="online-mini" style="margin-bottom: -47px;"></div>
+                            <div class="online-mini post-online-mini"></div>
                         {% endif %}
                     {% elif post.group %}
                         {% if post.group.image %}
@@ -30,7 +30,7 @@
                 <br>
             </div>
             {% if post.group %}
-                <p style="margin-left: 10px; margin-top: 10px;"><a href="{% url 'group_detail' post.group.id %}"><b>{{ post.group.title }}</b></a></p>
+                <p class="post-group-title"><a href="{% url 'group_detail' post.group.pk %}"><b>{{ post.group.title }}</b></a></p>
             {% endif %}
             {% if post.user %}
                 {% if post.user.is_staff %}
@@ -57,14 +57,14 @@
         {% endif %}
     </div>
 
-    <div style="margin-bottom: 5px;" class="post-comment-and-like-buttons">
+    <div class="post-comment-and-like-buttons">
         <a href="{% url 'post_detail' post.id %}"><button class="dark-button">View</button></a>
         <div class="like-button">
             <img src="/media/icons/thumbs_up_green.png" alt="like">
-            <p style="color: green;">{{post.likers|length}}&nbsp;</p>
+            <p class="like-count">{{post.likers|length}}&nbsp;</p>
 
             <img src="/media/icons/thumbs_down-red.png" alt="dislike">
-            <p style="color: red;">&nbsp;{{post.dislikers|length}}</p>
+            <p class="dislike-count">&nbsp;{{post.dislikers|length}}</p>
         </div>
     </div>
 

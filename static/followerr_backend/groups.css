@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 5px;
+    margin-bottom: 10px;
 }
 
 .group a {
@@ -26,6 +26,10 @@
 
 .group a:hover {
     text-decoration: underline;
+}
+
+.search-group {
+    margin-bottom: 10px;
 }
 
 .group-avatar-name {
@@ -43,7 +47,7 @@
 
 .group-info-wrap {
     display: flex;
-    gap: 10px;
+    gap: 30px;
 }
 
 .group-title-description {
@@ -91,6 +95,10 @@
     text-decoration: underline;
 }
 
+.group-participants {
+    text-align: right;
+}
+
 .group-discussions {
     display: flex;
     flex-direction: column;
@@ -111,18 +119,47 @@
     text-decoration: underline;
 }
 
+.list-discussion-title {
+    text-decoration: none;
+}
+
+.list-discussion-author {
+    text-decoration: none;
+}
+
 .group-discussion-label {
     display: flex;
     flex-direction: column;
     padding: 0;
+    width: 100%;
 }
+
 .label-author-title a{
     padding: 5px;
 }
+
 .label-author-title p, h3 {
     background-color: #404040;
     color: white !important;
     padding: 5px;
+}
+
+.discussion-label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #404040;
+    color: white !important;
+    border-radius: 10px 10px 0 0;
+}
+
+.discussion-label p {
+    border-radius: 10px;
+}
+
+.remove-discussion-button {
+    color: white;
+    text-decoration: none;
 }
 
 .label-description {
@@ -158,4 +195,12 @@
 
 .group-user-list-user-info a:hover {
     text-decoration: underline;
+}
+
+.message-button {
+    margin: 15px 0 0 0;
+}
+
+.group-list-info {
+    text-align: right;
 }

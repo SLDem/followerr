@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-    {% if request.user.pk == comment.user.pk %}
-        <h1>Edit Comment</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% block extrahead %}
-            {{ form.media }}
-            {% endblock %}
-            {{ form.as_p }}
-            <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Save</button>
-        </form>
-    {% else %}
-        <p>You can only edit your own comments.</p>
-    {% endif %}
+    <div class="main-form">
+        {% if request.user.pk == comment.user.pk %}
+            <h1>Edit Comment</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% block extrahead %}
+                {{ form.media }}
+                {% endblock %}
+                {{ form.as_p }}
+                <button class="dark-button edit-comment-button" type="submit">Save</button>
+            </form>
+        {% else %}
+            <p>You can only edit your own comments.</p>
+        {% endif %}
+    </div>
 {% endblock %}

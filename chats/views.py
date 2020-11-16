@@ -43,9 +43,10 @@ def messages(request):
 def delete_message(request, pk):
     try:
         message = Message.objects.get(pk=pk)
+        chat = message.chat
         if request.user == message.from_user:
             message.delete()
-        return redirect(request.get_full_path())
+        return redirect('chat', pk=chat.pk)
     except Exception as ex:
         pass
     return redirect('messages')
@@ -68,7 +69,7 @@ def chat(request, pk):
             new_message.chat = chat
             new_message.save()
             form = NewMessageForm()
-            redirect('chat', pk=chat.pk)
+            return redirect('chat', pk=chat.pk)
     else:
         form = NewMessageForm()
     return render(request, 'chat.html', {'messages': messages,

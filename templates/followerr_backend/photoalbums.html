@@ -3,10 +3,15 @@
 
 <h1>{{ user }} Photoalbums</h1>
 <br>
-<a href="{% url 'search_photoalbums' %}">Search all photoalbums</a> | <a href="{% url 'search_images' %}">Search all images</a>
+
+<a href="{% url 'search_photoalbums' %}"><button class="dark-button">Search all photoalbums &#128269;</button></a>
+<a href="{% url 'search_images' %}"><button class="dark-button">Search all images &#128269;</button></a>
+<br>
+<br>
+
 {% for photoalbum in photoalbums %}
     <div class="album-wrap">
-        <a style="text-decoration: none;" href="{% url 'photoalbum' photoalbum.pk %}">{{ photoalbum.title }}</a>
+        <a href="{% url 'photoalbum' photoalbum.pk %}">{{ photoalbum.title }}</a>
 
         {% if request.user == photoalbum.user %}
             <div>

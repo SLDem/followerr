@@ -1,6 +1,6 @@
-<div class="album-wrap" style="margin-bottom: 10px;">
-    <a style="text-decoration: none; font-weight: bold;" href="{% url 'photoalbum' photoalbum.id %}">{{ photoalbum.title }}</a>
-    <a style="text-decoration: none;" href="{% url 'profile' photoalbum.user.id %}">by {{ photoalbum.user.name }}</a>
+<div class="album-wrap album-search">
+    <a href="{% url 'photoalbum' photoalbum.id %}">{{ photoalbum.title }}</a>
+    <a href="{% url 'profile' photoalbum.user.id %}">by {{ photoalbum.user.name }}</a>
     {% if request.user == photoalbum.user %}
         <div>
             <a href="{% url 'edit_album' photoalbum.pk %}"><button class="dark-button">&#9998;</button></a>

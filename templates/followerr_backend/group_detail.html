@@ -10,7 +10,7 @@
             <p>{{ group.description }}</p>
         </div>
         <div class="group-discussions">
-            <a style="margin-bottom: 10px;" href="{% url 'discussions_list' group.pk %}">Latest discussions:</a>
+            <a href="{% url 'discussions_list' group.pk %}">Latest discussions:</a>
             {% for discussion in discussions %}
                 <div class="group-discussion">
                     <a href="{% url 'discussion' discussion.pk %}">{{ discussion.title }}</a>

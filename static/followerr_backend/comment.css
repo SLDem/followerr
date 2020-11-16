@@ -9,7 +9,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 5px;
 }
+
+.comment-button {
+    height: 50%;
+    text-decoration: none;
+}
+
 
 .comment-text {
     line-height: 20px;
@@ -132,4 +139,12 @@
 
 .reply-button, .image-reply-button {
     width: 20px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    background-color: white;
+    color: orange;
+}
+
+.edit-comment-button {
+    margin: 10px 0 0 0;
 }

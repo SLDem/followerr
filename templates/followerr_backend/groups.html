@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="get">
-    <input style="width: 95%;" id="q" name="q" type="text" placeholder="Search for groups...">
-    <button class="dark-button" type="submit">&#128269;</button>
+    <input class="search-input" id="q" name="q" type="text" placeholder="Search for groups...">
+    <button class="dark-button search-button" type="submit">&#128269;</button>
 </form>
-
 <br>
 
 {% if searched_groups %}
-<div class="group-list" style="margin-bottom: 30px; text-align: center;">
+<div class="group-list">
     {% if searched_groups %}
-    <p>Search results: </p>
+    <h2>Search results: </h2>
+    <br>
         {% for group in searched_groups %}
-            <div class="group" style="margin-bottom: 10px;">
+            <div class="group">
                 <div class="group-avatar-name">
                     {% if group.image %}
                         <a href="{% url 'group_detail' group.id %}"><img height="50px" width="auto" src="{{ group.image }}" alt="connect"></a>
@@ -21,7 +21,7 @@
                     {% endif %}
                     <a href="{% url 'group_detail' group.id %}">{{ group.title }}</a>
                 </div>
-                <div style="text-align: right;">
+                <div>
                     <p>{{ group.users|length }} participants.</p>
                 </div>
             </div>
@@ -29,11 +29,10 @@
     {% endif %}
 </div>
 {% endif %}
+<br>
 
-<div class="group-list" style="margin-bottom: 30px; text-align: center;">
-    <h2 style="margin-bottom: 10px;">Your groups</h2>
-
-    <hr>
+<div class="group-list">
+    <h2>Your groups:</h2>
     <br>
 
     {% for group in user_groups %}
@@ -46,16 +45,16 @@
                 {% endif %}
                 <a href="{% url 'group_detail' group.pk %}">{{ group.title }}</a>
             </div>
-            <div style="text-align: right;">
+            <div class="group-list-info">
                 <p>created: {{ group.date_created }}</p>
                 <p>{{ group.users.count }} participants.</p>
             </div>
         </div>
-    <br>
     {% endfor %}
 </div>
+<br>
 
-<p style="margin-bottom: 10px; text-align: right;">Add new group:</p>
+<p>Add new group:</p>
 <form class="main-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 

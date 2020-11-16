@@ -16,7 +16,7 @@
                 {% endif %}
 
                 {% if user in online_users %}
-                    <div class="online-mini" style="margin-bottom: -47px;"></div>
+                    <div class="online-mini post-online-mini"></div>
                 {% endif %}
 
                 <a href="{% url 'profile' user.pk %}">{{ user.name }}</a>

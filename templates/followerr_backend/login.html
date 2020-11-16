@@ -4,8 +4,8 @@
     <form class="login-from" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button style="margin: 10px 0 20px 0;" class="dark-button" type="submit">Login</button>
+        <button class="dark-button login-button" type="submit">Login</button>
     </form>
     <p>Don't have an account? Signup now!</p>
-    <a href="{% url 'signup' %}"><button class="dark-button">Signup</button></a>
+    <a href="{% url 'signup' %}"><button class="dark-button login-button">Signup</button></a>
 {% endblock %}

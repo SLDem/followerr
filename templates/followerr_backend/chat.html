@@ -15,16 +15,12 @@
     </div>
 </div>
 
-<h1 style="text-align: center; margin-bottom: 10px;">{{ chat.title }}</h1>
+<h1 class="chat-title">{{ chat.title }}</h1>
 
-{% if message in messages %}
-<a href="{% url 'chat_users' message.chat.pk %}">Users</a>
-{% endif %}
 {% for message in page_obj %}
-
     <div class="message-avatar-body">
         <div class="message-content">
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="message-avatar">
                 {% if message.from_user.image %}
                     <a href="{% url 'profile' message.from_user.pk %}"><img width="50px" height="auto" src="{{ message.from_user.image.image.url }}" alt="connect" ></a>
                 {% else %}
@@ -36,30 +32,28 @@
                 {% endif %}
 
                 {% if message.from_user in online_users %}
-                    <div style="margin-top: -33px; margin-right: -2px;" class="online-mini"></div>
+                    <div class="online-mini online-messages"></div>
                 {% else %}
                 {% endif %}
             </div>
 
-            <div style="display: flex;">
-                <p style="opacity: 0.6;">{{ message.created_at }}</p>
+            <div class="message-body">
+                {{ message.body }}
+            </div>
+
+            <div class="date-button-wrap">
+                <p class="message-date">{{ message.created_at }}</p>
                 {% if request.user == message.from_user or request.user == chat.owner %}
-                    <a style="text-decoration: none; margin: 0 10px; font-weight: bold; text-shadow: none; opacity: 0.8;" href="{% url 'delete_message' message.pk %}">&#10006;</a>
+                    <a class="message-delete-button" href="{% url 'delete_message' message.pk %}">&#10006;</a>
                 {% endif %}
             </div>
         </div>
 
-        <div class="message-body">
-            {{ message.body }}
-        </div>
-
-        <div>
+        {% if message.image %}
             <div class="message-image">
-                {% if message.image %}
-                    <img src="{{ message.image.url }}" alt="msg-image">
-                {% endif %}
+                <img src="{{ message.image.url }}" alt="msg-image">
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endfor %}
 
