@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 def profile(request, pk):
     try:
         user = User.objects.get(pk=pk)
+        title = 'Follower of ' + user.following
         if request.user in user.blocked_users.all():
             return HttpResponse('This user blocked you.')
         else:
@@ -53,15 +54,21 @@ def profile(request, pk):
                     return HttpResponse('Action not allowed')
             else:
                 form = NewPostForm(instance=None)
-            return render(request, 'profile.html', {'user': user, 'friends': friends, 'posts': posts, 'form': form,
-                                                    'button_status': button_status, 'online_users': online_users,
-                                                    'page_obj': page_obj})
+            return render(request, 'profile.html', {'user': user,
+                                                    'friends': friends,
+                                                    'posts': posts,
+                                                    'form': form,
+                                                    'button_status': button_status,
+                                                    'online_users': online_users,
+                                                    'page_obj': page_obj,
+                                                    'title': title})
     except Exception as ex:
         pass
     return HttpResponse('User does not exist')
 
 
 def upload_avatar(request):
+    title = 'Upload Avatar'
     if request.method == 'POST':
         form = NewImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -77,11 +84,12 @@ def upload_avatar(request):
             return redirect('profile', pk=request.user.pk)
     else:
         form = NewImageForm()
-    return render(request, 'upload_avatar.html', {'form': form})
+    return render(request, 'upload_avatar.html', {'form': form, 'title': title})
 
 
 def edit_user(request, pk):
     try:
+        title = 'Edit Profile'
         user = User.objects.get(pk=pk)
         if request.user == user:
             if request.method == 'POST':
@@ -91,7 +99,9 @@ def edit_user(request, pk):
                     return redirect('profile', pk=user.pk)
             else:
                 form = EditUserForm(instance=user)
-            return render(request, 'edit_user.html', {'form': form, 'current_user': user})
+            return render(request, 'edit_user.html', {'form': form,
+                                                      'current_user': user,
+                                                      'title': title})
         else:
             return HttpResponse('Action not allowed')
     except Exception as ex:
@@ -101,6 +111,7 @@ def edit_user(request, pk):
 
 def change_password(request):
     user = request.user
+    title = 'Change Password'
     if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
@@ -114,4 +125,4 @@ def change_password(request):
             else:
                 return HttpResponse('Your passwords do not match')
     form = ChangePasswordForm()
-    return render(request, 'edit_password.html', {'form': form})
+    return render(request, 'edit_password.html', {'form': form, 'title': title})

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main-form">
+    <form method="post">
+        {{ form.as_p }}
+        <button class="dark-button" type="submit">Register</button>
+    </form>
+    <br>
+
+    <h2>After registering your account please check your email address and activate it.</h2>
+    <h2 style="color: red;">You must activate your account before you can login.</h2>
+    <br>
+
+    <p>Already have an account?</p>
+    <a href="{% url 'login' %}"><button class="dark-button login-button">Login</button></a>
+</div>
+{% endblock %}

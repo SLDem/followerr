@@ -22,6 +22,7 @@ def see_online_users():
 
 
 def signup(request):
+    title = 'Signup'
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -56,7 +57,7 @@ def signup(request):
             return redirect('login')
     else:
         form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'custom_signup.html', {'form': form, 'title': title})
 
 
 class VerificationView(View):

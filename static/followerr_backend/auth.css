@@ -1,0 +1,35 @@
+.signup-gender {
+    height: 30px;
+    margin: 10px 0;
+}
+
+.signup-email {
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+.signup-name {
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+.signup-password {
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+input[type=text]{
+    width: 100%;
+    margin: 10px 0;
+}
+
+input[type=password]{
+    width: 100%;
+    margin: 10px 0;
+}

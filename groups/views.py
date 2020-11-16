@@ -19,6 +19,7 @@ def groups(request):
     user = request.user
     user_groups = Group.objects.filter(users__id=user.pk)
     all_groups = Group.objects.all()
+    title = 'Groups'
 
     def search_groups(request):
         q = request.GET.get('q')
@@ -43,7 +44,11 @@ def groups(request):
             return redirect('group_detail', pk=new_group.pk)
     else:
         form = NewGroupForm()
-    return render(request, 'groups.html', {'all_groups': all_groups, 'searched_groups': searched_groups, 'user_groups': user_groups, 'form': form})
+    return render(request, 'groups.html', {'all_groups': all_groups,
+                                           'searched_groups': searched_groups,
+                                           'user_groups': user_groups,
+                                           'form': form,
+                                           'title': title})
 
 
 def group_detail(request, pk):
@@ -82,7 +87,8 @@ def group_detail(request, pk):
                                                      'posts': posts,
                                                      'button_status': button_status,
                                                      'users': users,
-                                                     'discussions': discussions})
+                                                     'discussions': discussions,
+                                                     'title': group.title})
     except Exception:
         pass
     return HttpResponse('Group does not exist')
@@ -91,6 +97,7 @@ def group_detail(request, pk):
 def discussions_list(request, pk):
     try:
         group = Group.objects.get(pk=pk)
+        title = "Discussions of " + group.title + " group"
         discussions = Discussion.objects.filter(group=group)
         if request.method == 'POST':
             if request.user in group.users.all():
@@ -106,7 +113,10 @@ def discussions_list(request, pk):
                 return HttpResponse('You have to be a member of the group to create discussions')
         else:
             form = NewDiscussionForm()
-        return render(request, 'discussions.html', {'form': form, 'group': group, 'discussions': discussions})
+        return render(request, 'discussions.html', {'form': form,
+                                                    'group': group,
+                                                    'discussions': discussions,
+                                                    'title': title})
 
     except Exception:
         pass
@@ -136,7 +146,8 @@ def discussion(request, pk):
         return render(request, 'discussion.html', {'form': form,
                                                    'discussion': discussion,
                                                    'messages': messages,
-                                                   'online_users': online_users})
+                                                   'online_users': online_users,
+                                                   'title': discussion.title})
     except Exception:
         pass
     return HttpResponse('Discussion does not exist')
@@ -254,6 +265,7 @@ def delete_group_request(request, pk, user_pk):
 def group_management(request, pk):
     try:
         group = Group.objects.get(pk=pk)
+        title = 'Group ' + group.title + ' management'
         join_requests = GroupJoinRequest.objects.filter(to_group=group)
         if request.user in group.owners.all():
             if request.method == 'POST':
@@ -264,7 +276,10 @@ def group_management(request, pk):
                     return redirect('group_detail', pk=group.pk)
             else:
                 form = NewGroupForm(instance=group)
-            return render(request, 'group_management.html', {'join_requests': join_requests, 'group': group, 'form': form})
+            return render(request, 'group_management.html', {'join_requests': join_requests,
+                                                             'group': group,
+                                                             'form': form,
+                                                             'title': title})
         else:
             return HttpResponse('You can only manage your own groups.')
     except Exception:
@@ -275,10 +290,11 @@ def group_management(request, pk):
 def group_users(request, pk):
     try:
         group = Group.objects.get(pk=pk)
+        title = group.title + ' participants'
         if not group.is_private:
-            return render(request, 'group_users.html', {'group': group})
+            return render(request, 'group_users.html', {'group': group, 'title': title})
         elif group.is_private and request.user in group.users.all():
-            return render(request, 'group_users.html', {'group': group})
+            return render(request, 'group_users.html', {'group': group, 'title': title})
         else:
             return HttpResponse('You must be a member of this group to view its participants')
     except Exception:

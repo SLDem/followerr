@@ -68,6 +68,11 @@
 .group-avatar-wrap img {
     width: 250px;
     height: auto;
+    border-radius: 5px;
+}
+
+.group-avatar {
+    padding-right: 4px;
 }
 
 .group-participant {
@@ -84,7 +89,7 @@
 .group-participant img {
     height: 30px;
     width: auto;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .group-participants a {
@@ -96,7 +101,6 @@
 }
 
 .group-participants {
-    text-align: right;
 }
 
 .group-discussions {
@@ -186,7 +190,7 @@
 }
 
 .group-user-list-user-info img{
-    border-radius: 25px;
+    border-radius: 5px;
 }
 
 .group-user-list-user-info a {

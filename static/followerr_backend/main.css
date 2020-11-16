@@ -51,7 +51,6 @@ body {
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-    width: 100%;
 }
 
 .main-post-form-image-wrap {
@@ -66,6 +65,9 @@ body {
 
 .main-post-form-image-wrap img {
     border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
 }
 
 .main-post-form img {
@@ -179,8 +181,6 @@ body {
 }
 
 .change-password-save-button {
-    color: white;
-    margin-top: 30px;
 }
 
 .login-button {

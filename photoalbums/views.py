@@ -13,7 +13,7 @@ def photoalbums(request, pk):
     try:
         user = User.objects.get(pk=pk)
         photoalbums = Photoalbum.objects.filter(user=user)
-
+        title = user.name + 's photoalbums'
         if request.user == user:
             if request.method == 'POST':
                 form = NewPhotoalbumForm(request.POST)
@@ -28,7 +28,10 @@ def photoalbums(request, pk):
         else:
             return HttpResponse('Action not allowed')
         form = NewPhotoalbumForm()
-        return render(request, 'photoalbums.html', {'photoalbums': photoalbums, 'form': form, 'user': user})
+        return render(request, 'photoalbums.html', {'photoalbums': photoalbums,
+                                                    'form': form,
+                                                    'user': user,
+                                                    'title': title})
     except Exception:
         pass
     return HttpResponse('User does not exist')
@@ -37,6 +40,7 @@ def photoalbums(request, pk):
 def photoalbum(request, pk):
     try:
         photoalbum = Photoalbum.objects.get(pk=pk)
+        title = photoalbum.title
         images = Image.objects.filter(album=photoalbum)
         if request.method == 'POST':
             if request.user == photoalbum.user:
@@ -50,7 +54,10 @@ def photoalbum(request, pk):
             else:
                 return HttpResponse('Action not allowed')
         form = NewImageForm()
-        return render(request, 'photoalbum.html', {'photoalbum': photoalbum, 'form': form, 'images': images})
+        return render(request, 'photoalbum.html', {'photoalbum': photoalbum,
+                                                   'form': form,
+                                                   'images': images,
+                                                   'title': title})
     except Exception:
         pass
     return HttpResponse('Photoalbum does not exist')
@@ -58,6 +65,7 @@ def photoalbum(request, pk):
 
 def image_detail(request, pk):
     try:
+        title = 'Image Detail'
         online_users = see_online_users()
         image = Image.objects.get(pk=pk)
         comments = Comment.objects.filter(picture=image)
@@ -75,7 +83,8 @@ def image_detail(request, pk):
         return render(request, 'image_detail.html', {'online_users': online_users,
                                                      'image': image,
                                                      'form': form,
-                                                     'comments': comments})
+                                                     'comments': comments,
+                                                     'title': title})
     except Exception:
         pass
     return HttpResponse('Image does not exist')
@@ -116,6 +125,7 @@ def make_avatar(request, pk):
 
 def edit_image(request, pk):
     try:
+        title = 'Edit Image'
         image = Image.objects.get(pk=pk)
         if request.user == image.album.user:
             if request.method == 'POST':
@@ -125,7 +135,7 @@ def edit_image(request, pk):
                     return redirect('image_detail', pk=image.pk)
             else:
                 form = NewImageForm(instance=image)
-                return render(request, 'edit_image.html', {'image': image, 'form': form})
+                return render(request, 'edit_image.html', {'image': image, 'form': form, 'title': title})
         else:
             return HttpResponse('Action not allowed')
     except Exception:
@@ -154,6 +164,7 @@ def delete_image(request, pk):
 def edit_album(request, pk):
     try:
         photoalbum = Photoalbum.objects.get(pk=pk)
+        title = 'Edit ' + photoalbum.title
         if request.user == photoalbum.user:
             if request.method == 'POST':
                 form = NewPhotoalbumForm(request.POST, instance=photoalbum)
@@ -165,7 +176,9 @@ def edit_album(request, pk):
                 form = NewPhotoalbumForm(instance=photoalbum)
         else:
             return HttpResponse('Action not allowed')
-        return render(request, 'edit_photoalbum.html', {'photoalbum': photoalbum, 'form': form})
+        return render(request, 'edit_photoalbum.html', {'photoalbum': photoalbum,
+                                                        'form': form,
+                                                        'title': title})
     except Exception as ex:
         pass
     return HttpResponse('Photoalbum does not exist')

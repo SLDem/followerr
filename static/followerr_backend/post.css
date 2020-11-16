@@ -9,7 +9,6 @@
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-    width: 100%;
 }
 
 .post-user-avatar {
@@ -117,7 +116,6 @@
 }
 
 .comment-button p {
-    margin-left: -20px;
     font-size: 17px;
 }
 
@@ -126,7 +124,9 @@
 }
 
 .comment-button a:hover {
+    border: 1px solid #404040;
     color: white;
+    background-color: #404040;
 }
 
 .like-button {

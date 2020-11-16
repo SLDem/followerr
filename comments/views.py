@@ -42,6 +42,7 @@ def edit_comment(request, pk):
     try:
         comment = Comment.objects.get(pk=pk)
         post = comment.post
+        title = 'Edit Comment'
         if request.method == 'POST':
             form = NewCommentForm(request.POST, request.FILES, instance=comment)
             if form.is_valid():
@@ -49,7 +50,7 @@ def edit_comment(request, pk):
                 return redirect('post_detail', pk=post.pk)
         else:
             form = NewCommentForm(instance=comment)
-        return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
+        return render(request, 'edit_comment.html', {'form': form, 'comment': comment, 'title': title})
 
     except Exception as ex:
         pass

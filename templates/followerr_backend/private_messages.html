@@ -5,6 +5,8 @@
     <h1>{{ receiver }}</h1>
     {% if receiver in online_users %}
         <div class="online private-messages-online"></div>
+    {% else %}
+    <p class="offline-chat-msg">&nbsp;is offline</p>
     {% endif %}
 </div>
 

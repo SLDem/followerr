@@ -16,6 +16,7 @@ from search.documents import PostDocument
 
 
 def index(request):
+    title = 'Home'
     online_users = see_online_users()
     user_groups = Group.objects.filter(users__id=request.user.pk)
 
@@ -49,12 +50,14 @@ def index(request):
                 return redirect('index')
         else:
             form = NewPostForm(instance=None)
+
         context = {
             'form': form,
             'posts': posts,
             'searched_posts': searched_posts,
             'online_users': online_users,
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'title': title,
         }
 
         return render(request, 'index.html', context=context)
@@ -64,6 +67,7 @@ def index(request):
 
 def post_detail(request, pk):
     try:
+        title = 'Post Comments'
         online_users = see_online_users()
         post = Post.objects.get(pk=pk)
         if request.user.is_authenticated:
@@ -82,7 +86,8 @@ def post_detail(request, pk):
             return render(request, 'post_detail.html', {'form': form,
                                                         'post': post,
                                                         'online_users': online_users,
-                                                        'comments': comments})
+                                                        'comments': comments,
+                                                        'title': title})
         else:
             return redirect('login')
     except Exception as ex:
@@ -93,6 +98,7 @@ def post_detail(request, pk):
 def edit_post(request, pk):
     try:
         post = Post.objects.get(pk=pk)
+        title = 'Edit Post'
         if request.user.is_authenticated:
             if request.user == post.user:
                 if request.method == 'POST':
@@ -107,7 +113,9 @@ def edit_post(request, pk):
         else:
             return redirect('login')
         form = NewPostForm(instance=post)
-        return render(request, 'edit_post.html', {'form': form, 'post': post})
+        return render(request, 'edit_post.html', {'form': form,
+                                                  'post': post,
+                                                  'title': title})
     except Exception:
         pass
     return HttpResponse('Post does not exist')

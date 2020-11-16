@@ -8,6 +8,7 @@ from django.db import transaction, IntegrityError
 def friends(request, pk):
     try:
         user = User.objects.get(pk=pk)
+        title = user.name + 's Friends'
         friends = user.friends.all()
         sent_friend_requests = FriendRequest.objects.filter(from_user=request.user)
         received_friend_requests = FriendRequest.objects.filter(to_user=request.user)
@@ -18,6 +19,7 @@ def friends(request, pk):
                                                 'sent_friend_requests': sent_friend_requests,
                                                 'received_friend_requests': received_friend_requests,
                                                 'online_users': online_users,
+                                                'title': title
                                                 })
     except Exception as ex:
         pass

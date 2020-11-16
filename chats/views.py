@@ -21,12 +21,12 @@ def get_users_for_private_messages(request):
 
 @login_required
 def messages(request):
+    title = 'Chats'
     user = request.user
     online_users = see_online_users()
     users = get_users_for_private_messages(request)
     chats = Chat.objects.filter(users__id=user.pk)
 
-    # creating chats
     if request.method == 'POST':
         form = NewChatForm(request.POST, request.FILES)
         if form.is_valid():
@@ -37,7 +37,11 @@ def messages(request):
             return redirect('messages')
     else:
         form = NewChatForm(None)
-    return render(request, 'messages.html', {'online_users': online_users, 'chats': chats, 'form': form, 'users': users})
+    return render(request, 'messages.html', {'online_users': online_users,
+                                             'chats': chats,
+                                             'form': form,
+                                             'users': users,
+                                             'title': title})
 
 
 def delete_message(request, pk):
@@ -76,11 +80,13 @@ def chat(request, pk):
                                          'form': form,
                                          'online_users': online_users,
                                          'chat': chat,
-                                         'page_obj': page_obj})
+                                         'page_obj': page_obj,
+                                         'title': chat.title})
 
 
 def edit_chat(request, pk):
     chat = Chat.objects.get(pk=pk)
+    title = 'Edit ' + chat.title
     if request.user == chat.owner:
         if request.method == 'POST':
             form = NewChatForm(request.POST, request.FILES, instance=chat)
@@ -88,7 +94,7 @@ def edit_chat(request, pk):
             return redirect('chat', pk=chat.pk)
         else:
             form = NewChatForm(instance=chat)
-            return render(request, 'edit_chat.html', {'form': form, 'chat': chat})
+            return render(request, 'edit_chat.html', {'form': form, 'chat': chat, 'title': title})
     else:
         return HttpResponse('You must be the owner of the chat to edit it.')
 
@@ -109,6 +115,7 @@ def delete_chat(request, pk):
 def add_users_to_chat(request, pk):
     try:
         chat = Chat.objects.get(pk=pk)
+        title = "Add Users"
 
         friends = request.user.friends.all()
         chat_users = chat.users.all()
@@ -124,7 +131,7 @@ def add_users_to_chat(request, pk):
                     return redirect('messages')
             else:
                 form = AddUsersToChatForm(queryset)
-            return render(request, 'add_users_to_chat.html', {'form': form, 'chat': chat, 'friends': friends})
+            return render(request, 'add_users_to_chat.html', {'form': form, 'chat': chat, 'friends': friends, 'title': title})
         else:
             return HttpResponse('You can only edit your own chats')
     except Exception as ex:
@@ -133,9 +140,17 @@ def add_users_to_chat(request, pk):
 
 
 def chat_users(request, pk):
-    chat = Chat.objects.get(pk=pk)
-    users = chat.users.all()
-    return render(request, 'chat_users.html', {'users': users, 'chat': chat})
+    try:
+        chat = Chat.objects.get(pk=pk)
+        title = "Participants"
+        if request.user in chat.users.all():
+            users = chat.users.all()
+            return render(request, 'chat_users.html', {'users': users, 'chat': chat, 'title': title})
+        else:
+            return HttpResponse('Action not allowed')
+    except Exception as ex:
+        pass
+    return HttpResponse('Chat does not exist')
 
 
 def remove_user_from_chat(request, pk, user_pk):
@@ -170,6 +185,7 @@ def leave_chat(request, pk):
 def private_messages(request, pk):
     online_users = see_online_users()
     receiver = User.objects.get(pk=pk)
+    title = "Messages with " + receiver.name
 
     from_user = PrivateMessage.objects.filter(from_user=request.user, to_user=receiver)
     to_user = PrivateMessage.objects.filter(to_user=request.user, from_user=receiver)
@@ -194,7 +210,8 @@ def private_messages(request, pk):
                                                      'messages': messages,
                                                      'form': form,
                                                      'receiver': receiver,
-                                                     'page_obj': page_obj})
+                                                     'page_obj': page_obj,
+                                                     'title': title})
 
 
 def delete_private_message(request, pk):

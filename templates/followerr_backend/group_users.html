@@ -5,8 +5,8 @@
     {% for user in group.users.all %}
         <div class="group-user-list-user">
             <div class="group-user-list-user-info">
-                {% if user.avatar %}
-                    <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="{{ user.avatar.picture.url }}" alt="connect"></a>
+                {% if user.image %}
+                    <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="{{ user.image.image.url }}" alt="connect"></a>
                 {% else %}
                     {% if user.gender %}
                         <a href="{% url 'profile' user.pk %}"><img height="50px" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>
@@ -19,5 +19,8 @@
         </div>
     {% endfor %}
 </div>
+<br>
+
+<a href="{% url 'group_detail' pk=group.pk %}"><button class="dark-button">Back</button></a>
 
 {% endblock %}

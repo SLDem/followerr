@@ -2,7 +2,7 @@
 {% load social_share %}
 
 {% block content %}
-    <div style="margin-top: -20px;" class="post">
+    <div class="post">
         <div class="post-user-info">
             <div class="post-user-group-admin-name">
                 <div>
@@ -33,8 +33,8 @@
                             {% endif %}
                         {% endif %}
                         {% if post.group %}
-                            {% if post.group.group_avatar %}
-                                <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="{{ group.group_avatar.url}}" alt="connect" ></a>
+                            {% if post.group.image %}
+                                <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="{{ post.group.image.url}}" alt="connect" ></a>
                             {% else %}
                                 <a href="{% url 'group_detail' post.group.pk %}"><img width="auto" height="50px" src="/media/group_avatars/group.png"></a>
                             {% endif %}
