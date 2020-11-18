@@ -26,10 +26,13 @@
 
 input[type=text]{
     width: 100%;
-    margin: 10px 0;
 }
 
 input[type=password]{
     width: 100%;
-    margin: 10px 0;
+}
+
+.login-signup-wrap {
+    width: 50%;
+    margin: 0 auto;
 }
