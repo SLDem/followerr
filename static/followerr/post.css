@@ -119,10 +119,6 @@
     font-size: 17px;
 }
 
-.comment-button p:hover {
-    margin-left: -20px;
-}
-
 .comment-button a:hover {
     border: 1px solid #404040;
     color: white;

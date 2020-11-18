@@ -2,30 +2,23 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
-from .forms import NewMessageForm, NewChatForm, AddUsersToChatForm, NewPrivateMessageForm
+from .forms import NewMessageForm, NewChatForm, AddUsersToChatForm
 from user_profile.models import User
-from .models import Message, PrivateMessage, Chat
+from .models import Message, Chat
 from authentication.views import see_online_users
 from django.contrib.auth.decorators import login_required
 
 
-def get_users_for_private_messages(request):
-    users = []
-    for message in PrivateMessage.objects.filter(from_user=request.user):
-        users.append(message.to_user)
-    for message in PrivateMessage.objects.filter(to_user=request.user):
-        users.append(message.from_user)
-    users = set(users)
-    return users
-
-
-@login_required
 def messages(request):
     title = 'Chats'
     user = request.user
     online_users = see_online_users()
-    users = get_users_for_private_messages(request)
     chats = Chat.objects.filter(users__id=user.pk)
+
+    for chat in chats:
+        for message in chat.chat_messages.all():
+            if not message.is_read:
+                chat.unread_count += 1
 
     if request.method == 'POST':
         form = NewChatForm(request.POST, request.FILES)
@@ -40,20 +33,43 @@ def messages(request):
     return render(request, 'messages.html', {'online_users': online_users,
                                              'chats': chats,
                                              'form': form,
-                                             'users': users,
                                              'title': title})
+
+
+def create_private_chat(request, pk):
+    user = User.objects.get(pk=pk)
+    chat = Chat.objects.filter(users__id=user.pk, is_private=True).filter(users__id=request.user.pk).first()
+    if chat:
+        return redirect('chat', pk=chat.pk)
+    else:
+        chat = Chat.objects.create(is_private=True)
+        chat.users.add(user)
+        chat.users.add(request.user)
+        return redirect('chat', pk=chat.pk)
 
 
 def delete_message(request, pk):
     try:
         message = Message.objects.get(pk=pk)
+        redirect_pk = message.chat.pk
         chat = message.chat
         if request.user == message.from_user:
-            message.delete()
-        return redirect('chat', pk=chat.pk)
+            if message == chat.last_message:
+                message.delete()
+                if chat.chat_messages.count() == 0:
+                    return redirect('chat', pk=redirect_pk)
+                else:
+                    chat.last_message = chat.chat_messages.latest('created_at')
+                    chat.save()
+            else:
+                message.delete()
+                chat.save()
+        else:
+            return HttpResponse('Action not allowed')
+        return redirect('chat', pk=redirect_pk)
     except Exception as ex:
-        pass
-    return redirect('messages')
+        return HttpResponse(ex)
+
 
 
 def chat(request, pk):
@@ -65,6 +81,12 @@ def chat(request, pk):
     page_number = request.GET.get('page')
     page_obj = messages_paginator.get_page(page_number)
 
+    if request.method == 'GET':
+        for message in messages:
+            if message.from_user != request.user:
+                message.is_read = True
+                message.save()
+
     if request.method == 'POST':
         form = NewMessageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -72,6 +94,8 @@ def chat(request, pk):
             new_message.from_user = request.user
             new_message.chat = chat
             new_message.save()
+            chat.last_message = new_message
+            chat.save()
             form = NewMessageForm()
             return redirect('chat', pk=chat.pk)
     else:
@@ -115,6 +139,8 @@ def delete_chat(request, pk):
 def add_users_to_chat(request, pk):
     try:
         chat = Chat.objects.get(pk=pk)
+        if chat.is_private:
+            return HttpResponse('This chat is private')
         title = "Add Users"
 
         friends = request.user.friends.all()
@@ -181,47 +207,3 @@ def leave_chat(request, pk):
         pass
     return HttpResponse('This chat does not exist yet or have been deleted')
 
-
-def private_messages(request, pk):
-    online_users = see_online_users()
-    receiver = User.objects.get(pk=pk)
-    title = "Messages with " + receiver.name
-
-    from_user = PrivateMessage.objects.filter(from_user=request.user, to_user=receiver)
-    to_user = PrivateMessage.objects.filter(to_user=request.user, from_user=receiver)
-    messages = from_user.union(to_user)
-
-    messages_paginator = Paginator(messages, 10)
-    page_number = request.GET.get('page')
-    page_obj = messages_paginator.get_page(page_number)
-
-    if request.method == 'POST':
-        form = NewPrivateMessageForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_message = form.save(commit=False)
-            new_message.from_user = request.user
-            new_message.to_user = receiver
-            new_message.save()
-            form = NewPrivateMessageForm()
-            return redirect('private_messages', pk=receiver.pk)
-    else:
-        form = NewPrivateMessageForm()
-    return render(request, 'private_messages.html', {'online_users': online_users,
-                                                     'messages': messages,
-                                                     'form': form,
-                                                     'receiver': receiver,
-                                                     'page_obj': page_obj,
-                                                     'title': title})
-
-
-def delete_private_message(request, pk):
-    try:
-        message = PrivateMessage.objects.get(pk=pk)
-        if request.user == message.from_user or request.user == message.to_user:
-            message.delete()
-            return redirect(request.get_full_path())
-        else:
-            return HttpResponse('Action not allowed')
-    except Exception as ex:
-        pass
-    return HttpResponse('Action not allowed')

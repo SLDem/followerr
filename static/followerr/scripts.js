@@ -12,3 +12,16 @@ $(document).ready(function(){
         $( button_id ).toggle();
     });
 });
+
+// sidebar icons
+const currentLocation = location.href;
+const menuItems = document.querySelectorAll('.sidebar-ul a');
+const menuLength = menuItems.length;
+const menuArrows = document.querySelectorAll('.arrow')
+
+for (let i=0; i< menuLength; i++) {
+    if (menuItems[i].href === currentLocation){
+        menuItems.forEach(menuItem => menuItem.classList.remove('active'))
+        menuItems[i].className = 'active'
+    }
+};

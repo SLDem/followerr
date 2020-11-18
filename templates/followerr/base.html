@@ -1,0 +1,60 @@
+{% load static %}
+<html>
+<head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/profile.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/user_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/post.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/comment.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/messages.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/groups.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/photoalbums.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/auth.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <ul class="navbar-ul">
+            <li class="nav-logo"><a href="{% url 'index' %}"><img height="50" width="auto" src="/media/images/followerr.png" alt="home">followerr</a></li>
+            {% if user.is_authenticated %}
+
+            <li class="nav-search">
+                <form action="{% url 'search_everything' %}" method="get" class="main-search-form">
+                    <input class="main-search-input" id="mq" name="mq" type="text" placeholder="Search followerr...">
+                    <button class="dark-button" type="submit">&#128269;</button>
+                </form>
+            </li>
+            <li class="nav-settings"><a href="{% url 'edit_user' request.user.pk %}"><img src="/media/images/gears.png" alt="/"></a></li>
+            {% else %}
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="sidebar">
+        <ul class="sidebar-ul">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'index' %}">Home</a><div class="icon home-icon"></div></li>
+                <li><a href="{% url 'profile' request.user.pk %}">Profile</a><div class="icon profile-icon"></div></li>
+                <li><a href="{% url 'messages' %}">Messages</a><div class="icon messages-icon"></div></li>
+                <li><a href="{% url 'groups' %}">Groups</a><div class="icon groups-icon"></div></li>
+                <li><a href="{% url 'photoalbums' request.user.pk %}">Photoalbums</a><div class="icon photoalbums-icon"></div></li>
+                <li><a href="{% url 'search_users' %}">Search users</a><div class="icon search-icon"></div></li>
+            {% else %}
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="content-wrap">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <div class="footer-items">
+            <p>&copy; 2020 All rights reserved </p>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="{% static 'followerr/scripts.js' %}"></script>
+
+</body>
+</html>

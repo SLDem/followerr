@@ -1,5 +1,5 @@
 from django import forms
-from .models import Message, Chat, PrivateMessage
+from .models import Message, Chat
 from emoji_picker.widgets import EmojiPickerTextareaAdmin
 
 
@@ -16,17 +16,6 @@ class NewMessageForm(forms.ModelForm):
         fields = ('body', 'image', )
 
 
-class NewPrivateMessageForm(forms.ModelForm):
-    body = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={'class': 'message-body-input',
-                                                                  'style': 'resize:none;',
-                                                                  'placeholder': 'Write your message'}), label="")
-    image = forms.ImageField(required=False, label='',
-                             widget=forms.FileInput(attrs={'class': 'message-image-input'}))
-
-    class Meta:
-        model = PrivateMessage
-        fields = ('body', 'image', )
-
 
 class NewChatForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={'class': 'new-chat-form',
@@ -37,7 +26,7 @@ class NewChatForm(forms.ModelForm):
 
     class Meta:
         model = Chat
-        fields = ('title', 'image', )
+        fields = ('title', 'image')
 
 
 class AddUsersToChatForm(forms.ModelForm):

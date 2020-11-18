@@ -14,7 +14,7 @@ def photoalbums(request, pk):
         user = User.objects.get(pk=pk)
         photoalbums = Photoalbum.objects.filter(user=user)
         title = user.name + 's photoalbums'
-        if request.user == user:
+        if request.user not in user.blocked_users.all():
             if request.method == 'POST':
                 form = NewPhotoalbumForm(request.POST)
                 if form.is_valid():
@@ -32,8 +32,8 @@ def photoalbums(request, pk):
                                                     'form': form,
                                                     'user': user,
                                                     'title': title})
-    except Exception:
-        pass
+    except Exception as ex:
+        print(ex)
     return HttpResponse('User does not exist')
 
 

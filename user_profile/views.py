@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 def profile(request, pk):
     try:
         user = User.objects.get(pk=pk)
-        title = 'Follower of ' + user.following
+        title = user.name
         if request.user in user.blocked_users.all():
             return HttpResponse('This user blocked you.')
         else:
@@ -63,8 +63,8 @@ def profile(request, pk):
                                                     'page_obj': page_obj,
                                                     'title': title})
     except Exception as ex:
-        pass
-    return HttpResponse('User does not exist')
+        return HttpResponse(ex)
+
 
 
 def upload_avatar(request):

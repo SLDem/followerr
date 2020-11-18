@@ -4,8 +4,8 @@ from django.urls import reverse
 
 from user_profile.models import User
 
-from .models import Chat, PrivateMessage, Message
-from .forms import NewChatForm, NewMessageForm, NewPrivateMessageForm, AddUsersToChatForm
+from .models import Chat, Message
+from .forms import NewChatForm, NewMessageForm, AddUsersToChatForm
 
 from django.test import tag
 
@@ -36,15 +36,6 @@ class ChatsModelTests(TestCase):
         message.delete()
         self.assertEqual(len(Message.objects.filter(from_user=self.user, chat=self.chat, body='test')), 0)
 
-    def test_private_message_creation(self):
-        private_message = PrivateMessage.objects.create(from_user=self.user, to_user=self.user1, body='test')
-        self.assertTrue(isinstance(private_message, PrivateMessage))
-
-    def test_private_message_deletion(self):
-        private_message = PrivateMessage.objects.create(from_user=self.user, to_user=self.user1, body='test')
-        private_message.delete()
-        self.assertEqual(len(PrivateMessage.objects.filter(from_user=self.user, to_user=self.user1, body='test')), 0)
-
 
 class ChatsViewTest(TestCase):
     def setUp(self):
@@ -58,12 +49,6 @@ class ChatsViewTest(TestCase):
         self.user1 = User.objects.create_user(email='test1@gmail.com', password='test1', name='test1')
         self.user2 = User.objects.create_user(email='test2@gmail.com', password='test2', name='test2')
 
-        self.private_message1 = PrivateMessage.objects.create(from_user=self.user,
-                                                              to_user=self.user1,
-                                                              body='test_message')
-        self.private_message2 = PrivateMessage.objects.create(from_user=self.user1,
-                                                              to_user=self.user,
-                                                              body='test_message1')
 
     def test_messages_view(self):
         response = self.client.get(reverse('messages'), follow=True)
@@ -212,40 +197,6 @@ class ChatsViewTest(TestCase):
         chat = Chat.objects.filter(pk=self.chat.pk).first()
         self.assertTrue(chat.DoesNotExist())
 
-    def test_private_messages_view(self):
-        response = self.client.get(reverse('private_messages', kwargs={'pk': self.user1.pk}))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'private_messages.html')
-
-    def test_private_messages_empty(self):
-        response = self.client.get(reverse('private_messages', kwargs={'pk': self.user2.pk}))
-        self.assertIn(force_bytes('No messages yet'), response.content)
-
-    def test_private_messages_showing(self):
-        response = self.client.get(reverse('private_messages', kwargs={'pk': self.user1.pk}))
-        self.assertIn(force_bytes(self.private_message1.body), response.content)
-        self.assertIn(force_bytes(self.private_message2.body), response.content)
-
-    def test_private_messages_sent(self):
-        data = {'body': 'test_message_to_user2'}
-        response = self.client.post(reverse('private_messages', kwargs={'pk': self.user2.pk}), data=data, follow=True)
-        self.assertIn(force_bytes('test_message_to_user2'), response.content)
-
-    def test_delete_private_message(self):
-        self.client.post(reverse('delete_private_message', kwargs={'pk': self.private_message1.pk}), follow=True)
-        private_message = PrivateMessage.objects.filter(from_user=self.user, to_user=self.user1, body='test_message1')
-        self.assertFalse(isinstance(private_message, PrivateMessage))
-
-    def test_delete_private_message_not_in_message_users(self):
-        private_message = PrivateMessage.objects.create(from_user=self.user1, to_user=self.user2, body='test_message2')
-        response = self.client.post(reverse('delete_private_message', kwargs={'pk': private_message.pk}), follow=True)
-        self.assertIn(force_bytes('Action not allowed'), response.content)
-
-    def delete_private_message_does_not_exist(self):
-        response = self.client.post(reverse('delete_private_message', kwargs={'pk': '10'}), follow=True)
-        self.assertIn(force_bytes('Action not allowed'), response.content)
-
-
 class ChatFormTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -284,20 +235,6 @@ class ChatFormTest(TestCase):
                 'chat': self.chat,
                 'body': ''}
         form = NewMessageForm(data=data)
-        self.assertFalse(form.is_valid())
-
-    def test_new_private_message_form_valid(self):
-        data = {'from_user': self.user,
-                'to_user': self.user1,
-                'body': 'test'}
-        form = NewPrivateMessageForm(data=data)
-        self.assertTrue(form.is_valid())
-
-    def test_new_private_message_form_invalid(self):
-        data = {'from_user': self.user,
-                'to_user': self.user1,
-                'body': ''}
-        form = NewPrivateMessageForm(data=data)
         self.assertFalse(form.is_valid())
 
     def test_add_users_to_chat_form_valid(self):

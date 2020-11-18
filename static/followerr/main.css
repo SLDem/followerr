@@ -6,13 +6,17 @@
     font-family: sans-serif;
 }
 
+.upload {
+    opacity: 1;
+}
+
 body {
     background-color: #EEEEEE !important;
 }
 
 .navbar {
     height: 50px;
-    background-color: #FA4337;
+    background-color: #5F9BE3;
     width: 100%;
     position: fixed;
     z-index: 2;
@@ -26,14 +30,113 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 60%;
+    width: 100%;
 }
 
 .navbar-ul a {
     text-decoration: none;
     color: white;
     font-family: "Courier New", Courier, monospace;
+    display: flex;
+    align-items: center;
 }
+
+.active {
+    color: #5F9BE3;
+}
+
+.nav-logo {
+    flex-basis: 20%;
+    margin-right: auto;
+}
+
+.nav-search {
+    display: flex;
+    flex-basis: 60%;
+
+}
+
+.nav-settings {
+    flex-basis: 20%;
+    margin-right: 10px;
+}
+
+.nav-settings a {
+    float: right;
+}
+
+.main-search-form {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-search-input {
+    width: calc(100% - 45px) !important ;
+}
+
+.main-search-button {
+    width: 40px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+    position: absolute;
+    width: 15%;
+    position: fixed;
+
+}
+
+.sidebar-ul {
+    list-style: none;
+    min-width: 170px !important;
+}
+
+.sidebar li {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.home-icon {
+    background-image: url('./images/home.png');
+    width: 24px;
+    height: 24px;
+}
+
+.profile-icon {
+    background-image: url('./images/profile.png');
+    width: 24px;
+    height: 24px;
+}
+.messages-icon {
+    background-image: url('./images/messages.png');
+    width: 24px;
+    height: 24px;
+}
+.groups-icon {
+    background-image: url('./images/groups.png');
+    width: 24px;
+    height: 24px;
+}
+.photoalbums-icon {
+    background-image: url('./images/photoalbums.png');
+    width: 24px;
+    height: 24px;
+}
+.search-icon {
+    background-image: url('./images/search.png');
+    width: 24px;
+    height: 24px;
+}
+
 
 .content-wrap {
     width: 40%;
@@ -128,7 +231,7 @@ body {
 
 .footer {
     margin-top: 30px;
-    height: 100px;
+    height: 70px;
     background-color: #404040;
     color: white;
     display: flex;
@@ -185,4 +288,8 @@ body {
 
 .login-button {
     margin: 10px 0;
+}
+
+.search-user-name {
+    text-decoration: none;
 }

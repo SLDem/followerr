@@ -41,7 +41,6 @@
     <div class="button-info-wrap">
         {% if user.pk == request.user.pk %}
             <div class="profile-buttons-wrap">
-                <a href="{% url 'edit_user' user.pk %}"><button class="dark-button">Edit Profile</button></a>
                 <a href="{% url 'upload_avatar' %}"><button class="dark-button">Upload Avatar</button></a>
                 <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
                 <a href="{% url 'blocked_users' %}"><button class="dark-button">Blocked Users</button></a>
@@ -52,7 +51,7 @@
             {% if user in request.user.blocked_users.all %}
                 <a href="{% url 'unblock_user' user.pk %}"><button class="dark-button">Unblock User</button></a>
             {% else %}
-                <a href="{% url 'private_messages' user.pk %}"><button class="dark-button">Message</button></a>
+                <a href="{% url 'create_private_chat' user.pk %}"><button class="dark-button">Message</button></a>
                 <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
                 {% if button_status == 'not_friend' %}
                     <a href="{% url 'send_friend_request' user.pk %}"><button class="dark-button">Add Friend</button></a>

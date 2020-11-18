@@ -1,6 +1,39 @@
-from django.shortcuts import render
-from search.documents import ChatDocument, PrivateMessageDocument, PhotoalbumDocument, \
-    ImageDocument, UserDocument
+from django.shortcuts import render, redirect
+from search.documents import ChatDocument, PhotoalbumDocument, \
+    ImageDocument, UserDocument, PostDocument, GroupDocument
+
+
+def search_everything(request):
+    title = 'Search Results'
+    mq = request.GET.get('mq')
+    searched_results = {}
+
+    if request.method == 'GET':
+        if mq:
+            searched_users = UserDocument.search().query('match', name=mq)
+            if searched_users:
+                users = {'users': list(searched_users)}
+                searched_results.update(users)
+
+            searched_groups = GroupDocument.search().query('match', title=mq)
+            if searched_groups:
+                groups = {'groups': list(searched_groups)}
+                searched_results.update(groups)
+
+            searched_photoalbums = PhotoalbumDocument.search().query('match', title=mq)
+            if searched_photoalbums:
+                photoalbums = {'photoalbums': list(searched_photoalbums)}
+                searched_results.update(photoalbums)
+
+            searched_posts = PostDocument.search().query('match', body=mq)
+            if searched_posts:
+                posts = {'posts': list(searched_posts)}
+                searched_results.update(posts)
+            return render(request, 'searched_results.html', {'searched_results': searched_results,
+                                                      'title': title})
+        else:
+            searched_results = {}
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def search_chats(request):
@@ -11,16 +44,6 @@ def search_chats(request):
     else:
         chats = ''
     return render(request, 'search_chats.html', {'chats': chats, 'title': title})
-
-
-def search_private_messages(request):
-    q = request.GET.get('q')
-    title = 'Search Private Messages'
-    if q:
-        private_messages = PrivateMessageDocument.search().query('match', body=q)
-    else:
-        private_messages = ''
-    return render(request, 'search_private_messages.html', {'private_messages': private_messages, 'title': title})
 
 
 def search_photoalbums(request):

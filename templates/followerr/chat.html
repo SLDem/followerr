@@ -3,13 +3,17 @@
 
 <div class="chat-buttons">
     <div>
-        <a href="{% url 'add_users_to_chat' chat.pk %}"><button class="dark-button">Add users</button></a>
+        {% if not chat.is_private %}
+            <a href="{% url 'add_users_to_chat' chat.pk %}"><button class="dark-button">Add users</button></a>
+        {% endif %}
         <a href="{% url 'leave_chat' chat.pk %}"><button class="dark-button">Leave Chat</button></a>
     </div>
     <div>
         {% if request.user == chat.owner %}
             <a href="{% url 'chat_users' chat.pk %}"><button class="dark-button">Remove Users</button></a>
             <a href="{% url 'edit_chat' chat.pk %}"><button class="dark-button">Edit Chat</button></a>
+            <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
+        {% elif chat.is_private %}
             <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
         {% endif %}
     </div>
@@ -18,7 +22,11 @@
 <h1 class="chat-title">{{ chat.title }}</h1>
 
 {% for message in page_obj %}
-    <div class="message-avatar-body">
+    {% if message.is_read %}
+        <div class="message-avatar-body">
+    {% else %}
+        <div class="not-read-message-avatar-body">
+    {% endif %}
         <div class="message-content">
             <div class="message-avatar">
                 {% if message.from_user.image %}

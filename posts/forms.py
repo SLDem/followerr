@@ -11,6 +11,7 @@ class NewPostForm(forms.ModelForm):
     image = forms.ImageField(required=False, label='',
                              widget=forms.FileInput(attrs={'class': 'post-image-input'}))
 
+
     class Meta:
         model = Post
-        fields = ('body', 'image', )
+        fields = ('body', )

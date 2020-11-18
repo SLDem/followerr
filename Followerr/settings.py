@@ -70,7 +70,7 @@ ROOT_URLCONF = 'Followerr.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.dirname(__file__), '../templates/followerr_backend').replace('\\', '/')],
+        'DIRS': [os.path.join(os.path.dirname(__file__), '../templates/followerr').replace('\\', '/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

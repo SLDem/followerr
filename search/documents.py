@@ -3,13 +3,12 @@ from django_elasticsearch_dsl import Document, Index, fields
 from posts.models import Post
 from user_profile.models import User
 from groups.models import Group
-from chats.models import Chat, PrivateMessage
+from chats.models import Chat
 from photoalbums.models import Photoalbum, Image
 
 posts = Index('posts')
 groups = Index('groups')
 chats = Index('chats')
-private_messages = Index('private_messages')
 photoalbums = Index('photoalbums')
 images = Index('images')
 users = Index('users')
@@ -77,39 +76,6 @@ class PhotoalbumDocument(Document):
             'created_at',
         ]
 
-
-@private_messages.doc_type
-class PrivateMessageDocument(Document):
-    from_user = fields.ObjectField(properties={
-        'id': fields.IntegerField(),
-        'name': fields.TextField(),
-        'gender': fields.BooleanField(),
-        'image': fields.ObjectField(properties={
-            'id': fields.IntegerField(),
-            'image': fields.FileField(),
-        }),
-    })
-
-    to_user = fields.ObjectField(properties={
-        'id': fields.IntegerField(),
-        'name': fields.TextField(),
-        'gender': fields.BooleanField(),
-        'image': fields.ObjectField(properties={
-            'id': fields.IntegerField(),
-            'image': fields.FileField(),
-        }),
-    })
-
-    class Index:
-        name = 'private_messages'
-
-    class Django:
-        model = PrivateMessage
-        fields = [
-            'id',
-            'body',
-            'created_at',
-        ]
 
 
 @chats.doc_type

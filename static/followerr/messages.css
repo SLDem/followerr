@@ -28,6 +28,11 @@
     padding-right: 10px;
 }
 
+.unread-wrap {
+    flex-basis: 15%;
+    text-align: center;
+}
+
 .messages-item img {
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
@@ -82,6 +87,20 @@
     flex-direction: column;
     gap: 10px;
     background-color: white;
+    width: 100%;
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    margin-bottom: 8px;
+}
+
+.not-read-message-avatar-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #D5D5D5;
     width: 100%;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
@@ -144,6 +163,11 @@
     outline: none;
 }
 
+.message-body-not-read {
+    width: 100%;
+    background-color: grey !important;
+}
+
 .message-date {
     width: 100px;
     opacity: 0.6;
@@ -159,7 +183,7 @@
 
 .message-image-input {
     width: 100%;
-    margin-bottom: -10px;
+    margin-bottom: 5px;
 }
 
 .add-people-to-chat-form {
@@ -186,6 +210,7 @@
 .messages-item-image {
     display: flex; align-items:
     center; gap: 10px;
+    flex-basis: 85%;
 }
 
 .edit-chat-button {
@@ -198,4 +223,56 @@
 
 .offline-chat-msg {
     font-size: 13px;
+}
+
+.unread {
+    background-color: grey;
+    color: white;
+    border-radius: 25px;
+    border: 1px solid lightgrey;
+    padding: 2px;
+    text-align: center;
+}
+
+.unread-in-preview {
+    background-color: #D5D5D5;
+    text-align: left;
+    border-radius: 0;
+    width: calc(100% - 10px);
+}
+
+.read-in-preview {
+    color: #404040; border-radius: 0;
+    border: none;
+    background-color: white;
+    text-align: left;
+    width: calc(100% - 10px);
+}
+
+.chat-image {
+    display: flex;
+    gap: 5px;
+}
+
+.last-message {
+    display: flex;
+    gap: 3px;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.chat-last-message {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.chat-title-last-message {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 70px);
+}
+
+.messages-user-name {
+    width: 100%;
 }

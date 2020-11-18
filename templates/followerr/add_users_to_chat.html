@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+{% if not chat.is_private %}
+    <form class="main-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="dark-button" type="submit">Add users</button>
+    </form>
+{% else %}
+<p>This chat is private</p>
+{% endif %}
+<br>
+<a href="{% url 'chat' chat.pk %}"><button class="dark-button">Back</button></a>
+
+{% endblock %}

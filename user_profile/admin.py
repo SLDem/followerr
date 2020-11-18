@@ -7,7 +7,7 @@ from friends.models import FriendRequest
 from groups.models import GroupJoinRequest, Discussion
 from posts.models import Post
 from comments.models import Comment
-from chats.models import Message, PrivateMessage, Chat
+from chats.models import Message, Chat
 from photoalbums.models import Image, Photoalbum
 
 
@@ -67,7 +67,6 @@ admin.site.register(Comment)
 
 admin.site.register(Message)
 
-admin.site.register(PrivateMessage)
 admin.site.register(Chat)
 admin.site.register(Discussion)
 

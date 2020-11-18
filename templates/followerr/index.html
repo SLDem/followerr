@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form class="main-form" method="post" enctype="multipart/form-data">
+    <div class="main-post-form-image-wrap">
+        {% if request.user.image %}
+            <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="{{ request.user.image.image.url}}" alt="connect" ></a>
+        {% else %}
+            {% if user.gender %}
+                <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>
+            {% else %}
+                <a href="{% url 'profile' request.user.pk %}"><img height="70px" width="auto" src="/media/avatars/default-avatar-female.jpg"></a>
+            {% endif %}
+        {% endif %}
+        <h2>Welcome back, {{user.name}}.</h2>
+    </div>
+    {% csrf_token %}
+
+    {% block extrahead %}
+    {{ form.media }}
+    {% endblock %}
+    {{ form.as_p }}
+    <br>
+    <button class="dark-button" type="submit">Send</button>
+</form>
+
+<br>
+<br>
+
+<form method="get">
+    <input class="search-input" id="q" name="q" type="text" placeholder="Search for posts...">
+    <button class="dark-button search-button" type="submit">&#128269;</button>
+</form>
+
+<div class="posts">
+    {% if searched_posts %}
+        {% for post in searched_posts %}
+            {% include "_post_search.html" %}
+        {% endfor %}
+    <br>
+    <hr>
+    {% endif %}
+    {% for post in page_obj %}
+        {% include "_post.html" %}
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&#xab;</a>&nbsp;
+            <a href="?page={{ page_obj.previous_page_number }}">&#x2039;</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">&#x203A;</a>&nbsp;
+            <a href="?page={{ page_obj.paginator.num_pages }}">&#xbb;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

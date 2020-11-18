@@ -2,19 +2,19 @@ from django.test import TestCase, Client
 from django.utils.encoding import force_bytes
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .documents import UserDocument, ImageDocument, PhotoalbumDocument, PrivateMessageDocument, ChatDocument, \
+from .documents import UserDocument, ImageDocument, PhotoalbumDocument, ChatDocument, \
     PostDocument, GroupDocument
 
 from posts.models import Post
 from groups.models import Group
-from chats.models import Chat, PrivateMessage
+from chats.models import Chat
 from photoalbums.models import Image, Photoalbum
 from user_profile.models import User
 
 
 from django_elasticsearch_dsl.documents import DocType
 
-from .documents import posts, groups, chats, private_messages, photoalbums, images, users
+from .documents import posts, groups, chats, photoalbums, images, users
 import os
 
 from Followerr.settings import MEDIA_ROOT

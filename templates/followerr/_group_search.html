@@ -1,0 +1,13 @@
+<div class="group">
+    <div class="group-avatar-name">
+        {% if group.image %}
+            <a href="{% url 'group_detail' group.id %}"><img height="50px" width="auto" src="{{ group.image }}" alt="connect"></a>
+        {% else %}
+            <a href="{% url 'group_detail' group.id %}"><img height="50px" width="auto" src="/media/group_avatars/group.png" alt="connect"></a>
+        {% endif %}
+        <a href="{% url 'group_detail' group.id %}">{{ group.title }}</a>
+    </div>
+    <div>
+        <p>{{ group.users|length }} participants.</p>
+    </div>
+</div>

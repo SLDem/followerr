@@ -61,11 +61,10 @@
         <div class="comment-button">
             <a href="{% url 'post_detail' post.pk %}"><img src="/media/icons/comments.png" alt="comments"></a>
             {% if post.post_comments.count == 0 %}
-                <p>&nbsp;View</p>
             {% elif post.post_comments.count == 1 %}
-                <p>&nbsp;View {{ post.post_comments.count }} comment.</p>
+                <p>&nbsp;{{ post.post_comments.count }} comment</p>
             {% elif post.post_comments.count > 1 %}
-                <p>&nbsp;View {{ post.post_comments.count }} comments.</p>
+                <p>&nbsp;{{ post.post_comments.count }} comments</p>
             {% endif %}
         </div>
         <div class="like-button">
