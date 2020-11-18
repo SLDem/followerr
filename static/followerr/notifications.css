@@ -21,3 +21,35 @@
     align-items: center;
     justify-content: space-between;
 }
+
+#notifications {
+    position: fixed;
+    width: 200px !important;
+    right: 30;
+    top: 80;
+    transition: 0.3s ease;
+    border: 1px solid #5F9BE3;
+}
+
+.notifications-ul {
+    list-style: none;
+    width: 200px;
+}
+
+.li-bold {
+    font-weight: bold;
+}
+
+#nav-notifications {
+    flex-basis: 17%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+#nav-notifications img {
+    border: 1px solid orange;
+    border-radius: 25px;
+}

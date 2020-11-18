@@ -17,7 +17,7 @@ def friends(request, pk):
         received_friend_requests = FriendRequest.objects.filter(to_user=request.user)
 
         online_users = see_online_users()
-        return render(request, 'friends.html', {'user': user,
+        return render(request, 'friends/friends.html', {'user': user,
                                                 'friends': friends,
                                                 'sent_friend_requests': sent_friend_requests,
                                                 'received_friend_requests': received_friend_requests,

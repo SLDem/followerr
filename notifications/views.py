@@ -6,7 +6,7 @@ from .models import Notification
 
 def view_notifications(request):
     notifications = Notification.objects.filter(user=request.user)
-    return render(request, 'notifications.html', {'notifications': notifications, 'title': 'Notifications'})
+    return render(request, 'notifications/notifications.html', {'notifications': notifications, 'title': 'Notifications'})
 
 
 def clear_all_notifications(request):

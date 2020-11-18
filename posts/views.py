@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from comments.forms import NewCommentForm
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 
 from .forms import NewPostForm
 
@@ -34,9 +33,9 @@ def index(request):
 
     if request.user.is_authenticated:
         user = request.user
-        user_posts = Post.objects.filter(user=request.user)
-        friends_posts = Post.objects.filter(user__in=user.friends.all())
-        user_group_posts = Post.objects.filter(group__in=user_groups)
+        user_posts = Post.objects.filter(user=request.user).exclude(is_private=True)
+        friends_posts = Post.objects.filter(user__in=user.friends.all()).exclude(is_private=True)
+        user_group_posts = Post.objects.filter(group__in=user_groups).exclude(is_private=True)
 
         posts = friends_posts.union(user_posts, user_group_posts)[::-1]
         posts_paginator = Paginator(posts, 5)
@@ -64,7 +63,7 @@ def index(request):
             'title': title,
         }
 
-        return render(request, 'index.html', context=context)
+        return render(request, 'posts/index.html', context=context)
     else:
         return redirect('login')
 
@@ -87,11 +86,11 @@ def post_detail(request, pk):
                     return redirect('post_detail', pk=post.pk)
             else:
                 form = NewCommentForm(instance=None)
-            return render(request, 'post_detail.html', {'form': form,
-                                                        'post': post,
-                                                        'online_users': online_users,
-                                                        'comments': comments,
-                                                        'title': title})
+            return render(request, 'posts/post_detail.html', {'form': form,
+                                                              'post': post,
+                                                              'online_users': online_users,
+                                                              'comments': comments,
+                                                              'title': title})
         else:
             return redirect('login')
     except Exception as ex:
@@ -117,12 +116,11 @@ def edit_post(request, pk):
         else:
             return redirect('login')
         form = NewPostForm(instance=post)
-        return render(request, 'edit_post.html', {'form': form,
-                                                  'post': post,
-                                                  'title': title})
-    except Exception:
-        pass
-    return HttpResponse('Post does not exist')
+        return render(request, 'posts/edit_post.html', {'form': form,
+                                                        'post': post,
+                                                        'title': title})
+    except Exception as ex:
+        return HttpResponse(ex)
 
 
 def like_post(request, pk):
@@ -170,7 +168,7 @@ def dislike_post(request, pk):
 def delete_post(request, pk):
     try:
         post = Post.objects.get(pk=pk)
-        if post.user.pk == request.user.pk:
+        if post.user == request.user or post.profile == request.user:
             post.delete()
             return redirect('index')
         else:

@@ -39,7 +39,7 @@
             {% endif %}
         </div>
         <div class="buttons">
-            {% if request.user.pk == post.user.pk or request.user in post.group.owners.all %}
+            {% if request.user.pk == post.user.pk or request.user in post.group.owners.all or request.user == post.profile %}
                 <a href="{% url 'edit_post' post.pk %}"><button class="dark-button">&#9998;</button></a>
                 <a href="{% url 'delete_post' post.pk %}"><button class="dark-button">&#10006;</button></a>
             {% endif %}

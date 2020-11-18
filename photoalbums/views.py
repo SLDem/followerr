@@ -28,7 +28,7 @@ def photoalbums(request, pk):
         else:
             return HttpResponse('Action not allowed')
         form = NewPhotoalbumForm()
-        return render(request, 'photoalbums.html', {'photoalbums': photoalbums,
+        return render(request, 'photoalbums/photoalbums.html', {'photoalbums': photoalbums,
                                                     'form': form,
                                                     'user': user,
                                                     'title': title})
@@ -54,7 +54,7 @@ def photoalbum(request, pk):
             else:
                 return HttpResponse('Action not allowed')
         form = NewImageForm()
-        return render(request, 'photoalbum.html', {'photoalbum': photoalbum,
+        return render(request, 'photoalbums/photoalbum.html', {'photoalbum': photoalbum,
                                                    'form': form,
                                                    'images': images,
                                                    'title': title})
@@ -80,7 +80,7 @@ def image_detail(request, pk):
                 return redirect('image_detail', pk=image.pk)
         else:
             form = NewCommentForm()
-        return render(request, 'image_detail.html', {'online_users': online_users,
+        return render(request, 'photoalbums/image_detail.html', {'online_users': online_users,
                                                      'image': image,
                                                      'form': form,
                                                      'comments': comments,
@@ -135,7 +135,7 @@ def edit_image(request, pk):
                     return redirect('image_detail', pk=image.pk)
             else:
                 form = NewImageForm(instance=image)
-                return render(request, 'edit_image.html', {'image': image, 'form': form, 'title': title})
+                return render(request, 'photoalbums/edit_image.html', {'image': image, 'form': form, 'title': title})
         else:
             return HttpResponse('Action not allowed')
     except Exception:
@@ -176,7 +176,7 @@ def edit_album(request, pk):
                 form = NewPhotoalbumForm(instance=photoalbum)
         else:
             return HttpResponse('Action not allowed')
-        return render(request, 'edit_photoalbum.html', {'photoalbum': photoalbum,
+        return render(request, 'photoalbums/edit_photoalbum.html', {'photoalbum': photoalbum,
                                                         'form': form,
                                                         'title': title})
     except Exception as ex:

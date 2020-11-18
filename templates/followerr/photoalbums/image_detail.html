@@ -9,8 +9,10 @@
 <div class="main-form image-description">
     <p>{{ image.description }}</p>
     <div>
+        {% if request.user == image.album.user %}
         <a href="{% url 'edit_image' image.pk %}"><button class="dark-button">&#9998;</button></a>
         <a href="{% url 'delete_image' image.pk %}"><button class="dark-button">&#10006;</button></a>
+        {% endif %}
     </div>
 </div>
 <br>

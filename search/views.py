@@ -29,8 +29,8 @@ def search_everything(request):
             if searched_posts:
                 posts = {'posts': list(searched_posts)}
                 searched_results.update(posts)
-            return render(request, 'searched_results.html', {'searched_results': searched_results,
-                                                      'title': title})
+            return render(request, 'search/searched_results.html', {'searched_results': searched_results,
+                                                                    'title': title})
         else:
             searched_results = {}
     return redirect(request.META.get('HTTP_REFERER', '/'))
@@ -43,7 +43,7 @@ def search_chats(request):
         chats = ChatDocument.search().query('match', title=q)
     else:
         chats = ''
-    return render(request, 'search_chats.html', {'chats': chats, 'title': title})
+    return render(request, 'search/search_chats.html', {'chats': chats, 'title': title})
 
 
 def search_photoalbums(request):
@@ -53,7 +53,7 @@ def search_photoalbums(request):
         photoalbums = PhotoalbumDocument.search().query('match', title=q)
     else:
         photoalbums = ''
-    return render(request, 'search_photoalbums.html', {'photoalbums': photoalbums, 'title': title})
+    return render(request, 'search/search_photoalbums.html', {'photoalbums': photoalbums, 'title': title})
 
 
 def search_images(request):
@@ -63,7 +63,7 @@ def search_images(request):
         images = ImageDocument.search().query('match', description=q)
     else:
         images = ''
-    return render(request, 'search_images.html', {'images': images, 'title': title})
+    return render(request, 'search/search_images.html', {'images': images, 'title': title})
 
 
 def search_users(request):
@@ -73,4 +73,4 @@ def search_users(request):
         users = UserDocument.search().query('match', name=q)
     else:
         users = ''
-    return render(request, 'search_users.html', {'users': users, 'title': title})
+    return render(request, 'search/search_users.html', {'users': users, 'title': title})

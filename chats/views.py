@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
@@ -34,7 +34,7 @@ def messages(request):
             return redirect('messages')
     else:
         form = NewChatForm(None)
-    return render(request, 'messages.html', {'online_users': online_users,
+    return render(request, 'chats/messages.html', {'online_users': online_users,
                                              'chats': chats,
                                              'form': form,
                                              'title': title})
@@ -70,7 +70,7 @@ def delete_message(request, pk):
                 chat.save()
         else:
             return HttpResponse('Action not allowed')
-        return redirect('chat', pk=redirect_pk)
+        return redirect(request.META.get('HTTP_REFERER', '/'))
     except Exception as ex:
         return HttpResponse(ex)
 
@@ -117,10 +117,10 @@ def chat(request, pk):
                     notification.save()
             chat.save()
             form = NewMessageForm()
-            return redirect('chat', pk=chat.pk)
+            return redirect(reverse('chat', kwargs={'pk': chat.pk}) + '?page=%s' % messages_paginator.num_pages)
     else:
         form = NewMessageForm()
-    return render(request, 'chat.html', {'messages': messages,
+    return render(request, 'chats/chat.html', {'messages': messages,
                                          'form': form,
                                          'online_users': online_users,
                                          'chat': chat,
@@ -177,7 +177,7 @@ def add_users_to_chat(request, pk):
                     return redirect('messages')
             else:
                 form = AddUsersToChatForm(queryset)
-            return render(request, 'add_users_to_chat.html', {'form': form, 'chat': chat, 'friends': friends, 'title': title})
+            return render(request, 'chats/add_users_to_chat.html', {'form': form, 'chat': chat, 'friends': friends, 'title': title})
         else:
             return HttpResponse('You can only edit your own chats')
     except Exception as ex:
@@ -191,7 +191,7 @@ def chat_users(request, pk):
         title = "Participants"
         if request.user in chat.users.all():
             users = chat.users.all()
-            return render(request, 'chat_users.html', {'users': users, 'chat': chat, 'title': title})
+            return render(request, 'chats/chat_users.html', {'users': users, 'chat': chat, 'title': title})
         else:
             return HttpResponse('Action not allowed')
     except Exception as ex:

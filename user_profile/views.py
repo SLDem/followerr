@@ -11,6 +11,7 @@ from posts.models import Post
 from friends.models import FriendRequest
 from photoalbums.forms import NewImageForm
 from photoalbums.models import Photoalbum
+from notifications.models import Notification
 
 from authentication.views import see_online_users
 from django.contrib.auth.decorators import login_required
@@ -27,7 +28,9 @@ def profile(request, pk):
             online_users = see_online_users()
             friends = user.friends.all()
 
-            posts = Post.objects.filter(user=user).order_by('date_posted').reverse()
+            user_posts = Post.objects.filter(user=user)
+            profile_posts = Post.objects.filter(profile=user)
+            posts = user_posts.union(profile_posts).order_by('date_posted').reverse()
             posts_paginator = Paginator(posts, 5)
             page_number = request.GET.get('page')
             page_obj = posts_paginator.get_page(page_number)
@@ -43,18 +46,22 @@ def profile(request, pk):
                 button_status = 'friend'
 
             if request.method == 'POST':
-                if request.user == user:
-                    form = NewPostForm(request.POST, request.FILES)
-                    if form.is_valid():
-                        new_post = form.save(commit=False)
-                        new_post.user = user
-                        new_post.save()
-                        return redirect('index')
-                else:
-                    return HttpResponse('Action not allowed')
+                form = NewPostForm(request.POST, request.FILES)
+                if form.is_valid():
+                    new_post = form.save(commit=False)
+                    new_post.user = request.user
+                    new_post.profile = user
+                    new_post.is_private = True
+                    new_post.save()
+                    notification = Notification.objects.create(type='P',
+                                                               text='New Post in profile!',
+                                                               user=user,
+                                                               post=new_post)
+                    notification.save()
+                    return redirect(request.META.get('HTTP_REFERER', '/'))
             else:
                 form = NewPostForm(instance=None)
-            return render(request, 'profile.html', {'user': user,
+            return render(request, 'user_profile/profile.html', {'user': user,
                                                     'friends': friends,
                                                     'posts': posts,
                                                     'form': form,
@@ -109,7 +116,7 @@ def upload_avatar(request):
             return redirect('profile', pk=request.user.pk)
     else:
         form = NewImageForm()
-    return render(request, 'upload_avatar.html', {'form': form, 'title': title})
+    return render(request, 'user_profile/upload_avatar.html', {'form': form, 'title': title})
 
 
 def edit_user(request, pk):
@@ -124,7 +131,7 @@ def edit_user(request, pk):
                     return redirect('profile', pk=user.pk)
             else:
                 form = EditUserForm(instance=user)
-            return render(request, 'edit_user.html', {'form': form,
+            return render(request, 'user_profile/edit_user.html', {'form': form,
                                                       'current_user': user,
                                                       'title': title})
         else:
@@ -150,4 +157,4 @@ def change_password(request):
             else:
                 return HttpResponse('Your passwords do not match')
     form = ChangePasswordForm()
-    return render(request, 'edit_password.html', {'form': form, 'title': title})
+    return render(request, 'user_profile/edit_password.html', {'form': form, 'title': title})

@@ -50,7 +50,7 @@ def edit_comment(request, pk):
                 return redirect('post_detail', pk=post.pk)
         else:
             form = NewCommentForm(instance=comment)
-        return render(request, 'edit_comment.html', {'form': form, 'comment': comment, 'title': title})
+        return render(request, 'comments/edit_comment.html', {'form': form, 'comment': comment, 'title': title})
 
     except Exception as ex:
         pass

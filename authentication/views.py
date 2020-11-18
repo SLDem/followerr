@@ -57,7 +57,7 @@ def signup(request):
             return redirect('login')
     else:
         form = SignupForm()
-    return render(request, 'custom_signup.html', {'form': form, 'title': title})
+    return render(request, 'authentication/custom_signup.html', {'form': form, 'title': title})
 
 
 class VerificationView(View):

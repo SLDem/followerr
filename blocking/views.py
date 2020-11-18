@@ -48,4 +48,4 @@ def unblock_user(request, pk):
 def blocked_users(request):
     title = 'Blocked Users'
     blocked_users = request.user.blocked_users.all()
-    return render(request, 'blocked_users.html', {'blocked_users': blocked_users, 'title': title})
+    return render(request, 'blocking/blocked_users.html', {'blocked_users': blocked_users, 'title': title})

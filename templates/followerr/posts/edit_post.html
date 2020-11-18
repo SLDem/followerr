@@ -4,9 +4,11 @@
         <h1>Edit Post</h1>
         <form class="main-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
             {% block extrahead %}
             {{ form.media }}
             {% endblock %}
+
             {{ form.as_p }}
             <button class="dark-button save-edit-post-button" type="submit">Save</button>
         </form>

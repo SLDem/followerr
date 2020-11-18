@@ -85,7 +85,7 @@
 
     <br>
     <br>
-    {% if request.user == user %}
+
     <form class="main-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -97,7 +97,7 @@
         <br>
         <button class="dark-button" type="submit">Send</button>
     </form>
-    {% endif %}
+
     <div class="posts">
         {% for post in page_obj %}
             {% include "_post.html" %}
