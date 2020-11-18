@@ -9,6 +9,7 @@ from .forms import NewPostForm
 from .models import Post
 from groups.models import Group
 from comments.models import Comment
+from notifications.models import Notification
 
 from authentication.views import see_online_users
 
@@ -47,6 +48,9 @@ def index(request):
                 new_post = form.save(commit=False)
                 new_post.user = user
                 new_post.save()
+                for user in request.user.subscribers.all():
+                    notification = Notification.objects.create(type='P', text='New Post in subscribed!', user=user, post=new_post)
+                    notification.save()
                 return redirect('index')
         else:
             form = NewPostForm(instance=None)

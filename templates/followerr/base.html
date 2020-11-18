@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/groups.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/photoalbums.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/auth.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'followerr/notifications.css' %}">
+    <link rel="icon" href="/media/images/followerr.png">
 </head>
 <body>
     <div class="navbar">
@@ -24,6 +26,13 @@
                     <button class="dark-button" type="submit">&#128269;</button>
                 </form>
             </li>
+            <li id="nav-notifications">
+                {% if request.user.user_notifications.all|length != 0 %}
+                    <img src="/media/images/darrow-active.png" alt="/">
+                {% else %}
+                    <img src="/media/images/darrow.png" alt="/">
+                {% endif %}
+            </li>
             <li class="nav-settings"><a href="{% url 'edit_user' request.user.pk %}"><img src="/media/images/gears.png" alt="/"></a></li>
             {% else %}
             {% endif %}
@@ -36,6 +45,7 @@
                 <li><a href="{% url 'index' %}">Home</a><div class="icon home-icon"></div></li>
                 <li><a href="{% url 'profile' request.user.pk %}">Profile</a><div class="icon profile-icon"></div></li>
                 <li><a href="{% url 'messages' %}">Messages</a><div class="icon messages-icon"></div></li>
+                <li><a href="{% url 'friends' request.user.pk %}">Friends</a><div class="icon friends-icon"></div></li>
                 <li><a href="{% url 'groups' %}">Groups</a><div class="icon groups-icon"></div></li>
                 <li><a href="{% url 'photoalbums' request.user.pk %}">Photoalbums</a><div class="icon photoalbums-icon"></div></li>
                 <li><a href="{% url 'search_users' %}">Search users</a><div class="icon search-icon"></div></li>
@@ -45,6 +55,18 @@
     </div>
 
     <div class="content-wrap">
+        <div style="display: none;" id="notifications" class="main-form">
+            <ul class="notifications-ul">
+                {% if request.user.user_notifications.all|length != 0 %}
+                    {% for notification in request.user.user_notifications.all %}
+                        <li class="li-bold">{{ notification.text }}</li>
+                    {% endfor %}
+                    <li><a href="{% url 'view_notifications' %}">All</a></li>
+                {% else %}
+                    <li class="li-bold">No new notifications</li>
+                {% endif %}
+            </ul>
+        </div>
         {% block content %}{% endblock %}
     </div>
 

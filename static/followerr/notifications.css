@@ -1,0 +1,23 @@
+.notification-post {
+    margin-bottom: 10px;
+}
+
+.notification-post a {
+    text-decoration: none;
+}
+
+.notification-post-comment-button {
+    height: auto !important;
+    margin-top: 15px;
+}
+
+.chat-anchor {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.notifications-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

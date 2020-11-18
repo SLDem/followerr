@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
+{% if user not in request.user.blocked_users.all %}
     <h1>
         {{user.name}}{% if user.following %}, I follow the ways of
         {{ user.following }}
@@ -53,6 +53,11 @@
             {% else %}
                 <a href="{% url 'create_private_chat' user.pk %}"><button class="dark-button">Message</button></a>
                 <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
+                {% if request.user in user.subscribers.all %}
+                    <a href="{% url 'unsubscribe_from_user' user.pk %}"><button class="dark-button">Unsubscribe</button></a>
+                {% else %}
+                    <a href="{% url 'subscribe_to_user' user.pk %}"><button class="dark-button">Subscribe</button></a>
+                {% endif %}
                 {% if button_status == 'not_friend' %}
                     <a href="{% url 'send_friend_request' user.pk %}"><button class="dark-button">Add Friend</button></a>
                 {% elif button_status == 'friend_request_sent' %}
@@ -117,4 +122,7 @@
             {% endif %}
         </span>
     </div>
+{% else %}
+<h1>This user blocked you</h1>
+{% endif %}
 {% endblock %}

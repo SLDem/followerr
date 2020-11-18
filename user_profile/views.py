@@ -66,6 +66,31 @@ def profile(request, pk):
         return HttpResponse(ex)
 
 
+def subscribe_to_user(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+        if request.user in user.subscribers.all():
+            return HttpResponse('You are already subscribed to this user')
+        user.subscribers.add(request.user)
+        user.save()
+        return redirect(request.META.get('HTTP_REFERER'))
+    except Exception as ex:
+        pass
+    return HttpResponse('User does not exist')
+
+
+def unsubscribe_from_user(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+        if request.user in user.subscribers.all():
+            user.subscribers.remove(request.user)
+            return redirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponse('You are not subscribed to this user')
+    except Exception as ex:
+        pass
+    return HttpResponse('User does not exist')
+
 
 def upload_avatar(request):
     title = 'Upload Avatar'

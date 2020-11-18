@@ -9,6 +9,7 @@ from posts.models import Post
 from comments.models import Comment
 from chats.models import Message, Chat
 from photoalbums.models import Image, Photoalbum
+from notifications.models import Notification
 
 
 class UserAdmin(BaseUserAdmin):
@@ -23,6 +24,7 @@ class UserAdmin(BaseUserAdmin):
             'blocked_users',
             'image',
             'gender',
+            'subscribers'
         )}),
     )
     add_fieldsets = (
@@ -46,11 +48,10 @@ class PostsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'body', 'image', 'date_posted')
     list_filter = ('body', )
 
-    # fieldsets = (
-    #     (None, {
-    #         'fields': ('body', 'image', )
-    #     }),
-    # )
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'post', 'message', 'friend_request', 'type', 'text', 'user')
 
 
 admin.site.register(User, UserAdmin)
@@ -72,3 +73,5 @@ admin.site.register(Discussion)
 
 admin.site.register(Photoalbum)
 admin.site.register(Image)
+
+admin.site.register(Notification, NotificationAdmin)

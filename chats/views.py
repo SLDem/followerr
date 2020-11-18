@@ -3,9 +3,13 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 from .forms import NewMessageForm, NewChatForm, AddUsersToChatForm
-from user_profile.models import User
+
 from .models import Message, Chat
+from user_profile.models import User
+from notifications.models import Notification
+
 from authentication.views import see_online_users
+
 from django.contrib.auth.decorators import login_required
 
 
@@ -81,11 +85,18 @@ def chat(request, pk):
     page_number = request.GET.get('page')
     page_obj = messages_paginator.get_page(page_number)
 
+    if chat.is_private:
+        title = 'Chat'
+    else:
+        title = chat.title
+
     if request.method == 'GET':
         for message in messages:
             if message.from_user != request.user:
                 message.is_read = True
                 message.save()
+        for n in Notification.objects.filter(user=request.user, message__in=chat.chat_messages.all()):
+            n.delete()
 
     if request.method == 'POST':
         form = NewMessageForm(request.POST, request.FILES)
@@ -95,6 +106,15 @@ def chat(request, pk):
             new_message.chat = chat
             new_message.save()
             chat.last_message = new_message
+            for notification in Notification.objects.filter(message__chat=chat).all():
+                notification.delete()
+            for user in chat.users.all():
+                if user != request.user:
+                    notification = Notification.objects.create(type='M',
+                                                               text='New Message',
+                                                               user=user,
+                                                               message=new_message)
+                    notification.save()
             chat.save()
             form = NewMessageForm()
             return redirect('chat', pk=chat.pk)
@@ -105,7 +125,7 @@ def chat(request, pk):
                                          'online_users': online_users,
                                          'chat': chat,
                                          'page_obj': page_obj,
-                                         'title': chat.title})
+                                         'title': title})
 
 
 def edit_chat(request, pk):

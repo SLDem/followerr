@@ -25,3 +25,15 @@ for (let i=0; i< menuLength; i++) {
         menuItems[i].className = 'active'
     }
 };
+
+//notifications
+const notificationOpenButton = document.getElementById('nav-notifications')
+const notificationsModal = document.getElementById('notifications')
+
+notificationOpenButton.addEventListener('click', function () {
+    if (notificationsModal.style.display == 'block') {
+        notificationsModal.style.display = 'none';
+    } else {
+        notificationsModal.style.display = 'block';
+    }
+})

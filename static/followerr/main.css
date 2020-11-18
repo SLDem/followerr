@@ -56,8 +56,21 @@ body {
 
 }
 
+#nav-notifications {
+    flex-basis: 17%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#nav-notifications img {
+    border: 1px solid orange;
+    border-radius: 25px;
+}
+
 .nav-settings {
-    flex-basis: 20%;
+    flex-basis: 3%;
     margin-right: 10px;
 }
 
@@ -118,6 +131,11 @@ body {
 }
 .messages-icon {
     background-image: url('./images/messages.png');
+    width: 24px;
+    height: 24px;
+}
+.friends-icon {
+    background-image: url('./images/friends.png');
     width: 24px;
     height: 24px;
 }
@@ -292,4 +310,22 @@ body {
 
 .search-user-name {
     text-decoration: none;
+}
+
+#notifications {
+    position: fixed;
+    width: 200px !important;
+    right: 30;
+    top: 80;
+    transition: 0.3s ease;
+    border: 1px solid #5F9BE3;
+}
+
+.notifications-ul {
+    list-style: none;
+    width: 200px;
+}
+
+.li-bold {
+    font-weight: bold;
 }

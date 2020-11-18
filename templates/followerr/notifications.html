@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="{% url 'clear_all_notifications' %}"><button class="dark-button">Clear All</button></a>
+
+<div class="notifications-title">
+    <h1>New Posts:</h1>
+    <a href="{% url 'clear_post_notifications' %}"><button class="dark-button">Clear</button></a>
+</div>
+{% for notification in notifications %}
+    {% if notification.post %}
+        <div class="main-form notification-post">
+            <div>
+                <a class="chat-anchor" href="{% url 'profile' notification.post.user.pk %}">{{ notification.post.user }} says:</a>
+                <br>
+                <br>
+
+                <p>{{ notification.post.body|truncatewords:10 }}</p>
+            </div>
+            <div class="comment-button notification-post-comment-button">
+                <a href="{% url 'post_detail' notification.post.pk %}"><img src="/media/icons/comments.png" alt="comments"></a>
+                {% if notification.post.post_comments.count == 0 %}
+                {% elif notification.post.post_comments.count == 1 %}
+                    <p>&nbsp;{{ notification.post.post_comments.count }} comment</p>
+                {% elif notification.post.post_comments.count > 1 %}
+                    <p>&nbsp;{{ notification.post.post_comments.count }} comments</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+
+<div class="notifications-title">
+    <h1>New Messages:</h1>
+    <a href="{% url 'clear_message_notifications' %}"><button class="dark-button">Clear</button></a>
+</div>
+{% for notification in notifications %}
+    {% if notification.message %}
+        {% if not notification.message.is_read %}
+        <div class="main-form notification-post">
+            {% if notification.message.chat.title %}
+                Chat: <a class="chat-anchor" href="{% url 'chat' notification.message.chat.pk %}">{{ notification.message.chat.title }}</a><br>
+                <a class="chat-anchor" href="{% url 'profile' notification.message.from_user.pk %}">{{ notification.message.from_user }}:</a>
+            {% else %}
+                <a class="chat-anchor" href="{% url 'profile' notification.message.chat.pk %}">{{ notification.message.from_user }}:</a>
+            {% endif %}
+            <br>
+            <br>
+
+            {{ notification.message.body }}
+            <br>
+            <br>
+            <a href="{% url 'chat' notification.message.chat.pk %}"><button class="dark-button">View Chat</button></a>
+        </div>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+
+<div class="notifications-title">
+    <h1>Friend Requests:</h1>
+    <a href="{% url 'clear_friend_request_notifications' %}"><button class="dark-button">Clear</button></a>
+</div>
+{% for notification in notifications %}
+    {% if notification.friend_request %}
+        <div class="main-form notification-post">
+            <a class="chat-anchor" href="{% url 'profile' notification.friend_request.from_user.pk %}">{{notification.friend_request.from_user.name}}</a>
+            <div>
+                <a href="{% url 'accept_friend_request' notification.friend_request.from_user.pk %}"><button class="dark-button">Accept</button></a>
+                <a href="{% url 'delete_friend_request' notification.friend_request.from_user.pk %}"><button class="dark-button">Ignore</button></a>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

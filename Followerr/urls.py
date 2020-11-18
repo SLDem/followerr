@@ -29,7 +29,8 @@ urlpatterns = [
     path('', include('posts.urls')),
     path('', include('user_profile.urls')),
     path('', include('photoalbums.urls')),
-    path('', include('search.urls'))
+    path('', include('search.urls')),
+    path('', include('notifications.urls')),
 ]
 
 if settings.DEBUG:

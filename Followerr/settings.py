@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'posts',
     'user_profile',
     'photoalbums',
+    'notifications',
     'mptt',
     'django_social_share',
     'emoji_picker',

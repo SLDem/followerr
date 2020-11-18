@@ -28,4 +28,3 @@ class Message(models.Model):
     from_user = models.ForeignKey(User, related_name='message_from_user', on_delete=models.PROTECT, null=True)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='chat_messages', null=True)
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name='message_discussion', null=True)
-

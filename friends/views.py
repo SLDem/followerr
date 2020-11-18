@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, HttpResponse
-from user_profile.models import User
+
 from .models import FriendRequest
+from user_profile.models import User
+from notifications.models import Notification
+
 from authentication.views import see_online_users
-from django.db import transaction, IntegrityError
+
 
 
 def friends(request, pk):
@@ -42,6 +45,10 @@ def send_friend_request(request, pk):
                     from_user=request.user,
                     to_user=user
                 )
+                Notification.objects.create(type='FR',
+                                            text='Friend Request from ' + user.name,
+                                            user=user,
+                                            friend_request=f_request)
             return redirect('profile', pk=user.pk)
 
     except Exception as ex:
@@ -57,9 +64,11 @@ def cancel_friend_request(request, pk):
                 from_user=request.user,
                 to_user=user
             ).first()
+            notification = Notification.objects.filter(friend_request=f_request)
             f_request.delete()
-            return redirect('profile', pk=user.pk)
+            notification.delete()
 
+            return redirect('profile', pk=user.pk)
     except Exception as ex:
         pass
     return HttpResponse('User does not exist')
