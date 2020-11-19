@@ -17,7 +17,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
 }
 
 .group a {
@@ -207,4 +206,9 @@
 
 .group-list-info {
     text-align: right;
+}
+
+.group-list-created-participants {
+    font-size: 13px;
+    color: grey;
 }

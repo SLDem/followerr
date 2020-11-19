@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from search.documents import ChatDocument, PhotoalbumDocument, \
     ImageDocument, UserDocument, PostDocument, GroupDocument
+
 
 
 def search_everything(request):
@@ -33,6 +34,7 @@ def search_everything(request):
                                                                     'title': title})
         else:
             searched_results = {}
+
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 

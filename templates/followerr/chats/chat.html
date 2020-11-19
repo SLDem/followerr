@@ -1,99 +1,151 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="chat-buttons">
-    <div>
-        {% if not chat.is_private %}
-            <a href="{% url 'add_users_to_chat' chat.pk %}"><button class="dark-button">Add users</button></a>
-        {% endif %}
-        <a href="{% url 'leave_chat' chat.pk %}"><button class="dark-button">Leave Chat</button></a>
-    </div>
-    <div>
-        {% if request.user == chat.owner %}
-            <a href="{% url 'chat_users' chat.pk %}"><button class="dark-button">Remove Users</button></a>
-            <a href="{% url 'edit_chat' chat.pk %}"><button class="dark-button">Edit Chat</button></a>
-            <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
-        {% elif chat.is_private %}
-            <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
-        {% endif %}
-    </div>
-</div>
-
-<h1 class="chat-title">{{ chat.title }}</h1>
-
-{% for message in page_obj %}
-    {% if message.is_read %}
-        <div class="message-avatar-body">
-    {% else %}
-        <div class="not-read-message-avatar-body">
-    {% endif %}
-        <div class="message-content">
-            <div class="message-avatar">
-                {% if message.from_user.image %}
-                    <a href="{% url 'profile' message.from_user.pk %}"><img width="50px" height="auto" src="{{ message.from_user.image.image.url }}" alt="connect" ></a>
-                {% else %}
-                    {% if message.from_user.gender %}
-                        <a href="{% url 'profile' message.from_user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
-                    {% else %}
-                        <a href="{% url 'profile' message.from_user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
-                    {% endif %}
-                {% endif %}
-
-                {% if message.from_user in online_users %}
-                    <div class="online-mini online-messages"></div>
-                {% else %}
-                {% endif %}
-            </div>
-
-            <div class="message-body">
-                {{ message.body }}
-            </div>
-
-            <div class="date-button-wrap">
-                <p class="message-date">{{ message.created_at }}</p>
-                {% if request.user == message.from_user or request.user == chat.owner %}
-                    <a class="message-delete-button" href="{% url 'delete_message' message.pk %}">&#10006;</a>
-                {% endif %}
-            </div>
+<div class="main-form">
+    <div class="chat-buttons">
+        <div>
+            {% if not chat.is_private %}
+                <a href="{% url 'add_users_to_chat' chat.pk %}"><button class="dark-button">Add users</button></a>
+            {% endif %}
+            <a href="{% url 'leave_chat' chat.pk %}"><button class="dark-button">Leave Chat</button></a>
         </div>
-
-        {% if message.image %}
-            <div class="message-image">
-                <img src="{{ message.image.url }}" alt="msg-image">
-            </div>
-        {% endif %}
+        <div>
+            {% if request.user == chat.owner %}
+                <a href="{% url 'chat_users' chat.pk %}"><button class="dark-button">Remove Users</button></a>
+                <a href="{% url 'edit_chat' chat.pk %}"><button class="dark-button">Edit Chat</button></a>
+                <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
+            {% elif chat.is_private %}
+                <a href="{% url 'delete_chat' chat.pk %}"><button class="dark-button">Delete Chat</button></a>
+            {% endif %}
+        </div>
     </div>
-{% endfor %}
+
+    <h1 class="chat-title">{{ chat.title }}</h1>
+
+    <form method="get">
+        <input class="search-input" id="q" name="q" type="text" placeholder="Search messages...">
+        <button class="dark-button search-button" type="submit">&#128269;</button>
+    </form>
+
+    {% if searched_messages %}
+        {% for message in searched_messages %}
+            {% if message.is_read %}
+                <div class="message-avatar-body">
+            {% else %}
+                <div class="not-read-message-avatar-body">
+            {% endif %}
+                <div class="message-content">
+                    <div class="message-avatar">
+                        {% if message.from_user.image %}
+                            <a href="{% url 'profile' message.from_user.id %}"><img width="50px" height="auto" src="{{ message.from_user.image.image }}" alt="connect" ></a>
+                        {% else %}
+                            {% if message.from_user.gender %}
+                                <a href="{% url 'profile' message.from_user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                            {% else %}
+                                <a href="{% url 'profile' message.from_user.id %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if message.from_user in online_users %}
+                            <div class="online-mini online-messages"></div>
+                        {% else %}
+                        {% endif %}
+                    </div>
+
+                    <div class="message-body">
+                        {{ message.body }}
+                    </div>
+
+                    <div class="date-button-wrap">
+                        <p class="message-date">{{ message.created_at|timesince }} ago.</p>
+                        {% if request.user == message.from_user or request.user == chat.owner %}
+                            <a class="message-delete-button" href="{% url 'delete_message' message.id %}">&#10006;</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if message.image %}
+                    <div class="message-image">
+                        <img src="{{ message.image.url }}" alt="msg-image">
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        {% for message in page_obj %}
+            {% if message.is_read %}
+                <div class="message-avatar-body">
+            {% else %}
+                <div class="not-read-message-avatar-body">
+            {% endif %}
+                <div class="message-content">
+                    <div class="message-avatar">
+                        {% if message.from_user.image %}
+                            <a href="{% url 'profile' message.from_user.pk %}"><img width="50px" height="auto" src="{{ message.from_user.image.image.url }}" alt="connect" ></a>
+                        {% else %}
+                            {% if message.from_user.gender %}
+                                <a href="{% url 'profile' message.from_user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-male.jpg"></a>
+                            {% else %}
+                                <a href="{% url 'profile' message.from_user.pk %}"><img height="auto" width="50px" src="/media/avatars/default-avatar-female.jpg"></a>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if message.from_user in online_users %}
+                            <div class="online-mini online-messages"></div>
+                        {% else %}
+                        {% endif %}
+                    </div>
+
+                    <div class="message-body">
+                        {{ message.body }}
+                    </div>
+
+                    <div class="date-button-wrap">
+                        <p class="message-date">{{ message.created_at }}</p>
+                        {% if request.user == message.from_user or request.user == chat.owner %}
+                            <a class="message-delete-button" href="{% url 'delete_message' message.pk %}">&#10006;</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if message.image %}
+                    <div class="message-image">
+                        <img src="{{ message.image.url }}" alt="msg-image">
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form class="message-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% block extrahead %}
+        {{ form.media }}
+        {% endblock %}
+
+        {{ form.as_p }}
+        <br>
+        <button class="dark-button" type="submit">Send Message</button>
+    </form>
+    <a href="{% url 'messages' %}"><button class="dark-button">Back</button></a>
+</div>
 
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&larr; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1">&#xab;</a>&nbsp;
+            <a href="?page={{ page_obj.previous_page_number }}">&#x2039;</a>
         {% endif %}
 
         <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+            <a href="?page={{ page_obj.next_page_number }}">&#x203A;</a>&nbsp;
+            <a href="?page={{ page_obj.paginator.num_pages }}">&#xbb;</a>
         {% endif %}
     </span>
 </div>
-
-<form class="message-form" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    {% block extrahead %}
-    {{ form.media }}
-    {% endblock %}
-
-    {{ form.as_p }}
-    <br>
-    <button class="dark-button" type="submit">Send Message</button>
-</form>
-<a href="{% url 'messages' %}"><button class="dark-button">Back</button></a>
 {% endblock %}
-

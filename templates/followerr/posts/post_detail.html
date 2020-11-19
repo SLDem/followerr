@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load social_share %}
+{% load static %}
 
 {% block content %}
     <div class="post">
@@ -65,23 +66,23 @@
 
         <div class="like-posted">
             <div class="posted-date">
-                {{ post.date_posted | timesince }} ago.
+                <p>&#128336; {{ post.date_posted|timesince }} ago.</p>
             </div>
             <div class="like-button">
                 {% if request.user in post.likers.all %}
-                    <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+                    <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like"></a>&nbsp;
                     <p class="like-count">{{post.likers.count}}&nbsp;</p>
                 {% else %}
-                    <a href="{% url 'like_post' post.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
-                    <p>{{post.likers.count}}&nbsp;</p>
+                    <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_dark.png' %}" alt="like"></a>&nbsp;
+                    <p class="inactive-like">{{post.likers.count}}&nbsp;</p>
                 {% endif %}
 
                 {% if request.user in post.dislikers.all %}
-                    <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+                    <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike"></a>
                     <p class="dislike-count">&nbsp;{{post.dislikers.count}}</p>
                 {% else %}
-                    <a href="{% url 'dislike_post' post.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
-                    <p>&nbsp;{{post.dislikers.count}}</p>
+                    <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down_dark.png' %}" alt="dislike"></a>
+                    <p class="inactive-like">&nbsp;{{post.dislikers.count}}</p>
                 {% endif %}
             </div>
         </div>

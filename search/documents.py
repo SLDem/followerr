@@ -3,7 +3,7 @@ from django_elasticsearch_dsl import Document, Index, fields
 from posts.models import Post
 from user_profile.models import User
 from groups.models import Group
-from chats.models import Chat
+from chats.models import Chat, Message
 from photoalbums.models import Photoalbum, Image
 
 posts = Index('posts')
@@ -12,6 +12,7 @@ chats = Index('chats')
 photoalbums = Index('photoalbums')
 images = Index('images')
 users = Index('users')
+messages = Index('messages')
 
 
 @users.doc_type
@@ -156,4 +157,42 @@ class GroupDocument(Document):
             'title',
             'image',
 
+        ]
+
+
+@messages.doc_type
+class MessageDocument(Document):
+    chat = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'title': fields.TextField(),
+        'owner': fields.ObjectField(properties={
+            'id': fields.IntegerField(),
+            'name': fields.TextField(),
+            'image': fields.ObjectField(properties={
+                'id': fields.IntegerField(),
+                'image': fields.FileField()
+            })
+        })
+    })
+
+    from_user = fields.ObjectField(properties={
+            'id': fields.IntegerField(),
+            'name': fields.TextField(),
+            'image': fields.ObjectField(properties={
+                'id': fields.IntegerField(),
+                'image': fields.FileField()
+            })
+        })
+
+    class Index:
+        name = 'messages'
+
+    class Django:
+        model = Message
+        fields = [
+            'id',
+            'image',
+            'body',
+            'created_at',
+            'is_read',
         ]

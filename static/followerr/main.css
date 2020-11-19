@@ -142,7 +142,6 @@ body {
     height: 24px;
 }
 
-
 .content-wrap {
     width: 40%;
     min-height: 100%;
@@ -159,10 +158,12 @@ body {
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .main-post-form-image-wrap {
-    margin: 0 auto;
     height: 70px;
     width: auto;
     padding: 5px 15px 15px 5px;
@@ -201,15 +202,21 @@ body {
 .dark-button {
     padding: 5px;
     background-color: white;
-    border: 3px solid #404040;
+    border: 3px solid #5F9BE3;
     border-radius: 5px;
-    color: #404040;
+    color: #0060B0;
     cursor: pointer;
     outline: none;
+    transition: 0.3s ease-out;
 }
 
 .dark-button:hover {
-    background-color: #E3E3E3;
+    background-color: #D8EAFF;
+    transition: 0.3s ease-out;
+}
+
+.send-button {
+    width: 60px;
 }
 
 .dep-container {
@@ -269,7 +276,7 @@ body {
 }
 
 .search-input {
-    width: calc(100% - 44px);
+    width: calc(100% - 44px) !important;
 }
 
 .search-button {
@@ -277,7 +284,6 @@ body {
 }
 
 .search-user-avatar {
-    margin-top: 10px;
 }
 
 .search-user-admin-sign {

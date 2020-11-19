@@ -12,12 +12,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/photoalbums.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/auth.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'followerr/notifications.css' %}">
-    <link rel="icon" href="/media/images/followerr.png">
+    <link rel="icon" href="{% static 'followerr/images/followerr.png' %}">
 </head>
 <body>
     <div class="navbar">
         <ul class="navbar-ul">
-            <li class="nav-logo"><a href="{% url 'index' %}"><img height="50" width="auto" src="/media/images/followerr.png" alt="home">followerr</a></li>
+            <li class="nav-logo"><a href="{% url 'index' %}"><img height="50" width="auto" src="{% static 'followerr/images/followerr.png' %}" alt="/">followerr</a></li>
             {% if user.is_authenticated %}
 
             <li class="nav-search">
@@ -28,12 +28,12 @@
             </li>
             <li id="nav-notifications">
                 {% if request.user.user_notifications.all|length != 0 %}
-                    <img src="/media/images/darrow-active.png" alt="/">
+                    <img src="{% static 'followerr/images/darrow-active.png' %}" alt="/">
                 {% else %}
-                    <img src="/media/images/darrow.png" alt="/">
+                    <img src="{% static 'followerr/images/darrow.png' %}" alt="/">
                 {% endif %}
             </li>
-            <li class="nav-settings"><a href="{% url 'edit_user' request.user.pk %}"><img src="/media/images/gears.png" alt="/"></a></li>
+            <li class="nav-settings"><a href="{% url 'edit_user' request.user.pk %}"><img src="{% static 'followerr/images/gears.png' %}" alt="/"></a></li>
             {% else %}
             {% endif %}
         </ul>

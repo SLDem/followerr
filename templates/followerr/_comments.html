@@ -1,4 +1,5 @@
 {% load mptt_tags %}
+{% load static %}
 <ul class="comments">
     {% recursetree comments %}
         <li class="thread">
@@ -25,18 +26,18 @@
                     <div></div>
                     <div class="like-button">
                         {% if request.user in node.likers.all %}
-                            <a href="{% url 'like_comment' node.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+                            <a href="{% url 'like_comment' node.pk %}"><img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like"></a>&nbsp;
                             <p class="like-count">{{node.likers.count}}&nbsp;</p>
                         {% else %}
-                            <a href="{% url 'like_comment' node.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
-                            <p>{{node.likers.count}}&nbsp</p>
+                            <a href="{% url 'like_comment' node.pk %}"><img src="{% static '/followerr/images/thumbs_up_dark.png' %}" alt="like"></a>&nbsp;
+                            <p class="inactive-like">{{node.likers.count}}&nbsp</p>
                         {% endif %}
                         {% if request.user in node.dislikers.all %}
-                            <a href="{% url 'dislike_comment' node.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+                            <a href="{% url 'dislike_comment' node.pk %}"><img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike"></a>
                             <p class="dislike-count">&nbsp;{{node.dislikers.count}}</p>
                         {% else %}
-                            <a href="{% url 'dislike_comment' node.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
-                            <p>&nbsp;{{node.dislikers.count}}</p>
+                            <a href="{% url 'dislike_comment' node.pk %}"><img src="{% static '/followerr/images/thumbs_down_dark.png' %}" alt="dislike"></a>
+                            <p class="inactive-like">&nbsp;{{node.dislikers.count}}</p>
                         {% endif %}
                     </div>
                 </div>

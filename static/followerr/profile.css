@@ -187,9 +187,9 @@ label {
     margin-top: 30px;
 }
 
-.email, .name, .about_me, .favourite_music, .favourite_books, .favourite_movies, .following, .gender {
+.email, .name, .about_me, .favourite_music, .favourite_books, .favourite_movies, .following {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .admin-profile {

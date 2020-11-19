@@ -8,9 +8,9 @@ from .models import Message, Chat
 from user_profile.models import User
 from notifications.models import Notification
 
-from authentication.views import see_online_users
+from search.documents import MessageDocument
 
-from django.contrib.auth.decorators import login_required
+from authentication.views import see_online_users
 
 
 def messages(request):
@@ -77,6 +77,17 @@ def delete_message(request, pk):
 
 
 def chat(request, pk):
+    def search_messages(request):
+        q = request.GET.get('q')
+
+        if q:
+            searched_messages = MessageDocument.search().query('match', body=q)
+        else:
+            searched_messages = ''
+        return searched_messages
+
+    searched_messages = search_messages(request)
+
     online_users = see_online_users()
     chat = Chat.objects.get(pk=pk)
     messages = Message.objects.filter(chat=chat)
@@ -121,11 +132,12 @@ def chat(request, pk):
     else:
         form = NewMessageForm()
     return render(request, 'chats/chat.html', {'messages': messages,
-                                         'form': form,
-                                         'online_users': online_users,
-                                         'chat': chat,
-                                         'page_obj': page_obj,
-                                         'title': title})
+                                               'form': form,
+                                               'online_users': online_users,
+                                               'chat': chat,
+                                               'page_obj': page_obj,
+                                               'title': title,
+                                               'searched_messages': searched_messages})
 
 
 def edit_chat(request, pk):

@@ -29,7 +29,7 @@ class EditUserForm(forms.ModelForm):
         ('', 'Unknown'),
         (True, 'Male'),
         (False, 'Female')
-    ], attrs={'class': 'gender'}))
+    ], attrs={'class': 'signup-gender'}))
 
     class Meta:
         model = User

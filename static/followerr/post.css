@@ -113,6 +113,7 @@
     box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
     display: flex;
     width: 24px;
+    transition: 0.3s ease-out;
 }
 
 .comment-button p {
@@ -123,6 +124,7 @@
     border: 1px solid #404040;
     color: white;
     background-color: #404040;
+    transition: 0.3s ease-out;
 }
 
 .like-button {
@@ -217,4 +219,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.posted-date {
+    font-size: 13px;
+    color: grey;
+}
+
+.inactive-like {
+    color: grey;
 }
