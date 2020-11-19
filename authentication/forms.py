@@ -17,3 +17,19 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'name', 'gender', )
+
+
+class PasswordResetEmailForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'signup-email'}))
+
+    fields = ('email', )
+
+
+class PasswordResetForm(forms.ModelForm):
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'signup-password'}), label='Password')
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'signup-password'}), label='Confirm Password')
+
+    class Meta:
+        model = User
+        fields = ('password1', 'password2')
+

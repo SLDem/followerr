@@ -8,4 +8,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('activate/<user_id>/<token>/', views.VerificationView.as_view(), name='activate'),
+    path('password_reset/', views.password_reset, name='password_reset'),
+    path('confirm_password_reset/<user_id>/<token>/', views.password_reset_view, name='confirm_password_reset'),
 ]

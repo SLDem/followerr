@@ -147,5 +147,3 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'followerrstaff@gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'followerr2131!'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

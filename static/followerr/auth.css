@@ -36,3 +36,18 @@ input[type=password]{
     width: 50%;
     margin: 0 auto;
 }
+
+.signup-forgot-pass-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.errorlist {
+    color: #FC2222 !important;
+    list-style: none;
+    padding: 5px;
+    border: 3px solid #FC2222;
+    border-radius: 5px;
+    background-color: #FDBBBB;
+}

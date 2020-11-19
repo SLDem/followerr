@@ -7,7 +7,11 @@
         {{ form.as_p }}
         <button class="dark-button login-button" type="submit">Login</button>
     </form>
-    <p>Don't have an account? Signup now!</p>
-    <a href="{% url 'signup' %}"><button class="dark-button login-button">Signup</button></a>
+    <div class="signup-forgot-pass-buttons">
+        <p>Forgot password?</p>
+        <a href="{% url 'password_reset' %}"><button class="dark-button">Reset</button></a>
+        <p>Don't have an account? Signup now!</p>
+        <a href="{% url 'signup' %}"><button class="dark-button login-button">Signup</button></a>
+    </div>
 </div>
 {% endblock %}
