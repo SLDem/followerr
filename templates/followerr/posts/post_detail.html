@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="post">
+    <div class="post" style="margin-top: -10px;">
         <div class="post-user-info">
             <div class="post-user-group-admin-name">
                 <div>
@@ -55,35 +55,36 @@
         </div>
 
         <br>
-
-        <div class="post-body">
-            <div class="post-text">{{ post.body }}</div>
-            <br>
-            {% if post.image %}
-                <div class="post-image"><img onclick="window.open(this.src)" src="{{ post.image.url }}" alt="connect"></div>
-            {% endif %}
-        </div>
-
-        <div class="like-posted">
-            <div class="posted-date">
-                <p>&#128336; {{ post.date_posted|timesince }} ago.</p>
+        <div class="post-contents">
+            <div class="post-body">
+                <div class="post-text">{{ post.body }}</div>
+                <br>
+                {% if post.image %}
+                    <div class="post-image"><img onclick="window.open(this.src)" src="{{ post.image.url }}" alt="connect"></div>
+                {% endif %}
             </div>
-            <div class="like-button">
-                {% if request.user in post.likers.all %}
-                    <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like"></a>&nbsp;
-                    <p class="like-count">{{post.likers.count}}&nbsp;</p>
-                {% else %}
-                    <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_dark.png' %}" alt="like"></a>&nbsp;
-                    <p class="inactive-like">{{post.likers.count}}&nbsp;</p>
-                {% endif %}
 
-                {% if request.user in post.dislikers.all %}
-                    <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike"></a>
-                    <p class="dislike-count">&nbsp;{{post.dislikers.count}}</p>
-                {% else %}
-                    <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down_dark.png' %}" alt="dislike"></a>
-                    <p class="inactive-like">&nbsp;{{post.dislikers.count}}</p>
-                {% endif %}
+            <div class="like-posted">
+                <div class="posted-date">
+                    <p>&#128336; {{ post.date_posted|timesince }} ago.</p>
+                </div>
+                <div class="like-button">
+                    {% if request.user in post.likers.all %}
+                        <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like"></a>&nbsp;
+                        <p class="like-count">{{post.likers.count}}&nbsp;</p>
+                    {% else %}
+                        <a href="{% url 'like_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_up_dark.png' %}" alt="like"></a>&nbsp;
+                        <p class="inactive-like">{{post.likers.count}}&nbsp;</p>
+                    {% endif %}
+
+                    {% if request.user in post.dislikers.all %}
+                        <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike"></a>
+                        <p class="dislike-count">&nbsp;{{post.dislikers.count}}</p>
+                    {% else %}
+                        <a href="{% url 'dislike_post' post.pk %}"><img src="{% static '/followerr/images/thumbs_down_dark.png' %}" alt="dislike"></a>
+                        <p class="inactive-like">&nbsp;{{post.dislikers.count}}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

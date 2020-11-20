@@ -15,11 +15,10 @@ from .forms import NewGroupForm, NewDiscussionForm
 from search.documents import GroupDocument
 
 
-def groups(request):
-    user = request.user
+def groups(request, pk):
+    user = User.objects.get(pk=pk)
     user_groups = Group.objects.filter(users__id=user.pk)
-    all_groups = Group.objects.all()
-    title = 'Groups'
+    title = user.name + ' Groups'
 
     def search_groups(request):
         q = request.GET.get('q')
@@ -33,22 +32,25 @@ def groups(request):
     searched_groups = search_groups(request)
 
     if request.method == 'POST':
-        form = NewGroupForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_group = form.save(commit=False)
-            new_group.admin = user
-            new_group.save()
-            new_group.owners.add(user)
-            new_group.users.add(user)
-            form = NewGroupForm()
-            return redirect('group_detail', pk=new_group.pk)
+        if request.user == user:
+            form = NewGroupForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_group = form.save(commit=False)
+                new_group.admin = user
+                new_group.save()
+                new_group.owners.add(user)
+                new_group.users.add(user)
+                form = NewGroupForm()
+                return redirect('group_detail', pk=new_group.pk)
+        else:
+            return HttpResponse('Create new groups from your own group page')
     else:
         form = NewGroupForm()
-    return render(request, 'groups/groups.html', {'all_groups': all_groups,
-                                                  'searched_groups': searched_groups,
+    return render(request, 'groups/groups.html', {'searched_groups': searched_groups,
                                                   'user_groups': user_groups,
                                                   'form': form,
-                                                  'title': title})
+                                                  'title': title,
+                                                  'user': user})
 
 
 def group_detail(request, pk):

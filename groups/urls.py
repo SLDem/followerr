@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("groups/", views.groups, name='groups'),
+    path("groups/<int:pk>/", views.groups, name='groups'),
     path("group_detail/<int:pk>/", views.group_detail, name='group_detail'),
     path("discussions_list/<int:pk>/", views.discussions_list, name='discussions_list'),
     path("discussion/<int:pk>/", views.discussion, name='discussion'),

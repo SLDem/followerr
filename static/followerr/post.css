@@ -1,8 +1,6 @@
 .post {
     border: 1px solid white;
     border-radius: 10px;
-    padding: 5px;
-    margin-top: 30px;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -30,7 +28,8 @@
 .post-user-info {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid lightgrey;
+    padding: 5px;
 }
 
 .post-user-info a {
@@ -41,8 +40,13 @@
     text-decoration: underline;
 }
 
+.post-contents {
+    padding: 5px;
+}
+
 .post-body {
     font-family: "Courier New", Courier, monospace;
+    padding: 3px;
 }
 
 .post-body p {
@@ -222,8 +226,10 @@
 }
 
 .posted-date {
+    margin-top: 10px;
     font-size: 13px;
     color: grey;
+    text-align: center;
 }
 
 .inactive-like {

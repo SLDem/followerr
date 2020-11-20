@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <a href="{% url 'clear_all_notifications' %}"><button class="dark-button">Clear All</button></a>
 
 <div class="notifications-title">
@@ -17,7 +18,7 @@
                 <p>{{ notification.post.body|truncatewords:10 }}</p>
             </div>
             <div class="comment-button notification-post-comment-button">
-                <a href="{% url 'post_detail' notification.post.pk %}"><img src="/media/icons/comments.png" alt="comments"></a>
+                <a href="{% url 'post_detail' notification.post.pk %}"><img src="{% static '/followerr/images/comments.png' %}" alt="comments"></a>
                 {% if notification.post.post_comments.count == 0 %}
                 {% elif notification.post.post_comments.count == 1 %}
                     <p>&nbsp;{{ notification.post.post_comments.count }} comment</p>

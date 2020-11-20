@@ -32,9 +32,6 @@
 <br>
 
 <div class="group-list">
-    <h2>Your groups:</h2>
-    <br>
-
     {% for group in user_groups %}
         <div class="group">
             <div class="group-avatar-name">
@@ -54,6 +51,7 @@
 </div>
 <br>
 
+{% if request.user == user %}
 <p>Add new group:</p>
 <form class="main-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -66,5 +64,6 @@
     <br>
     <button class="dark-button" type="submit">Create Group</button>
 </form>
+{% endif %}
 
 {% endblock %}

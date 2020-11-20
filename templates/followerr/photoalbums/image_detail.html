@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 <div class="image-wrap">
@@ -24,19 +25,19 @@
 
     <div class="like-button" style="width: 63px;">
         {% if request.user in image.likers.all %}
-            <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_green.png" alt="like"></a>&nbsp;
+            <a href="{% url 'like_image' image.pk %}"><img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like"></a>&nbsp;
             <p class="like-count">{{image.likers.count}}&nbsp;</p>
         {% else %}
-            <a href="{% url 'like_image' image.pk %}"><img src="/media/icons/thumbs_up_dark.png" alt="like"></a>&nbsp;
-            <p>{{image.likers.count}}&nbsp;</p>
+            <a href="{% url 'like_image' image.pk %}"><img src="{% static '/followerr/images/thumbs_up_dark.png' %}" alt="like"></a>&nbsp;
+            <p class="inactive-like">{{image.likers.count}}&nbsp;</p>
         {% endif %}
 
         {% if request.user in image.dislikers.all %}
-            <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down-red.png" alt="dislike"></a>
+            <a href="{% url 'dislike_image' image.pk %}"><img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike"></a>
             <p class="dislike-count">&nbsp;{{image.dislikers.count}}</p>
         {% else %}
-            <a href="{% url 'dislike_image' image.pk %}"><img src="/media/icons/thumbs_down_dark.png" alt="dislike"></a>
-            <p>&nbsp;{{image.dislikers.count}}</p>
+            <a href="{% url 'dislike_image' image.pk %}"><img src="{% static '/followerr/images/thumbs_down_dark.png' %}" alt="dislike"></a>
+            <p class="inactive-like">&nbsp;{{image.dislikers.count}}</p>
         {% endif %}
     </div>
 </div>

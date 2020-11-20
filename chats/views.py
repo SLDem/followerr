@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from django.forms import forms
 
 from .forms import NewMessageForm, NewChatForm, AddUsersToChatForm
 
@@ -11,6 +12,7 @@ from notifications.models import Notification
 from search.documents import MessageDocument
 
 from authentication.views import see_online_users
+
 
 
 def messages(request):
@@ -75,7 +77,6 @@ def delete_message(request, pk):
         return HttpResponse(ex)
 
 
-
 def chat(request, pk):
     def search_messages(request):
         q = request.GET.get('q')
@@ -92,9 +93,7 @@ def chat(request, pk):
     chat = Chat.objects.get(pk=pk)
     messages = Message.objects.filter(chat=chat)
 
-    messages_paginator = Paginator(messages, 10)
-    page_number = request.GET.get('page')
-    page_obj = messages_paginator.get_page(page_number)
+    form = NewMessageForm()
 
     if chat.is_private:
         title = 'Chat'
@@ -128,14 +127,11 @@ def chat(request, pk):
                     notification.save()
             chat.save()
             form = NewMessageForm()
-            return redirect(reverse('chat', kwargs={'pk': chat.pk}) + '?page=%s' % messages_paginator.num_pages)
-    else:
-        form = NewMessageForm()
+            return redirect(reverse('chat', kwargs={'pk': chat.pk}))
     return render(request, 'chats/chat.html', {'messages': messages,
                                                'form': form,
                                                'online_users': online_users,
                                                'chat': chat,
-                                               'page_obj': page_obj,
                                                'title': title,
                                                'searched_messages': searched_messages})
 
@@ -195,6 +191,7 @@ def add_users_to_chat(request, pk):
     except Exception as ex:
         pass
     return redirect('messages')
+
 
 
 def chat_users(request, pk):

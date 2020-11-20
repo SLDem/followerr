@@ -37,9 +37,11 @@
             {% endif %}
         {% elif k == 'posts' %}
             {% if v|length > 0 %}
-                <h2 style="margin-bottom: -30px;">Posts:</h2>
+                <h2>Posts:</h2>
+
                 {% for post in v %}
                     {% include "_post_search.html" %}
+                    <br>
                 {% endfor %}
                 <br>
             {% endif %}

@@ -1,3 +1,4 @@
+{% load static %}
 <div class="post">
     <div class="post-user-info">
         <div class="post-user-group-admin-name">
@@ -48,27 +49,28 @@
 
     <hr>
     <br>
-
-    <div class="post-body">
-        <div class="post-text">{{ post.body }}</div>
-        <br>
-        {% if post.image %}
-            <div class="post-image"><img onclick="window.open(this.src)" src="{{ post.image }}" alt="connect"></div>
-        {% endif %}
-    </div>
-
-    <div class="post-comment-and-like-buttons">
-        <a href="{% url 'post_detail' post.id %}"><button class="dark-button">View</button></a>
-        <div class="like-button">
-            <img src="/media/icons/thumbs_up_green.png" alt="like">
-            <p class="like-count">{{post.likers|length}}&nbsp;</p>
-
-            <img src="/media/icons/thumbs_down-red.png" alt="dislike">
-            <p class="dislike-count">&nbsp;{{post.dislikers|length}}</p>
+    <div class="post-contents">
+        <div class="post-body">
+            <div class="post-text">{{ post.body }}</div>
+            <br>
+            {% if post.image %}
+                <div class="post-image"><img onclick="window.open(this.src)" src="{{ post.image }}" alt="connect"></div>
+            {% endif %}
         </div>
-    </div>
 
-    <div class="posted-date">
-        {{ post.date_posted }}
+        <div class="post-comment-and-like-buttons">
+            <a href="{% url 'post_detail' post.id %}"><button class="dark-button">View</button></a>
+            <div class="like-button">
+                <img src="{% static '/followerr/images/thumbs_up_green.png' %}" alt="like">
+                <p class="like-count">{{post.likers|length}}&nbsp;</p>
+
+                <img src="{% static '/followerr/images/thumbs_down-red.png' %}" alt="dislike">
+                <p class="dislike-count">&nbsp;{{post.dislikers|length}}</p>
+            </div>
+        </div>
+
+        <div class="posted-date">
+            {{ post.date_posted }}
+        </div>
     </div>
 </div>

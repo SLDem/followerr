@@ -46,7 +46,7 @@
                 <li><a href="{% url 'profile' request.user.pk %}">Profile</a><div class="icon profile-icon"></div></li>
                 <li><a href="{% url 'messages' %}">Messages</a><div class="icon messages-icon"></div></li>
                 <li><a href="{% url 'friends' request.user.pk %}">Friends</a><div class="icon friends-icon"></div></li>
-                <li><a href="{% url 'groups' %}">Groups</a><div class="icon groups-icon"></div></li>
+                <li><a href="{% url 'groups' request.user.pk %}">Groups</a><div class="icon groups-icon"></div></li>
                 <li><a href="{% url 'photoalbums' request.user.pk %}">Photoalbums</a><div class="icon photoalbums-icon"></div></li>
                 <li><a href="{% url 'search_users' %}">Search users</a><div class="icon search-icon"></div></li>
             {% else %}

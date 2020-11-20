@@ -97,7 +97,16 @@ body {
     margin: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
+}
+
+.sidebar li a:hover {
+    color: #5F9BE3;
+    transition: 0.3s ease-out;
+}
+
+.sidebar li a {
+    transition: 0.3s ease-out;
 }
 
 .sidebar a {
@@ -143,7 +152,7 @@ body {
 }
 
 .content-wrap {
-    width: 40%;
+    width: 50%;
     min-height: 100%;
     margin: 0 auto;
     padding: 80px 0 0 0;
@@ -190,6 +199,7 @@ body {
 .post-body-input {
     width: 100%;
     min-height: 70px;
+    height: 70px;
     margin-bottom: 5px;
     padding-right: 20px;
 }

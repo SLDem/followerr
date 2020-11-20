@@ -10,8 +10,9 @@ from .models import User
 from posts.models import Post
 from friends.models import FriendRequest
 from photoalbums.forms import NewImageForm
-from photoalbums.models import Photoalbum
+from photoalbums.models import Photoalbum, Image
 from notifications.models import Notification
+from groups.models import Group
 
 from authentication.views import see_online_users
 from django.contrib.auth.decorators import login_required
@@ -26,7 +27,12 @@ def profile(request, pk):
             return HttpResponse('This user blocked you.')
         else:
             online_users = see_online_users()
+
             friends = user.friends.all()
+
+            friends_for_display = friends[:5]
+            images = Image.objects.filter(album__user=user).order_by('-added_at')[:8]
+            groups_for_display = Group.objects.filter(users__id=user.pk)[:3]
 
             user_posts = Post.objects.filter(user=user)
             profile_posts = Post.objects.filter(profile=user)
@@ -34,7 +40,6 @@ def profile(request, pk):
             posts_paginator = Paginator(posts, 5)
             page_number = request.GET.get('page')
             page_obj = posts_paginator.get_page(page_number)
-
 
             # Check if user is friend:
             button_status = 'none'
@@ -51,24 +56,31 @@ def profile(request, pk):
                     new_post = form.save(commit=False)
                     new_post.user = request.user
                     new_post.profile = user
-                    new_post.is_private = True
+                    if request.user == user:
+                        new_post.is_private = False
+                    else:
+                        new_post.is_private = True
                     new_post.save()
-                    notification = Notification.objects.create(type='P',
-                                                               text='New Post in profile!',
-                                                               user=user,
-                                                               post=new_post)
-                    notification.save()
+                    if request.user != user:
+                        notification = Notification.objects.create(type='P',
+                                                                   text='New Post in profile!',
+                                                                   user=user,
+                                                                   post=new_post)
+                        notification.save()
                     return redirect(request.META.get('HTTP_REFERER', '/'))
             else:
                 form = NewPostForm(instance=None)
             return render(request, 'user_profile/profile.html', {'user': user,
-                                                    'friends': friends,
-                                                    'posts': posts,
-                                                    'form': form,
-                                                    'button_status': button_status,
-                                                    'online_users': online_users,
-                                                    'page_obj': page_obj,
-                                                    'title': title})
+                                                                 'friends': friends,
+                                                                 'friends_for_display': friends_for_display,
+                                                                 'groups_for_display': groups_for_display,
+                                                                 'images': images,
+                                                                 'posts': posts,
+                                                                 'form': form,
+                                                                 'button_status': button_status,
+                                                                 'online_users': online_users,
+                                                                 'page_obj': page_obj,
+                                                                 'title': title})
     except Exception as ex:
         return HttpResponse(ex)
 

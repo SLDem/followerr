@@ -81,31 +81,18 @@
 }
 
 .message-avatar-body {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    gap: 10px;
-    background-color: white;
     width: 100%;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
-    margin-bottom: 8px;
 }
 
 .not-read-message-avatar-body {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    gap: 10px;
     background-color: #D5D5D5;
     width: 100%;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
-    margin-bottom: 8px;
 }
 
 .message-wrap {
@@ -169,8 +156,10 @@
 }
 
 .message-date {
-    width: 100px;
+    width: 140px;
     opacity: 0.6;
+    font-size: 13px;
+    text-align: center;
 }
 
 .message-delete-button {

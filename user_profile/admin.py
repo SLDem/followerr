@@ -24,7 +24,8 @@ class UserAdmin(BaseUserAdmin):
             'blocked_users',
             'image',
             'gender',
-            'subscribers'
+            'subscribers',
+            'messages_to_resend'
         )}),
     )
     add_fieldsets = (

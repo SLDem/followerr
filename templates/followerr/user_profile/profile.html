@@ -2,107 +2,153 @@
 {% load static %}
 {% block content %}
 {% if user not in request.user.blocked_users.all %}
-    <h1>
-        {{user.name}}{% if user.following %}, I follow the ways of
-        {{ user.following }}
-        {% endif %}
-    </h1>
-    <br>
 
-    <div class="user-info">
-        <div class="user-avatar">
-            {% if user.image %}
-                <a href="{% url 'image_detail' user.image.pk %}"><img src="{{ user.image.image.url }}" alt="connect"></a>
-            {% else %}
-                {% if user.gender %}
-                    <img src="/media/avatars/default-avatar-male.jpg">
+
+    <div class="profile-wrap">
+
+        <div class="left-bar">
+            <div class="user-avatar">
+                {% if user.image %}
+                    <a href="{% url 'image_detail' user.image.pk %}"><img src="{{ user.image.image.url }}" alt="connect"></a>
                 {% else %}
-                    <img src="/media/avatars/default-avatar-female.jpg">
+                    {% if user.gender %}
+                        <img src="/media/avatars/default-avatar-male.jpg">
+                    {% else %}
+                        <img src="/media/avatars/default-avatar-female.jpg">
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-            {% if user in online_users %}
-                <div class="online"></div>
-            {% endif %}
-
-        </div>
-        <div class="user-secondary-info">
-            {% if user.is_staff %}
-                <div class="admin-sign admin-profile">admin</div>
-            {% endif %}
-            <p>About me: {{ user.about_me }}</p>
-            <p>Favourite books: {{ user.favourite_books }}</p>
-            <p>Favourite music: {{ user.favourite_music }}</p>
-            <p>Favourite movies: {{ user.favourite_movies }}</p>
-            <br>
-        </div>
-    </div>
-
-    <div class="button-info-wrap">
-        {% if user.pk == request.user.pk %}
-            <div class="profile-buttons-wrap">
-                <a href="{% url 'upload_avatar' %}"><button class="dark-button">Upload Avatar</button></a>
-                <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
-                <a href="{% url 'blocked_users' %}"><button class="dark-button">Blocked Users</button></a>
-                <a href="{% url 'photoalbums' user.pk %}"><button class="dark-button">Photoalbums</button></a>
+                {% if user in online_users %}
+                    <div class="online"></div>
+                {% endif %}
             </div>
-        {% else %}
-        <div class="profile-buttons-wrap">
-            {% if user in request.user.blocked_users.all %}
-                <a href="{% url 'unblock_user' user.pk %}"><button class="dark-button">Unblock User</button></a>
+
+            {% if user.pk == request.user.pk %}
+                <div class="profile-buttons-wrap">
+                    <a href="{% url 'upload_avatar' %}"><button class="dark-button">Upload Avatar</button></a>
+                    <a href="{% url 'blocked_users' %}"><button class="dark-button">Blocked Users</button></a>
+                </div>
             {% else %}
-                <a href="{% url 'create_private_chat' user.pk %}"><button class="dark-button">Message</button></a>
-                <a href="{% url 'friends' user.pk %}"><button class="dark-button">Friends</button></a>
-                {% if request.user in user.subscribers.all %}
-                    <a href="{% url 'unsubscribe_from_user' user.pk %}"><button class="dark-button">Unsubscribe</button></a>
+            <div class="profile-buttons-wrap">
+                {% if user in request.user.blocked_users.all %}
+                    <a href="{% url 'unblock_user' user.pk %}"><button class="dark-button">Unblock User</button></a>
                 {% else %}
-                    <a href="{% url 'subscribe_to_user' user.pk %}"><button class="dark-button">Subscribe</button></a>
+                    <a href="{% url 'create_private_chat' user.pk %}"><button class="dark-button">Message</button></a>
+                    {% if request.user in user.subscribers.all %}
+                        <a href="{% url 'unsubscribe_from_user' user.pk %}"><button class="dark-button">Unsubscribe</button></a>
+                    {% else %}
+                        <a href="{% url 'subscribe_to_user' user.pk %}"><button class="dark-button">Subscribe</button></a>
+                    {% endif %}
+                    {% if button_status == 'not_friend' %}
+                        <a href="{% url 'send_friend_request' user.pk %}"><button class="dark-button">Add Friend</button></a>
+                    {% elif button_status == 'friend_request_sent' %}
+                        <a href="{% url 'cancel_friend_request' user.pk %}"><button class="dark-button">Cancel Request</button></a>
+                    {% elif button_status == 'friend' %}
+                        <a href="{% url 'remove_friend' user.pk %}"><button class="dark-button">Remove Friend</button></a>
+                    {% endif %}
+                    <a href="{% url 'block_user' user.pk %}"><button class="dark-button">Block User</button></a>
                 {% endif %}
-                {% if button_status == 'not_friend' %}
-                    <a href="{% url 'send_friend_request' user.pk %}"><button class="dark-button">Add Friend</button></a>
-                {% elif button_status == 'friend_request_sent' %}
-                    <a href="{% url 'cancel_friend_request' user.pk %}"><button class="dark-button">Cancel Request</button></a>
-                {% elif button_status == 'friend' %}
-                    <a href="{% url 'remove_friend' user.pk %}"><button class="dark-button">Remove Friend</button></a>
-                {% endif %}
-                <a href="{% url 'block_user' user.pk %}"><button class="dark-button">Block User</button></a>
-                <a href="{% url 'photoalbums' user.pk %}"><button class="dark-button">Photoalbums</button></a>
+            </div>
             {% endif %}
+
+
+            <div class="main-form profile-friends">
+                <div class="friends-header">
+                    <a href="{% url 'friends' user.pk %}">Friends</a>
+                </div>
+                {% for user in friends_for_display.all %}
+                    <div class="profile-friend">
+                        {% if user.image %}
+                                <a href="{% url 'profile' user.pk %}"><img height="30" width="auto" src="{{ user.image.image.url }}" alt="connect"></a>
+                            {% else %}
+                                {% if user.gender %}
+                                    <a href="{% url 'profile' user.pk %}"><img height="30" width="auto" src="/media/avatars/default-avatar-male.jpg"></a>
+                                {% else %}
+                                    <a href="{% url 'profile' user.pk %}"><img height="30" width="auto" src="/media/avatars/default-avatar-female.jpg"></a>
+                                {% endif %}
+                            {% endif %}
+                        <a class="profile-friend-name" href="{% url 'profile' user.pk %}">{{ user.name }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="main-form profile-friends">
+                <div class="friends-header">
+                    <a href="{% url 'groups' user.pk %}">Groups</a>
+                </div>
+                {% for group in groups_for_display.all %}
+                    <div class="profile-friend">
+                        {% if group.image %}
+                                <a href="{% url 'group_detail' group.pk %}"><img height="30" width="auto" src="{{ group.image.url }}" alt="connect"></a>
+                            {% else %}
+                                <a href="{% url 'group_detail' group.pk %}"><img height="30" width="auto" src="/media/group_avatars/group.png"></a>
+                            {% endif %}
+                        <a class="profile-friend-name" href="{% url 'group_detail' group.pk %}">{{ group.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
 
-        {% endif %}
-        <div class="user-main-info">
-            <p>Email: {{ user.email }}</p>
-            <p>Name: {{ user.name }}</p>
-            {% if user.gender %}
-                Gender: Male
-            {% else %}
-                Gender: Female
-            {% endif %}
-            <p>City: {{ user.city }}</p>
+
+        <div class="right-bar">
+            <div class="user-secondary-info">
+                <h2 class="profile-sign">
+                    {{user.name}}{% if user.following %}, I follow the ways of
+                    {{ user.following }}.
+                    {% endif %}
+                </h2>
+                {% if user.is_staff %}
+                    <div class="admin-sign admin-profile">admin</div>
+                {% endif %}
+                <div class="user-info-item"><p class="user-info-desc">About me:&nbsp;</p> <p>{{ user.about_me }}</p></div>
+                <div class="user-info-item"><p class="user-info-desc">Favourite books:&nbsp;</p> <p> {{ user.favourite_books }}</p></div>
+                <div class="user-info-item"><p class="user-info-desc">Favourite music:&nbsp;</p> <p> {{ user.favourite_music }}</p></div>
+                <div class="user-info-item"><p class="user-info-desc">Favourite movies:&nbsp;</p> <p> {{ user.favourite_movies }}</p></div>
+                <br>
+            </div>
+
+
+            <div class="user-main-info">
+                <div class="user-info-item"><p class="user-info-desc">Email:&nbsp;</p> <p>{{ user.email }}</p></div>
+                <div class="user-info-item"><p class="user-info-desc">Name:&nbsp;</p> <p> {{ user.name }}</p></div>
+                {% if user.gender %}
+                    <div class="user-info-item"><p class="user-info-desc">Gender:&nbsp;</p> <p> Male </p></div>
+                {% else %}
+                    <div class="user-info-item"><p class="user-info-desc">Gender:&nbsp;</p> <p> Female</p></div>
+                {% endif %}
+                <div class="user-info-item"><p class="user-info-desc">City:&nbsp;</p> <p> {{ user.city }}</p></div>
+            </div>
+
+            <div class="main-form profile-albums">
+                <div class="profile-albums-header">
+                    <a href="{% url 'photoalbums' user.pk %}">All Photoalbums</a>
+                </div>
+                <div class="profile-albums-images">
+                    {% for image in images %}
+                        <a href="{% url 'image_detail' image.pk %}"><img height="70" width="70" src="{{ image.image.url }}"></a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <form class="main-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% block extrahead %}
+                {{ form.media }}
+                {% endblock %}
+
+                {{ form.as_p }}
+                <br>
+                <button class="dark-button send-button" type="submit">Send</button>
+            </form>
+
+            <div class="posts">
+                {% for post in page_obj %}
+                    {% include "_post.html" %}
+                    <br>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-
-    <br>
-    <br>
-
-    <form class="main-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        {% block extrahead %}
-        {{ form.media }}
-        {% endblock %}
-
-        {{ form.as_p }}
-        <br>
-        <button class="dark-button send-button" type="submit">Send</button>
-    </form>
-
-    <div class="posts">
-        {% for post in page_obj %}
-            {% include "_post.html" %}
-            <br>
-        {% endfor %}
     </div>
 
     <div class="pagination">

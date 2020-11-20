@@ -16,6 +16,7 @@ class Image(models.Model):
 
     image = models.ImageField('Image', upload_to='images', null=False, blank=False)
     description = models.TextField('Description', max_length=4000, null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True, null=True)
 
     album = models.ForeignKey('Photoalbum', related_name='album_images', null=False, on_delete=models.CASCADE)
     likers = models.ManyToManyField(User, related_name='image_likers', blank=True)
