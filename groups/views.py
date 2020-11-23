@@ -91,9 +91,9 @@ def group_detail(request, pk):
                                                             'users': users,
                                                             'discussions': discussions,
                                                             'title': group.title})
-    except Exception:
-        pass
-    return HttpResponse('Group does not exist')
+    except Exception as ex:
+        return HttpResponse(ex)
+
 
 
 def discussions_list(request, pk):

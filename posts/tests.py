@@ -9,7 +9,6 @@ from user_profile.models import User
 from comments.models import Comment
 
 
-
 class PostModelTest(TestCase):
     def setUp(self):
         user = User.objects.create_user(email='test@gmail.com', password='test', name='test')

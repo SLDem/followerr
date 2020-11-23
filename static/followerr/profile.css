@@ -146,6 +146,15 @@
 .friends-sign {
     padding: 5px;
     background-color: white;
+    font-weight: bold;
+}
+
+.friend-in-list a {
+    text-decoration: none;
+}
+
+.friend-in-list a:hover {
+    text-decoration: underline;
 }
 
 .friends-names {

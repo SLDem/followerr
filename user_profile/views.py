@@ -17,6 +17,11 @@ from groups.models import Group
 from authentication.views import see_online_users
 from django.contrib.auth.decorators import login_required
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import UserSerializer
+
 
 @login_required
 def profile(request, pk):
@@ -170,3 +175,10 @@ def change_password(request):
                 return HttpResponse('Your passwords do not match')
     form = ChangePasswordForm()
     return render(request, 'user_profile/edit_password.html', {'form': form, 'title': title})
+
+
+class UsersView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response({'users': serializer.data})

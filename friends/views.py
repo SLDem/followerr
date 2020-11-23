@@ -46,7 +46,7 @@ def send_friend_request(request, pk):
                     to_user=user
                 )
                 Notification.objects.create(type='FR',
-                                            text='Friend Request from ' + user.name,
+                                            text='Friend Request from ' + request.user.name,
                                             user=user,
                                             friend_request=f_request)
             return redirect('profile', pk=user.pk)

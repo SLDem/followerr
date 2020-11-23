@@ -95,6 +95,10 @@ def chat(request, pk):
 
     form = NewMessageForm()
 
+    messages_paginator = Paginator(messages, 10)
+    page_number = request.GET.get('page')
+    page_obj = messages_paginator.get_page(page_number)
+
     if chat.is_private:
         title = 'Chat'
     else:
@@ -127,13 +131,14 @@ def chat(request, pk):
                     notification.save()
             chat.save()
             form = NewMessageForm()
-            return redirect(reverse('chat', kwargs={'pk': chat.pk}))
+            return redirect(reverse('chat', kwargs={'pk': chat.pk}) + '?page=%s' % messages_paginator.num_pages)
     return render(request, 'chats/chat.html', {'messages': messages,
                                                'form': form,
                                                'online_users': online_users,
                                                'chat': chat,
                                                'title': title,
-                                               'searched_messages': searched_messages})
+                                               'searched_messages': searched_messages,
+                                               'page_obj': page_obj})
 
 
 def edit_chat(request, pk):

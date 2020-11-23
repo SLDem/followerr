@@ -25,7 +25,6 @@ class UserAdmin(BaseUserAdmin):
             'image',
             'gender',
             'subscribers',
-            'messages_to_resend'
         )}),
     )
     add_fieldsets = (

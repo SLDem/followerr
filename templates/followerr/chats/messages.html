@@ -9,12 +9,10 @@
 <br>
 
 
-<div class="main-form">
+<div class="main-form" style="gap: 10px;">
     <a href="{% url 'search_chats' %}"><button class="dark-button">Search chats &#128269;</button></a>
-    <br>
     {% for chat in chats %}
         {% if not chat.is_private %}
-        <br>
         <div class="messages-item-wrap">
             <div class="messages-item">
                 <div class="messages-item-image">
@@ -27,7 +25,7 @@
                     </div>
 
                     <div class="chat-title-last-message">
-                        <a href="{% url 'chat' chat.pk %}">{{ chat.title }}</a><br>
+                        <a href="{% url 'chat' chat.pk %}">{{ chat.title }}</a>
                         <div class="chat-last-message">
                             {% if chat.last_message %}
                             <a href="{% url 'chat' chat.pk %}"><img height="25" width="auto" src="{{ chat.last_message.from_user.image.image.url }}"></a>
@@ -58,7 +56,6 @@
         </div>
 
         {% else %}
-        <br>
 
         <div class="messages-item-wrap">
             <div class="messages-item">

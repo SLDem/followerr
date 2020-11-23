@@ -29,7 +29,7 @@
 
 
     {% if searched_messages %}
-        {% for message in searched_messages %}
+        {% for message in page_obj %}
             {% if message.is_read %}
                 <div class="message-avatar-body">
             {% else %}

@@ -6,26 +6,26 @@ from emoji_picker.widgets import EmojiPickerTextareaAdmin
 class EditUserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.TextInput(attrs={'class': 'email'}), label='Your email:')
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'name'}), label='Your name:')
-    following = forms.CharField(widget=forms.TextInput(attrs={'class': 'following'}), label='You are following:')
+    following = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'following'}), label='You are following:')
 
-    about_me = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={
+    about_me = forms.CharField(required=False, widget=EmojiPickerTextareaAdmin(attrs={
         'class': 'about_me',
         'placeholder': 'Write about yourself...'}),
                                label='About you:')
-    favourite_music = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={
+    favourite_music = forms.CharField(required=False, widget=EmojiPickerTextareaAdmin(attrs={
         'class': 'favourite_music',
         'placeholder': 'Write about the music you like...'}),
                                       label='Your favourite music:')
-    favourite_books = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={
+    favourite_books = forms.CharField(required=False, widget=EmojiPickerTextareaAdmin(attrs={
         'class': 'favourite_books',
         'placeholder': 'Write about your favourite books or authors...'}),
                                       label='Your favourite books')
-    favourite_movies = forms.CharField(widget=EmojiPickerTextareaAdmin(attrs={
+    favourite_movies = forms.CharField(required=False, widget=EmojiPickerTextareaAdmin(attrs={
         'class': 'favourite_movies',
         'placeholder': 'Write about your favourite movies or directors...'}),
                                        label='Your favourite movies')
 
-    gender = forms.NullBooleanField(widget=forms.Select(choices=[
+    gender = forms.NullBooleanField(required=False, widget=forms.Select(choices=[
         ('', 'Unknown'),
         (True, 'Male'),
         (False, 'Female')

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
     'django_cleanup',
+    'rest_framework',
     'search',
     'authentication',
     'blocking',
