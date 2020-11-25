@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
-from django import forms
 from .forms import EditUserForm, ChangePasswordForm
 from posts.forms import NewPostForm
 
@@ -16,11 +15,6 @@ from groups.models import Group
 
 from authentication.views import see_online_users
 from django.contrib.auth.decorators import login_required
-
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .serializers import UserSerializer
 
 
 @login_required
@@ -177,8 +171,4 @@ def change_password(request):
     return render(request, 'user_profile/edit_password.html', {'form': form, 'title': title})
 
 
-class UsersView(APIView):
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response({'users': serializer.data})
+

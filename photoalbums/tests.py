@@ -109,19 +109,19 @@ class PhotoalbumViewTests(TestCase):
 
     def test_image_detail_view(self):
         image = self.post_image()
-        response = self.client.get(reverse('image_detail', kwargs={'pk': image.pk}), follow=True)
+        response = self.client.get(reverse('image-detail', kwargs={'pk': image.pk}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'image_detail.html')
         os.remove(MEDIA_ROOT + 'images/test_image.jpg')
 
     def test_image_detail_view_fail(self):
-        response = self.client.get(reverse('image_detail', kwargs={'pk': '10'}), follow=True)
+        response = self.client.get(reverse('image-detail', kwargs={'pk': '10'}), follow=True)
         self.assertIn(force_bytes('Image does not exist'), response.content)
 
     def test_image_detail_view_post_comment(self):
         image = self.post_image()
         data = {'body': 'test_comment'}
-        self.client.post(reverse('image_detail', kwargs={'pk': image.pk}), data=data)
+        self.client.post(reverse('image-detail', kwargs={'pk': image.pk}), data=data)
         self.assertTrue(len(Comment.objects.filter(body='test_comment', picture=image)), 1)
         os.remove(MEDIA_ROOT + 'images/test_image.jpg')
 

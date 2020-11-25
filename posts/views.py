@@ -14,11 +14,6 @@ from authentication.views import see_online_users
 
 from search.documents import PostDocument
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .serializers import PostSerializer
-
 
 def index(request):
     title = 'Home'
@@ -71,20 +66,6 @@ def index(request):
         return render(request, 'posts/index.html', context=context)
     else:
         return redirect('login')
-
-
-class IndexView(APIView):
-    def get(self, request):
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response({'posts': serializer.data})
-
-    def post(self, request):
-        post = request.data.get('post')
-        serializer = PostSerializer(data=post)
-        if serializer.is_valid(raise_exception=True):
-            post_saved = serializer.save()
-        return Response({'success': 'Post {} created successfully'.format(post_saved.pk)})
 
 
 def post_detail(request, pk):

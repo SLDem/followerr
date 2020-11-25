@@ -77,7 +77,7 @@ def image_detail(request, pk):
                 new_comment.parent_id = request.POST.get("parent_id")
                 new_comment.picture = image
                 new_comment.save()
-                return redirect('image_detail', pk=image.pk)
+                return redirect('image-detail', pk=image.pk)
         else:
             form = NewCommentForm()
         return render(request, 'photoalbums/image_detail.html', {'online_users': online_users,
@@ -101,7 +101,7 @@ def reply_form_picture(request, pk, parent_id):
                 new_reply.parent_id = request.POST.get("parent_id")
                 new_reply.picture = picture
                 new_reply.save()
-                return redirect('image_detail', pk=picture.pk)
+                return redirect('image-detail', pk=picture.pk)
         else:
             form = NewCommentForm()
     except Exception:
@@ -115,12 +115,11 @@ def make_avatar(request, pk):
         if image.album.user == request.user and image != request.user.image:
             request.user.image = image
             request.user.save()
-            return redirect('image_detail', pk=image.pk)
+            return redirect('image-detail', pk=image.pk)
         else:
             return HttpResponse('Action not allowed')
-    except Exception:
-        pass
-    return HttpResponse('Image does not exist')
+    except Exception as ex:
+        return HttpResponse(ex)
 
 
 def edit_image(request, pk):
@@ -132,7 +131,7 @@ def edit_image(request, pk):
                 form = NewImageForm(request.POST, instance=image)
                 if form.is_valid():
                     form.save()
-                    return redirect('image_detail', pk=image.pk)
+                    return redirect('image-detail', pk=image.pk)
             else:
                 form = NewImageForm(instance=image)
                 return render(request, 'photoalbums/edit_image.html', {'image': image, 'form': form, 'title': title})

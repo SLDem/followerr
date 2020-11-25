@@ -9,7 +9,7 @@
         <div class="left-bar">
             <div class="user-avatar">
                 {% if user.image %}
-                    <a href="{% url 'image_detail' user.image.pk %}"><img src="{{ user.image.image.url }}" alt="connect"></a>
+                    <a href="{% url 'image-detail' user.image.pk %}"><img src="{{ user.image.image.url }}" alt="connect"></a>
                 {% else %}
                     {% if user.gender %}
                         <img src="/media/avatars/default-avatar-male.jpg">
@@ -125,7 +125,7 @@
                 </div>
                 <div class="profile-albums-images">
                     {% for image in images %}
-                        <a href="{% url 'image_detail' image.pk %}"><img height="70" width="70" src="{{ image.image.url }}"></a>
+                        <a href="{% url 'image-detail' image.pk %}"><img height="70" width="70" src="{{ image.image.url }}"></a>
                     {% endfor %}
                 </div>
             </div>

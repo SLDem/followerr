@@ -10,6 +10,4 @@ urlpatterns = [
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('subscribe_to_user/<int:pk>/', views.subscribe_to_user, name='subscribe_to_user'),
     path('unsubscribe_from_user/<int:pk>', views.unsubscribe_from_user, name='unsubscribe_from_user'),
-
-    path('usersAPI/', views.UsersView.as_view()),
 ]

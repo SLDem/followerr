@@ -5,7 +5,7 @@
     <div class="images-wrap">
     {% for image in images %}
         <div class="image-item">
-            <a href="{% url 'image_detail' image.pk %}"><img width="300" height="auto" src="{{ image.image.url }}" alt="connect"></a>
+            <a href="{% url 'image-detail' image.pk %}"><img width="300" height="auto" src="{{ image.image.url }}" alt="connect"></a>
         </div>
     {% endfor %}
     </div>
