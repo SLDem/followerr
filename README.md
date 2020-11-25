@@ -1,6 +1,7 @@
 followerr
 
-A social network
+A social network.
+
 You will need an elasticsearch server running on port 9200 for all the functionality to work.
 
 To start:
